@@ -6,7 +6,8 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 FROM base AS dev
 RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
-    go install github.com/cosmtrek/air@latest
+    go install github.com/cosmtrek/air@latest && \
+    wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
 COPY . .
 CMD ["air", "-c", ".air.toml"]
 
