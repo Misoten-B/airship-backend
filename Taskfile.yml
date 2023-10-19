@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  lint:
+    desc: Run linting
+    cmds:
+      - echo "This is experimental feature"
+      - docker compose -f compose.yml -f compose.lint.yml up

@@ -1,9 +1,13 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func healthCheck(r *gin.Engine) {
 	r.GET("/ping", func(c *gin.Context) {
-		c.String(200, "alive")
+		c.String(http.StatusOK, "alive")
 	})
 }

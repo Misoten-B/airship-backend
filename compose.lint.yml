@@ -1,0 +1,4 @@
+services:
+  airship-backend:
+    command: golangci-lint run
+      

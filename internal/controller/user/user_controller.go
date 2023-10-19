@@ -6,7 +6,7 @@ import "github.com/gin-gonic/gin"
 // @Router /user [POST]
 // @Success 201 {object} dto.UserResponse
 // @Param CreateUserRequest body dto.CreateUserRequest true "User ID"
-func CreateUser(c *gin.Context) {}
+func CreateUser(_ *gin.Context) {}
 
 // @Tags User
 // @Router /user/:user_id [GET]
@@ -14,7 +14,7 @@ func CreateUser(c *gin.Context) {}
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"
 // @Success 200 {object} dto.UserResponse
-func ReadUserById(c *gin.Context) {}
+func ReadUserByID(_ *gin.Context) {}
 
 // @Tags User
 // @Router /user/:user_id [PUT]
@@ -23,7 +23,7 @@ func ReadUserById(c *gin.Context) {}
 // @Param CreateUserRequest body dto.CreateUserRequest true "update user"
 // @Param user_id path string true "User ID"
 // @Success 200 {object} nil
-func UpdateUser(c *gin.Context) {}
+func UpdateUser(_ *gin.Context) {}
 
 // @Tags User
 // @Router /user/:user_id [DELETE]
@@ -31,4 +31,4 @@ func UpdateUser(c *gin.Context) {}
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"
 // @Success 200 {object} nil
-func DeleteUser(c *gin.Context) {}
+func DeleteUser(_ *gin.Context) {}
