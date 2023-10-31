@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/Misoten-B/airship-backend/internal/database"
+	"github.com/Misoten-B/airship-backend/internal/database/model"
 )
 
 type User struct {
@@ -11,8 +11,8 @@ type User struct {
 	createdAt time.Time
 }
 
-func (u *User) toModel() *database.User {
-	return &database.User{
+func (u *User) toModel() *model.User {
+	return &model.User{
 		ID:        u.id,
 		CreatedAt: u.createdAt,
 	}
@@ -27,7 +27,7 @@ func NewUser() *User {
 	}
 }
 
-func fromModel(user *database.User) *User {
+func fromModel(user *model.User) *User {
 	return &User{
 		id:        user.ID,
 		createdAt: user.CreatedAt,
