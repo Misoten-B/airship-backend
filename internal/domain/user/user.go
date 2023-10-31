@@ -1,22 +1,35 @@
 package domain
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"github.com/Misoten-B/airship-backend/internal/database"
+)
 
 type User struct {
-	ID                string `json:"id"`
-	RecordedVoicePath string
-	RecordedModelPath string
-	IsToured          bool   `json:"is_toured"`
-	ModelKey          string `json:"model_key"`
+	id        string
+	createdAt time.Time
 }
 
-func (user *User) toModel() {}
-
-// TODO: database/modelに移動させる
-// 場所は仮
-type UserModel struct {
-	gorm.Model
+func (u *User) toModel() *database.User {
+	return &database.User{
+		ID:        u.id,
+		CreatedAt: u.createdAt,
+	}
 }
 
-func (model *UserModel) toEntity() {
+func NewUser() *User {
+	createdAt := time.Now()
+
+	return &User{
+		id:        "test-id",
+		createdAt: createdAt,
+	}
+}
+
+func fromModel(user *database.User) *User {
+	return &User{
+		id:        user.ID,
+		createdAt: user.CreatedAt,
+	}
 }
