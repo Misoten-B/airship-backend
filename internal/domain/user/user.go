@@ -1,10 +1,22 @@
 package domain
 
-import "time"
+import "gorm.io/gorm"
 
 type User struct {
-	ID        string    `json:"id"`
-	ModelKey  string    `json:"model_key"`
-	CreatedAt time.Time `json:"created_at"`
-	IsDeleted bool      `json:"is_deleted"`
+	ID                string `json:"id"`
+	RecordedVoicePath string
+	RecordedModelPath string
+	IsToured          bool   `json:"is_toured"`
+	ModelKey          string `json:"model_key"`
+}
+
+func (user *User) toModel() {}
+
+// TODO: database/modelに移動させる
+// 場所は仮
+type UserModel struct {
+	gorm.Model
+}
+
+func (model *UserModel) toEntity() {
 }

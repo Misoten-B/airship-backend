@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/Misoten-B/airship-backend/internal/database"
 	"github.com/Misoten-B/airship-backend/internal/routes"
 	"github.com/gin-gonic/gin"
 
@@ -20,5 +21,6 @@ import (
 func main() {
 	r := gin.Default()
 	routes.Register(r)
+	database.ConnectDB()
 	log.Fatal(r.Run())
 }
