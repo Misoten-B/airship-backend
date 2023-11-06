@@ -53,8 +53,8 @@ type BusinessCardPartsCoordinate struct {
 type BusinessCardBackground struct {
 	ID                             string         `gorm:"primaryKey"`
 	BusinessCards                  []BusinessCard `gorm:"foreignKey:BusinessCardBackground"`
-	BusinessCardBackgroundTemplate string
-	PersonalBusinessCardBackground string
+	BusinessCardBackgroundTemplate string         `gorm:"default:null"`
+	PersonalBusinessCardBackground string         `gorm:"default:null"`
 }
 
 // BusinessCardBackgroundTemplateは名刺背景テンプレートテーブルのORMモデルです。
