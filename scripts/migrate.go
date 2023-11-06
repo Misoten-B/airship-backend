@@ -13,7 +13,7 @@ func main() {
 	}
 
 	// マイグレーション
-	if err = db.AutoMigrate(&model.User{}); err != nil {
+	if err = db.AutoMigrate(&model.BusinessCard{}, &model.User{}); err != nil {
 		panic(err)
 	}
 }
