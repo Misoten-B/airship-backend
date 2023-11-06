@@ -10,6 +10,7 @@ type User struct {
 	BusinessCards                   []BusinessCard                   `gorm:"foreignKey:User"`
 	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:User"`
 	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
+	SpeakingAssets                  []SpeakingAsset
 	RecordedVoicePath               string
 	RecordedModelPath               string
 	CreatedAt                       time.Time
@@ -109,4 +110,12 @@ type PersonalThreeDimentionalModel struct {
 	ID     string `gorm:"primaryKey"`
 	UserID string
 	Path   string
+}
+
+// SpeakingAssetは音声アセットテーブルのORMモデルです。
+type SpeakingAsset struct {
+	ID          string `gorm:"primaryKey"`
+	UserID      string
+	Description string
+	AudioPath   string
 }

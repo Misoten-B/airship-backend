@@ -14,6 +14,7 @@ func main() {
 
 	// マイグレーション
 	if err = db.AutoMigrate(
+		&model.SpeakingAsset{},
 		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
 		&model.ThreeDimentionalModel{},
 		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
