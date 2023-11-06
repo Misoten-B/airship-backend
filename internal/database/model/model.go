@@ -20,9 +20,9 @@ type User struct {
 
 // BusinessCardは名刺テーブルのORMモデルです。
 type BusinessCard struct {
-	ID   string `gorm:"primaryKey"`
-	User string
-	// ARAssets
+	ID                          string `gorm:"primaryKey"`
+	User                        string
+	ARAsset                     string
 	BusinessCardPathsCoordinate string
 	BusinessCardBackground      string
 	BusinessCardName            string
@@ -94,7 +94,8 @@ type PersonalBusinessCardBackground struct {
 
 // ThreeDimentionalModelは3DモデルテーブルのORMモデルです。
 type ThreeDimentionalModel struct {
-	ID string `gorm:"primaryKey"`
+	ID       string `gorm:"primaryKey"`
+	ARAssets []ARAsset
 }
 
 // ThreeDimentionalModelTemplateは3DモデルテンプレートテーブルのORMモデルです。
@@ -115,7 +116,17 @@ type PersonalThreeDimentionalModel struct {
 // SpeakingAssetは音声アセットテーブルのORMモデルです。
 type SpeakingAsset struct {
 	ID          string `gorm:"primaryKey"`
+	ARAssets    []ARAsset
 	UserID      string
 	Description string
 	AudioPath   string
+}
+
+// ARAssetはARアセットテーブルのORMモデルです。
+type ARAsset struct {
+	ID                      string         `gorm:"primaryKey"`
+	BusinessCards           []BusinessCard `gorm:"foreignKey:ARAsset"`
+	UserID                  string
+	SpeakingAssetID         string
+	ThreeDimentionalModelID string
 }
