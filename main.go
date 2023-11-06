@@ -21,6 +21,11 @@ import (
 func main() {
 	r := gin.Default()
 	routes.Register(r)
-	database.ConnectDB()
+
+	_, err := database.ConnectDB()
+	if err != nil {
+		panic(err)
+	}
+
 	log.Fatal(r.Run())
 }
