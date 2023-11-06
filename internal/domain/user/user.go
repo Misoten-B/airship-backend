@@ -5,15 +5,15 @@ import (
 )
 
 type User struct {
-	id        string
-	createdAt time.Time
+	ID        string
+	CreatedAt time.Time
 }
 
 func NewUser() *User {
 	createdAt := time.Now()
 
 	return &User{
-		id:        "test-id",
-		createdAt: createdAt,
+		ID:        "test-id",
+		CreatedAt: createdAt,
 	}
 }
