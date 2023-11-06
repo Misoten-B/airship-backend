@@ -13,7 +13,13 @@ func main() {
 	}
 
 	// マイグレーション
-	if err = db.AutoMigrate(&model.BusinessCardPartsCoordinate{}, &model.BusinessCard{}, &model.User{}); err != nil {
+	if err = db.AutoMigrate(
+		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
+		&model.PersonalBusinessCardBackground{},
+		&model.BusinessCardPartsCoordinate{},
+		&model.BusinessCard{},
+		&model.User{},
+	); err != nil {
 		panic(err)
 	}
 }
