@@ -9,6 +9,7 @@ type User struct {
 	ID                              string                           `gorm:"primaryKey"`
 	BusinessCards                   []BusinessCard                   `gorm:"foreignKey:User"`
 	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:User"`
+	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
 	RecordedVoicePath               string
 	RecordedModelPath               string
 	CreatedAt                       time.Time
@@ -88,4 +89,24 @@ type PersonalBusinessCardBackground struct {
 	User                    string
 	ColorCode               string
 	ImagePath               string
+}
+
+// ThreeDimentionalModelは3DモデルテーブルのORMモデルです。
+type ThreeDimentionalModel struct {
+	ID string `gorm:"primaryKey"`
+}
+
+// ThreeDimentionalModelTemplateは3DモデルテンプレートテーブルのORMモデルです。
+// ThreeDimentionalModelの排他的サブタイプです。
+type ThreeDimentionalModelTemplate struct {
+	ID   string `gorm:"primaryKey"`
+	Path string
+}
+
+// PersonalThreeDimentionalModelはユーザー定義3DモデルテーブルのORMモデルです。
+// ThreeDimentionalModelの排他的サブタイプです。
+type PersonalThreeDimentionalModel struct {
+	ID     string `gorm:"primaryKey"`
+	UserID string
+	Path   string
 }

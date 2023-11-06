@@ -14,8 +14,10 @@ func main() {
 
 	// マイグレーション
 	if err = db.AutoMigrate(
+		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
+		&model.ThreeDimentionalModel{},
 		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
-		&model.PersonalBusinessCardBackground{},
+		&model.BusinessCardBackground{},
 		&model.BusinessCardPartsCoordinate{},
 		&model.BusinessCard{},
 		&model.User{},
