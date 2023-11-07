@@ -43,6 +43,24 @@ const docTemplate = `{
                 }
             }
         },
+        "/business_card_parts_coordinate": {
+            "get": {
+                "tags": [
+                    "BusinessCardPartsCoordinate"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BusinessCardPartsCoordinateResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "security": [
@@ -564,6 +582,71 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/business_card_background": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCardBackground"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BusinessCardBackgroundResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCardBackground"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "BusinessCardBackground",
+                        "name": "dto.CreateBusinessCardBackgroundRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateBusinessCardBackgroundRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
         "/user/three_dimentional": {
             "get": {
                 "security": [
@@ -765,6 +848,84 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.BusinessCardBackgroundResponse": {
+            "type": "object",
+            "properties": {
+                "business_card_background_color": {
+                    "type": "string",
+                    "example": "#ffffff"
+                },
+                "business_card_background_image": {
+                    "type": "string",
+                    "example": "url"
+                },
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.BusinessCardPartsCoordinateResponse": {
+            "type": "object",
+            "properties": {
+                "address_x": {
+                    "type": "integer"
+                },
+                "address_y": {
+                    "type": "integer"
+                },
+                "company_name_x": {
+                    "type": "integer"
+                },
+                "company_name_y": {
+                    "type": "integer"
+                },
+                "department_x": {
+                    "type": "integer"
+                },
+                "department_y": {
+                    "type": "integer"
+                },
+                "display_name_x": {
+                    "type": "integer"
+                },
+                "display_name_y": {
+                    "type": "integer"
+                },
+                "email_x": {
+                    "type": "integer"
+                },
+                "email_y": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "official_position_x": {
+                    "type": "integer"
+                },
+                "official_position_y": {
+                    "type": "integer"
+                },
+                "phone_number_x": {
+                    "type": "integer"
+                },
+                "phone_number_y": {
+                    "type": "integer"
+                },
+                "postal_code_x": {
+                    "type": "integer"
+                },
+                "postal_code_y": {
+                    "type": "integer"
+                },
+                "qrcode_x": {
+                    "type": "integer"
+                },
+                "qrcode_y": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.BusinessCardResponse": {
             "type": "object",
             "properties": {
@@ -774,13 +935,20 @@ const docTemplate = `{
                 "address": {
                     "type": "string"
                 },
-                "businessCardBackground": {
-                    "type": "string"
+                "businessCardBackgroundColor": {
+                    "description": "background",
+                    "type": "string",
+                    "example": "#ffffff"
+                },
+                "businessCardBackgroundImage": {
+                    "type": "string",
+                    "example": "url"
                 },
                 "businessCardName": {
                     "type": "string"
                 },
                 "businessCardPartsCoordinate": {
+                    "description": "business card",
                     "type": "string"
                 },
                 "companyName": {
@@ -814,6 +982,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "threeDimentionalModel": {
+                    "description": "ar assets",
                     "type": "string"
                 }
             }
@@ -831,6 +1000,20 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreateBusinessCardBackgroundRequest": {
+            "type": "object",
+            "properties": {
+                "business_card_background": {
+                    "type": "string",
+                    "example": "#ffffff"
+                },
+                "business_card_background_image": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
+                }
+            }
+        },
         "dto.CreateBusinessCardRequest": {
             "type": "object",
             "properties": {
@@ -839,9 +1022,17 @@ const docTemplate = `{
                     "x-nullable": true,
                     "example": "東京都渋谷区神南1-1-1"
                 },
-                "business_card_background": {
+                "ar_assets_id": {
+                    "description": "ar assets",
                     "type": "string",
-                    "example": "#ffffff"
+                    "x-nullable": true,
+                    "example": "ar_assets_id"
+                },
+                "business_card_background_id": {
+                    "description": "background",
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "id"
                 },
                 "business_card_name": {
                     "type": "string",
@@ -849,9 +1040,10 @@ const docTemplate = `{
                     "example": "会社"
                 },
                 "business_card_parts_coordinate": {
-                    "description": "BusinessCardBackgroundImage *string ` + "`" + `json:\"business_card_background_image\" example:\"url\" extensions:\"x-nullable\"` + "`" + `",
+                    "description": "business card",
                     "type": "string",
-                    "x-nullable": true
+                    "x-nullable": true,
+                    "example": "id"
                 },
                 "company_name": {
                     "type": "string",
@@ -887,6 +1079,11 @@ const docTemplate = `{
                     "type": "string",
                     "x-nullable": true,
                     "example": "123-4567"
+                },
+                "qrcode_image_path": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
                 }
             }
         },
