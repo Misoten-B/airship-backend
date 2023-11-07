@@ -36,6 +36,5 @@ type BusinessCardResponse struct {
 	Email                       string
 	PostalCode                  string
 	Address                     string
-	QrcodeImagePath             string
 	AccessCount                 int
 }

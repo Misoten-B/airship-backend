@@ -1,9 +1,9 @@
 package dto
 
 type CreateBusinessCardRequest struct {
+	// BusinessCardBackgroundImage *string `json:"business_card_background_image" example:"url" extensions:"x-nullable"`
 	BusinessCardPartsCoordinate *string `json:"business_card_parts_coordinate" extensions:"x-nullable"`
 	BusinessCardBackgroundColor *string `json:"business_card_background" example:"#ffffff"`
-	BusinessCardBackgroundImage *string `json:"business_card_background_image" example:"url" extensions:"x-nullable"`
 	BusinessCardName            *string `json:"business_card_name,omitempty" example:"会社" extensions:"x-nullable"`
 	DisplayName                 *string `json:"display_name,omitempty" example:"名前" extensions:"x-nullable"`
 	CompanyName                 *string `json:"company_name,omitempty" example:"会社名" extensions:"x-nullable"`
@@ -13,5 +13,4 @@ type CreateBusinessCardRequest struct {
 	Email                       *string `json:"email,omitempty" example:"sample@example.com" extensions:"x-nullable"`
 	PostalCode                  *string `json:"postal_code,omitempty" example:"123-4567" extensions:"x-nullable"`
 	Address                     *string `json:"address,omitempty" example:"東京都渋谷区神南1-1-1" extensions:"x-nullable"`
-	QrcodeImagePath             *string `json:"qrcode_image_path,omitempty" example:"url" extensions:"x-nullable"`
 }
