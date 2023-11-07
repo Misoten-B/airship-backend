@@ -38,4 +38,4 @@ func UpdateBusinessCard(_ *gin.Context) {}
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
 // @Success 200 {object} nil
-func DeleteBusinessCard(_gin *gin.Context) {}
+func DeleteBusinessCard(_ *gin.Context) {}
