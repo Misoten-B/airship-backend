@@ -6,7 +6,7 @@ import "github.com/gin-gonic/gin"
 // @Router /user/business_card_background [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Param dto.CreateBusinessCardBackgroundRequest body dto.CreateBusinessCardBackgroundRequest true "BusinessCardBackground"
+// @Param dto.CreateBackgroundRequest body dto.CreateBackgroundRequest true "BusinessCardBackground"
 // @Success 201 {object} nil
 func CreateBusinessCardBackground(_ *gin.Context) {}
 
