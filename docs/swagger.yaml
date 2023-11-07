@@ -4,6 +4,9 @@ definitions:
       id:
         example: id
         type: string
+      qrcode_image_path:
+        example: url
+        type: string
       speaking_audio_path:
         example: url
         type: string
@@ -42,8 +45,6 @@ definitions:
         type: string
       postalCode:
         type: string
-      qrcodeImagePath:
-        type: string
       speakingAudioPath:
         type: string
       speakingDescription:
@@ -53,13 +54,10 @@ definitions:
     type: object
   dto.CreateArAssetsRequest:
     properties:
-      speaking_audio_path:
-        example: url
-        type: string
       speaking_description:
         example: description
         type: string
-      three_dimentional_path:
+      three_dimentional_ID:
         example: url
         type: string
     type: object
@@ -72,15 +70,13 @@ definitions:
       business_card_background:
         example: '#ffffff'
         type: string
-      business_card_background_image:
-        example: url
-        type: string
-        x-nullable: true
       business_card_name:
         example: 会社
         type: string
         x-nullable: true
       business_card_parts_coordinate:
+        description: BusinessCardBackgroundImage *string `json:"business_card_background_image"
+          example:"url" extensions:"x-nullable"`
         type: string
         x-nullable: true
       company_name:
@@ -111,10 +107,6 @@ definitions:
         example: 123-4567
         type: string
         x-nullable: true
-      qrcode_image_path:
-        example: url
-        type: string
-        x-nullable: true
     type: object
   dto.CreateUserRequest:
     properties:
@@ -122,14 +114,13 @@ definitions:
         example: false
         type: boolean
         x-nullable: true
-      recorded_model_path:
-        example: url
+    type: object
+  dto.ThreeDimentionalResponse:
+    properties:
+      id:
         type: string
-        x-nullable: true
-      recorded_voice_path:
-        example: url
+      path:
         type: string
-        x-nullable: true
     type: object
   dto.UserResponse:
     properties:
@@ -272,12 +263,19 @@ paths:
       tags:
       - ArAssets
     post:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
         name: Authorization
         required: true
         type: string
+      - description: Image file to be uploaded
+        in: formData
+        name: qrcodeImage
+        required: true
+        type: file
       - description: ArAssets
         in: body
         name: dto.CreateArAssetsRequest
@@ -333,6 +331,8 @@ paths:
       tags:
       - ArAssets
     put:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
@@ -350,6 +350,10 @@ paths:
         name: ar_assets_id
         required: true
         type: string
+      - description: Image file to be uploaded
+        in: formData
+        name: qrcodeIcon
+        type: file
       responses:
         "201":
           description: Created
@@ -377,7 +381,19 @@ paths:
       tags:
       - BusinessCard
     post:
+      consumes:
+      - multipart/form-data
       parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Image file to be uploaded
+        in: formData
+        name: BusinessCardBackgroundImage
+        required: true
+        type: file
       - description: BusinessCard
         in: body
         name: CreateBusinessCardRequest
@@ -387,6 +403,8 @@ paths:
       responses:
         "201":
           description: Created
+      security:
+      - ApiKeyAuth: []
       tags:
       - BusinessCard
   /user/business_card/{business_card_id}:
@@ -431,6 +449,8 @@ paths:
       tags:
       - BusinessCard
     put:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
@@ -442,6 +462,11 @@ paths:
         name: business_card_id
         required: true
         type: string
+      - description: Image file to be uploaded
+        in: formData
+        name: BusinessCardBackgroundImage
+        required: true
+        type: file
       - description: BusinessCard
         in: body
         name: CreateBusinessCardRequest
@@ -455,4 +480,111 @@ paths:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
+  /user/three_dimentional:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ThreeDimentionalResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ThreeDimentionalModel
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 3dmodel file to be uploaded
+        in: formData
+        name: ThreeDimentionalModel
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ThreeDimentionalModel
+  /user/three_dimentional/{three_dimentional_id}:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ThreeDimentional ID
+        in: path
+        name: three_dimentional_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ThreeDimentionalModel
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ThreeDimentional ID
+        in: path
+        name: three_dimentional_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ThreeDimentionalResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ThreeDimentionalModel
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ThreeDimentional ID
+        in: path
+        name: three_dimentional_id
+        required: true
+        type: string
+      - description: 3dmodel file to be uploaded
+        in: formData
+        name: ThreeDimentionalModel
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ThreeDimentionalModel
 swagger: "2.0"

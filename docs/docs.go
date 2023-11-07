@@ -218,6 +218,9 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "ArAssets"
                 ],
@@ -227,6 +230,13 @@ const docTemplate = `{
                         "description": "Bearer [Firebase JWT Token]",
                         "name": "Authorization",
                         "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file to be uploaded",
+                        "name": "qrcodeImage",
+                        "in": "formData",
                         "required": true
                     },
                     {
@@ -287,6 +297,9 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "ArAssets"
                 ],
@@ -313,6 +326,12 @@ const docTemplate = `{
                         "name": "ar_assets_id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file to be uploaded",
+                        "name": "qrcodeIcon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -385,10 +404,32 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "BusinessCard"
                 ],
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file to be uploaded",
+                        "name": "BusinessCardBackgroundImage",
+                        "in": "formData",
+                        "required": true
+                    },
                     {
                         "description": "BusinessCard",
                         "name": "CreateBusinessCardRequest",
@@ -447,6 +488,9 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "BusinessCard"
                 ],
@@ -463,6 +507,13 @@ const docTemplate = `{
                         "description": "BusinessCard ID",
                         "name": "business_card_id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image file to be uploaded",
+                        "name": "BusinessCardBackgroundImage",
+                        "in": "formData",
                         "required": true
                     },
                     {
@@ -512,6 +563,180 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/three_dimentional": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ThreeDimentionalModel"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "ThreeDimentionalModel"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "3dmodel file to be uploaded",
+                        "name": "ThreeDimentionalModel",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/user/three_dimentional/{three_dimentional_id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ThreeDimentionalModel"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ThreeDimentional ID",
+                        "name": "three_dimentional_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "ThreeDimentionalModel"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ThreeDimentional ID",
+                        "name": "three_dimentional_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "3dmodel file to be uploaded",
+                        "name": "ThreeDimentionalModel",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ThreeDimentionalModel"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ThreeDimentional ID",
+                        "name": "three_dimentional_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -521,6 +746,10 @@ const docTemplate = `{
                 "id": {
                     "type": "string",
                     "example": "id"
+                },
+                "qrcode_image_path": {
+                    "type": "string",
+                    "example": "url"
                 },
                 "speaking_audio_path": {
                     "type": "string",
@@ -578,9 +807,6 @@ const docTemplate = `{
                 "postalCode": {
                     "type": "string"
                 },
-                "qrcodeImagePath": {
-                    "type": "string"
-                },
                 "speakingAudioPath": {
                     "type": "string"
                 },
@@ -595,15 +821,11 @@ const docTemplate = `{
         "dto.CreateArAssetsRequest": {
             "type": "object",
             "properties": {
-                "speaking_audio_path": {
-                    "type": "string",
-                    "example": "url"
-                },
                 "speaking_description": {
                     "type": "string",
                     "example": "description"
                 },
-                "three_dimentional_path": {
+                "three_dimentional_ID": {
                     "type": "string",
                     "example": "url"
                 }
@@ -621,17 +843,13 @@ const docTemplate = `{
                     "type": "string",
                     "example": "#ffffff"
                 },
-                "business_card_background_image": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
-                },
                 "business_card_name": {
                     "type": "string",
                     "x-nullable": true,
                     "example": "会社"
                 },
                 "business_card_parts_coordinate": {
+                    "description": "BusinessCardBackgroundImage *string ` + "`" + `json:\"business_card_background_image\" example:\"url\" extensions:\"x-nullable\"` + "`" + `",
                     "type": "string",
                     "x-nullable": true
                 },
@@ -669,11 +887,6 @@ const docTemplate = `{
                     "type": "string",
                     "x-nullable": true,
                     "example": "123-4567"
-                },
-                "qrcode_image_path": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
                 }
             }
         },
@@ -684,16 +897,17 @@ const docTemplate = `{
                     "type": "boolean",
                     "x-nullable": true,
                     "example": false
+                }
+            }
+        },
+        "dto.ThreeDimentionalResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 },
-                "recorded_model_path": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
-                },
-                "recorded_voice_path": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
+                "path": {
+                    "type": "string"
                 }
             }
         },
