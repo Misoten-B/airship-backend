@@ -19,33 +19,31 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/user": {
-            "post": {
+        "/ar_assets/{ar_assets_id}": {
+            "get": {
                 "tags": [
-                    "User"
+                    "ArAssets"
                 ],
                 "parameters": [
                     {
-                        "description": "create user",
-                        "name": "CreateUserRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateUserRequest"
-                        }
+                        "type": "string",
+                        "description": "ArAssets ID",
+                        "name": "ar_assets_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
+                            "$ref": "#/definitions/dto.ArAssetsResponse"
                         }
                     }
                 }
             }
         },
-        "/user/:user_id": {
+        "/user": {
             "get": {
                 "security": [
                     {
@@ -65,7 +63,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "update user",
+                        "description": "User ID",
                         "name": "user_id",
                         "in": "path",
                         "required": true
@@ -108,7 +106,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "update user",
+                        "description": "User ID",
                         "name": "user_id",
                         "in": "path",
                         "required": true
@@ -117,6 +115,37 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "User ID",
+                        "name": "CreateUserRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
                     }
                 }
             },
@@ -139,8 +168,340 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "delete user",
+                        "description": "User ID",
                         "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/ar_assets": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ArAssetsResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "ArAssets",
+                        "name": "dto.CreateArAssetsRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateArAssetsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/user/ar_assets/{ar_assets_id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ArAssets ID",
+                        "name": "ar_assets_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArAssetsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "ArAssets",
+                        "name": "dto.CreateArAssetsRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateArAssetsRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "ArAssets ID",
+                        "name": "ar_assets_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ArAssets ID",
+                        "name": "ar_assets_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/user/business_card": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BusinessCardResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "description": "BusinessCard",
+                        "name": "CreateBusinessCardRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateBusinessCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/user/business_card/{business_card_id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BusinessCard ID",
+                        "name": "business_card_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BusinessCardResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BusinessCard ID",
+                        "name": "business_card_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "BusinessCard",
+                        "name": "CreateBusinessCardRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateBusinessCardRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "BusinessCard ID",
+                        "name": "business_card_id",
                         "in": "path",
                         "required": true
                     }
@@ -154,11 +515,185 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CreateUserRequest": {
+        "dto.ArAssetsResponse": {
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "string",
+                    "example": "id"
+                },
+                "speaking_audio_path": {
+                    "type": "string",
+                    "example": "url"
+                },
+                "speaking_description": {
+                    "type": "string",
+                    "example": "description"
+                },
+                "three_dimentional_path": {
+                    "type": "string",
+                    "example": "url"
+                }
+            }
+        },
+        "dto.BusinessCardResponse": {
+            "type": "object",
+            "properties": {
+                "accessCount": {
+                    "type": "integer"
+                },
+                "address": {
                     "type": "string"
+                },
+                "businessCardBackground": {
+                    "type": "string"
+                },
+                "businessCardName": {
+                    "type": "string"
+                },
+                "businessCardPartsCoordinate": {
+                    "type": "string"
+                },
+                "companyName": {
+                    "type": "string"
+                },
+                "department": {
+                    "type": "string"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "officialPosition": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                },
+                "qrcodeImagePath": {
+                    "type": "string"
+                },
+                "speakingAudioPath": {
+                    "type": "string"
+                },
+                "speakingDescription": {
+                    "type": "string"
+                },
+                "threeDimentionalModel": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateArAssetsRequest": {
+            "type": "object",
+            "properties": {
+                "speaking_audio_path": {
+                    "type": "string",
+                    "example": "url"
+                },
+                "speaking_description": {
+                    "type": "string",
+                    "example": "description"
+                },
+                "three_dimentional_path": {
+                    "type": "string",
+                    "example": "url"
+                }
+            }
+        },
+        "dto.CreateBusinessCardRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "東京都渋谷区神南1-1-1"
+                },
+                "business_card_background": {
+                    "type": "string",
+                    "example": "#ffffff"
+                },
+                "business_card_background_image": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
+                },
+                "business_card_name": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "会社"
+                },
+                "business_card_parts_coordinate": {
+                    "type": "string",
+                    "x-nullable": true
+                },
+                "company_name": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "会社名"
+                },
+                "department": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "部署"
+                },
+                "display_name": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "名前"
+                },
+                "email": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "sample@example.com"
+                },
+                "official_position": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "役職"
+                },
+                "phone_number": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "090-1234-5678"
+                },
+                "postal_code": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "123-4567"
+                },
+                "qrcode_image_path": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
+                }
+            }
+        },
+        "dto.CreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "is_toured": {
+                    "type": "boolean",
+                    "x-nullable": true,
+                    "example": false
+                },
+                "recorded_model_path": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
+                },
+                "recorded_voice_path": {
+                    "type": "string",
+                    "x-nullable": true,
+                    "example": "url"
                 }
             }
         },
@@ -166,6 +701,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "id": {
+                    "type": "string"
+                },
+                "is_toured": {
+                    "type": "boolean"
+                },
+                "recorded_model_path": {
+                    "type": "string"
+                },
+                "recorded_voice_path": {
                     "type": "string"
                 }
             }
@@ -176,10 +720,10 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "",
+	Host:             "localhost:8080",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
+	Title:            "AIRship API",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

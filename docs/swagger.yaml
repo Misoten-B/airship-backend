@@ -1,39 +1,172 @@
 definitions:
-  dto.CreateUserRequest:
+  dto.ArAssetsResponse:
     properties:
       id:
+        example: id
         type: string
+      speaking_audio_path:
+        example: url
+        type: string
+      speaking_description:
+        example: description
+        type: string
+      three_dimentional_path:
+        example: url
+        type: string
+    type: object
+  dto.BusinessCardResponse:
+    properties:
+      accessCount:
+        type: integer
+      address:
+        type: string
+      businessCardBackground:
+        type: string
+      businessCardName:
+        type: string
+      businessCardPartsCoordinate:
+        type: string
+      companyName:
+        type: string
+      department:
+        type: string
+      displayName:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      officialPosition:
+        type: string
+      phoneNumber:
+        type: string
+      postalCode:
+        type: string
+      qrcodeImagePath:
+        type: string
+      speakingAudioPath:
+        type: string
+      speakingDescription:
+        type: string
+      threeDimentionalModel:
+        type: string
+    type: object
+  dto.CreateArAssetsRequest:
+    properties:
+      speaking_audio_path:
+        example: url
+        type: string
+      speaking_description:
+        example: description
+        type: string
+      three_dimentional_path:
+        example: url
+        type: string
+    type: object
+  dto.CreateBusinessCardRequest:
+    properties:
+      address:
+        example: 東京都渋谷区神南1-1-1
+        type: string
+        x-nullable: true
+      business_card_background:
+        example: '#ffffff'
+        type: string
+      business_card_background_image:
+        example: url
+        type: string
+        x-nullable: true
+      business_card_name:
+        example: 会社
+        type: string
+        x-nullable: true
+      business_card_parts_coordinate:
+        type: string
+        x-nullable: true
+      company_name:
+        example: 会社名
+        type: string
+        x-nullable: true
+      department:
+        example: 部署
+        type: string
+        x-nullable: true
+      display_name:
+        example: 名前
+        type: string
+        x-nullable: true
+      email:
+        example: sample@example.com
+        type: string
+        x-nullable: true
+      official_position:
+        example: 役職
+        type: string
+        x-nullable: true
+      phone_number:
+        example: 090-1234-5678
+        type: string
+        x-nullable: true
+      postal_code:
+        example: 123-4567
+        type: string
+        x-nullable: true
+      qrcode_image_path:
+        example: url
+        type: string
+        x-nullable: true
+    type: object
+  dto.CreateUserRequest:
+    properties:
+      is_toured:
+        example: false
+        type: boolean
+        x-nullable: true
+      recorded_model_path:
+        example: url
+        type: string
+        x-nullable: true
+      recorded_voice_path:
+        example: url
+        type: string
+        x-nullable: true
     type: object
   dto.UserResponse:
     properties:
       id:
         type: string
+      is_toured:
+        type: boolean
+      recorded_model_path:
+        type: string
+      recorded_voice_path:
+        type: string
     type: object
+host: localhost:8080
 info:
   contact: {}
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  title: Swagger Example API
+  title: AIRship API
   version: "1.0"
 paths:
-  /user:
-    post:
+  /ar_assets/{ar_assets_id}:
+    get:
       parameters:
-      - description: create user
-        in: body
-        name: CreateUserRequest
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
         required: true
-        schema:
-          $ref: '#/definitions/dto.CreateUserRequest'
+        type: string
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.UserResponse'
+            $ref: '#/definitions/dto.ArAssetsResponse'
       tags:
-      - User
-  /user/:user_id:
+      - ArAssets
+  /user:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -41,7 +174,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: delete user
+      - description: User ID
         in: path
         name: user_id
         required: true
@@ -60,7 +193,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: update user
+      - description: User ID
         in: path
         name: user_id
         required: true
@@ -72,6 +205,26 @@ paths:
             $ref: '#/definitions/dto.UserResponse'
       security:
       - ApiKeyAuth: []
+      tags:
+      - User
+    post:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: body
+        name: CreateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
       tags:
       - User
     put:
@@ -87,7 +240,7 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dto.CreateUserRequest'
-      - description: update user
+      - description: User ID
         in: path
         name: user_id
         required: true
@@ -99,4 +252,207 @@ paths:
       - ApiKeyAuth: []
       tags:
       - User
+  /user/ar_assets:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ArAssetsResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+    post:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ArAssets
+        in: body
+        name: dto.CreateArAssetsRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+  /user/ar_assets/{ar_assets_id}:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ArAssetsResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+    put:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ArAssets
+        in: body
+        name: dto.CreateArAssetsRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+  /user/business_card:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BusinessCardResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCard
+    post:
+      parameters:
+      - description: BusinessCard
+        in: body
+        name: CreateBusinessCardRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBusinessCardRequest'
+      responses:
+        "201":
+          description: Created
+      tags:
+      - BusinessCard
+  /user/business_card/{business_card_id}:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BusinessCard ID
+        in: path
+        name: business_card_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCard
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BusinessCard ID
+        in: path
+        name: business_card_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BusinessCardResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCard
+    put:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BusinessCard ID
+        in: path
+        name: business_card_id
+        required: true
+        type: string
+      - description: BusinessCard
+        in: body
+        name: CreateBusinessCardRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBusinessCardRequest'
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCard
 swagger: "2.0"
