@@ -4,6 +4,10 @@ import "github.com/gin-gonic/gin"
 
 // @Tags BusinessCard
 // @Router /user/business_card [POST]
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer [Firebase JWT Token]"
+// @Accept multipart/form-data
+// @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
 // @Param CreateBusinessCardRequest body dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 201 {object} nil
 func CreateBusinessCard(_ *gin.Context) {}
@@ -28,6 +32,8 @@ func ReadBusinessCardByID(_ *gin.Context) {}
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
+// @Accept multipart/form-data
+// @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
 // @Param CreateBusinessCardRequest body dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 201 {object} nil
 func UpdateBusinessCard(_ *gin.Context) {}
