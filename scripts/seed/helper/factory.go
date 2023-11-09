@@ -1,60 +1,45 @@
-package main
+package helper
 
-import (
-	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/database/model"
-	"gorm.io/gorm/clause"
-)
+import "github.com/Misoten-B/airship-backend/internal/database/model"
 
-func main() {
-	// データベースに接続
-	db, err := database.ConnectDB()
-	if err != nil {
-		panic(err)
-	}
+type AppModel struct {
+	User                              *model.User
+	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
+	PersonalThreeDimentionalModel     *model.PersonalThreeDimentionalModel
+	ThreeDimentionalModels            []*model.ThreeDimentionalModel
+	SpeakingAsset                     *model.SpeakingAsset
+	ARAsset                           *model.ARAsset
+	BusinessCardBackgroundTemplate    *model.BusinessCardBackgroundTemplate
+	PersonalBusinessCardBackground    *model.PersonalBusinessCardBackground
+	BusinessCardBackgrounds           []*model.BusinessCardBackground
+	BusinessCardPartsCoordinate       *model.BusinessCardPartsCoordinate
+	BusinessCard                      *model.BusinessCard
+}
 
-	// User
+func NewAppModel() *AppModel {
 	user := newUser()
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(user)
 
-	// ThreeDimentionalModelTemplate
 	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate()
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(threeDimentionalModelTemplate)
-
-	// PersonalThreeDimentionalModel
 	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(user)
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(personalThreeDimentionalModel)
+	threeDimentionalModels := newThreeDimentionalModels(
+		threeDimentionalModelTemplate,
+		personalThreeDimentionalModel,
+	)
 
-	// ThreeDimentionalModel
-	threeDimentionalModels := newThreeDimentionalModels(threeDimentionalModelTemplate, personalThreeDimentionalModel)
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(threeDimentionalModels)
-
-	// SpeakingAsset
 	speakingAsset := newSpeakingAsset(user)
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(speakingAsset)
-
-	// ARAsset
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(arAsset)
 
-	// BusinessCardBackgroundTemplate
 	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
 		ID:        "1",
 		ColorCode: "#ffffff",
 		ImagePath: "https://example.com/background_template.png",
 	}
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(businessCardBackgroundTemplate)
-
-	// PersonalBusinessCardBackground
 	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
 		ID:        "1",
 		User:      user.ID,
 		ColorCode: "#ffffff",
 		ImagePath: "https://example.com/background.png",
 	}
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(personalBusinessCardBackground)
-
-	// BusinessCardBackground
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
 			ID:                             "1",
@@ -65,20 +50,30 @@ func main() {
 			PersonalBusinessCardBackground: personalBusinessCardBackground.ID,
 		},
 	}
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(businessCardBackgrounds)
 
-	// BusinessCardPartsCoordinate
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(businessCardPartsCoordinate)
 
-	// BusinessCard
 	businessCard := newBusinessCard(
-		user, arAsset, businessCardPartsCoordinate, businessCardBackgrounds[0],
+		user,
+		arAsset,
+		businessCardPartsCoordinate,
+		businessCardBackgrounds[0],
 	)
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(businessCard)
-}
 
-// 初期データ生成用の関数
+	return &AppModel{
+		User:                              user,
+		TempThreeDimentionalModelTemplate: threeDimentionalModelTemplate,
+		PersonalThreeDimentionalModel:     personalThreeDimentionalModel,
+		ThreeDimentionalModels:            threeDimentionalModels,
+		SpeakingAsset:                     speakingAsset,
+		ARAsset:                           arAsset,
+		BusinessCardBackgroundTemplate:    businessCardBackgroundTemplate,
+		PersonalBusinessCardBackground:    personalBusinessCardBackground,
+		BusinessCardBackgrounds:           businessCardBackgrounds,
+		BusinessCardPartsCoordinate:       businessCardPartsCoordinate,
+		BusinessCard:                      businessCard,
+	}
+}
 
 func newUser() *model.User {
 	return &model.User{

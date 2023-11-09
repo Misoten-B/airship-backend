@@ -14,15 +14,15 @@ func main() {
 
 	// マイグレーション
 	if err = db.AutoMigrate(
-		&model.ARAsset{},
+		&model.User{},
 		&model.SpeakingAsset{},
+		&model.ARAsset{},
 		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
 		&model.ThreeDimentionalModel{},
 		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardBackground{},
 		&model.BusinessCardPartsCoordinate{},
 		&model.BusinessCard{},
-		&model.User{},
 	); err != nil {
 		panic(err)
 	}
