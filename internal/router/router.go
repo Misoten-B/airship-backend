@@ -8,4 +8,5 @@ func Register(r *gin.Engine) {
 
 	// bussiness
 	user(r)
+	businessCardPartsCoordinate(r)
 }
