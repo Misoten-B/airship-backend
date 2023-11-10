@@ -1,4 +1,4 @@
-package routes
+package router
 
 import (
 	controller "github.com/Misoten-B/airship-backend/internal/controller/user"

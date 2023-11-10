@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Misoten-B/airship-backend/internal/routes"
+	"github.com/Misoten-B/airship-backend/internal/router"
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/Misoten-B/airship-backend/docs"
@@ -20,7 +20,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	routes.Register(r)
+	router.Register(r)
 
 	log.Fatal(r.Run())
 }
