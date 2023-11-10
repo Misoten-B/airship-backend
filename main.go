@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 
-	"github.com/Misoten-B/airship-backend/internal/database"
 	"github.com/Misoten-B/airship-backend/internal/routes"
 	"github.com/gin-gonic/gin"
 
@@ -20,12 +19,8 @@ import (
 // @name                       Authorization
 func main() {
 	r := gin.Default()
-	routes.Register(r)
 
-	_, err := database.ConnectDB()
-	if err != nil {
-		panic(err)
-	}
+	routes.Register(r)
 
 	log.Fatal(r.Run())
 }
