@@ -120,7 +120,7 @@ definitions:
         example: url
         type: string
     type: object
-  dto.CreateBusinessCardBackgroundRequest:
+  dto.CreateBackgroundRequest:
     properties:
       business_card_background:
         example: '#ffffff'
@@ -249,6 +249,27 @@ paths:
       tags:
       - BusinessCardPartsCoordinate
   /user:
+    post:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: body
+        name: CreateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+      tags:
+      - User
+  /user/{user_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -287,26 +308,6 @@ paths:
             $ref: '#/definitions/dto.UserResponse'
       security:
       - ApiKeyAuth: []
-      tags:
-      - User
-    post:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: body
-        name: CreateUserRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateUserRequest'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/dto.UserResponse'
       tags:
       - User
     put:
@@ -599,10 +600,10 @@ paths:
         type: string
       - description: BusinessCardBackground
         in: body
-        name: dto.CreateBusinessCardBackgroundRequest
+        name: dto.CreateBackgroundRequest
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateBusinessCardBackgroundRequest'
+          $ref: '#/definitions/dto.CreateBackgroundRequest'
       responses:
         "201":
           description: Created

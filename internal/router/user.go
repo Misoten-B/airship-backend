@@ -9,8 +9,8 @@ func user(r *gin.Engine) {
 	ur := r.Group("/user")
 	{
 		ur.POST("/", controller.CreateUser)
-		ur.GET("/:id", controller.ReadUserByID)
-		ur.PUT("/:id", controller.UpdateUser)
-		ur.DELETE("/:id", controller.DeleteUser)
+		ur.GET("/:user_id", controller.ReadUserByID)
+		ur.PUT("/:user_id", controller.UpdateUser)
+		ur.DELETE("/:user_id", controller.DeleteUser)
 	}
 }
