@@ -111,15 +111,6 @@ definitions:
         description: ar assets
         type: string
     type: object
-  dto.CreateArAssetsRequest:
-    properties:
-      speaking_description:
-        example: description
-        type: string
-      three_dimentional_ID:
-        example: url
-        type: string
-    type: object
   dto.CreateBackgroundRequest:
     properties:
       business_card_background:
@@ -285,8 +276,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -370,15 +361,19 @@ paths:
         name: qrcodeImage
         required: true
         type: file
-      - description: ArAssets
-        in: body
-        name: dto.CreateArAssetsRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      - example: description
+        in: formData
+        name: speaking_description
+        type: string
+      - example: url
+        in: formData
+        name: three_dimentional_ID
+        type: string
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.ArAssetsResponse'
       security:
       - ApiKeyAuth: []
       tags:
@@ -397,8 +392,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -433,12 +428,14 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: ArAssets
-        in: body
-        name: dto.CreateArAssetsRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      - example: description
+        in: formData
+        name: speaking_description
+        type: string
+      - example: url
+        in: formData
+        name: three_dimentional_ID
+        type: string
       - description: ArAssets ID
         in: path
         name: ar_assets_id
@@ -577,8 +574,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:

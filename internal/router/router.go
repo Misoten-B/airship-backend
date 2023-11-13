@@ -7,6 +7,7 @@ func Register(r *gin.Engine) {
 	openapi(r)
 
 	// bussiness
+	arAssets(r)
 	user(r)
 	businessCardPartsCoordinate(r)
 }

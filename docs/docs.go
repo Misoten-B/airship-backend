@@ -158,18 +158,24 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "ArAssets",
-                        "name": "dto.CreateArAssetsRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateArAssetsRequest"
-                        }
+                        "type": "string",
+                        "example": "description",
+                        "name": "speaking_description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "url",
+                        "name": "three_dimentional_ID",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArAssetsResponse"
+                        }
                     }
                 }
             }
@@ -230,13 +236,16 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "ArAssets",
-                        "name": "dto.CreateArAssetsRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateArAssetsRequest"
-                        }
+                        "type": "string",
+                        "example": "description",
+                        "name": "speaking_description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "url",
+                        "name": "three_dimentional_ID",
+                        "in": "formData"
                     },
                     {
                         "type": "string",
@@ -284,8 +293,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -561,8 +570,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -913,8 +922,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -1082,19 +1091,6 @@ const docTemplate = `{
                 "threeDimentionalModel": {
                     "description": "ar assets",
                     "type": "string"
-                }
-            }
-        },
-        "dto.CreateArAssetsRequest": {
-            "type": "object",
-            "properties": {
-                "speaking_description": {
-                    "type": "string",
-                    "example": "description"
-                },
-                "three_dimentional_ID": {
-                    "type": "string",
-                    "example": "url"
                 }
             }
         },
