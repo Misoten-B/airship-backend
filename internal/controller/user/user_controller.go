@@ -76,10 +76,10 @@ func UpdateUser(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"
-// @Success 200 {object} nil
+// @Success 204 {object} nil
 func DeleteUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 	log.Printf("user_id: %s", c.Param("user_id"))
 
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusNoContent, nil)
 }

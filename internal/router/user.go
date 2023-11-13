@@ -1,6 +1,7 @@
 package router
 
 import (
+	bcController "github.com/Misoten-B/airship-backend/internal/controller/business_card"
 	bcbController "github.com/Misoten-B/airship-backend/internal/controller/business_card_background"
 	tdController "github.com/Misoten-B/airship-backend/internal/controller/three_dimentional"
 	userController "github.com/Misoten-B/airship-backend/internal/controller/user"
@@ -19,6 +20,15 @@ func user(r *gin.Engine) {
 		{
 			bcbGroup.GET("/", bcbController.ReadAllBusinessCardBackground)
 			bcbGroup.POST("/", bcbController.CreateBusinessCardBackground)
+		}
+
+		bcGroup := userGroup.Group("/business_card")
+		{
+			bcGroup.GET("/", bcController.ReadAllBusinessCard)
+			bcGroup.GET("/:business_card_id", bcController.ReadBusinessCardByID)
+			bcGroup.POST("/", bcController.CreateBusinessCard)
+			bcGroup.PUT("/:business_card_id", bcController.UpdateBusinessCard)
+			bcGroup.DELETE("/:business_card_id", bcController.DeleteBusinessCard)
 		}
 
 		tdGroup := userGroup.Group("/three_dimentional")
