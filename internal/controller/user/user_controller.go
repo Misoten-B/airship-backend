@@ -11,6 +11,7 @@ import (
 // @Tags User
 // @Router /user [POST]
 // @Success 201 {object} dto.UserResponse
+// @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param CreateUserRequest body dto.CreateUserRequest true "User ID"
 func CreateUser(c *gin.Context) {

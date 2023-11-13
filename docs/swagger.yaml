@@ -267,6 +267,8 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/dto.UserResponse'
+      security:
+      - ApiKeyAuth: []
       tags:
       - User
   /user/{user_id}:
@@ -647,6 +649,8 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.ThreeDimentionalResponse'
       security:
       - ApiKeyAuth: []
       tags:
@@ -665,8 +669,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -714,6 +718,8 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.ThreeDimentionalResponse'
       security:
       - ApiKeyAuth: []
       tags:

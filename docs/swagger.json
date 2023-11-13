@@ -55,6 +55,11 @@
         },
         "/user": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "tags": [
                     "User"
                 ],
@@ -595,7 +600,10 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        }
                     }
                 }
             }
@@ -672,7 +680,10 @@
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        }
                     }
                 }
             },
@@ -702,8 +713,8 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }

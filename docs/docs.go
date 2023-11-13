@@ -63,6 +63,11 @@ const docTemplate = `{
         },
         "/user": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "tags": [
                     "User"
                 ],
@@ -603,7 +608,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        }
                     }
                 }
             }
@@ -680,7 +688,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        }
                     }
                 }
             },
@@ -710,8 +721,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
