@@ -10,20 +10,20 @@ import (
 )
 
 func user(r *gin.Engine) {
-	userGroup := r.Group("/user")
+	userGroup := r.Group("/users")
 	{
 		userGroup.POST("", userController.CreateUser)
 		userGroup.GET("/:user_id", userController.ReadUserByID)
 		userGroup.PUT("/:user_id", userController.UpdateUser)
 		userGroup.DELETE("/:user_id", userController.DeleteUser)
 
-		bcbGroup := userGroup.Group("/business_card_background")
+		bcbGroup := userGroup.Group("/business_card_backgrounds")
 		{
 			bcbGroup.GET("", bcbController.ReadAllBusinessCardBackground)
 			bcbGroup.POST("", bcbController.CreateBusinessCardBackground)
 		}
 
-		bcGroup := userGroup.Group("/business_card")
+		bcGroup := userGroup.Group("/business_cards")
 		{
 			bcGroup.GET("", bcController.ReadAllBusinessCard)
 			bcGroup.GET("/:business_card_id", bcController.ReadBusinessCardByID)
@@ -32,7 +32,7 @@ func user(r *gin.Engine) {
 			bcGroup.DELETE("/:business_card_id", bcController.DeleteBusinessCard)
 		}
 
-		tdGroup := userGroup.Group("/three_dimentional")
+		tdGroup := userGroup.Group("/three_dimentionals")
 		{
 			tdGroup.GET("", tdController.ReadAllThreeDimentional)
 			tdGroup.POST("", tdController.CreateThreeDimentional)

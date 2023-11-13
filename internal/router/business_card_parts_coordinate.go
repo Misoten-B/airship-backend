@@ -6,5 +6,5 @@ import (
 )
 
 func businessCardPartsCoordinate(r *gin.Engine) {
-	r.GET("/business_card_parts_coordinate", controller.ReadAllBusinessCardPartsCoordinate)
+	r.GET("/business_card_parts_coordinates", controller.ReadAllBusinessCardPartsCoordinate)
 }

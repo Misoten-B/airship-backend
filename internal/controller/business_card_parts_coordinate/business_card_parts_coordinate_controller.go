@@ -8,10 +8,10 @@ import (
 )
 
 // @Tags BusinessCardPartsCoordinate
-// @Router /business_card_parts_coordinate [GET]
-// @Success 201 {object} []dto.BusinessCardPartsCoordinateResponse
+// @Router /business_card_parts_coordinates [GET]
+// @Success 200 {object} []dto.BusinessCardPartsCoordinateResponse
 func ReadAllBusinessCardPartsCoordinate(c *gin.Context) {
-	c.JSON(http.StatusCreated, []dto.BusinessCardPartsCoordinateResponse{
+	c.JSON(http.StatusOK, []dto.BusinessCardPartsCoordinateResponse{
 		{
 			ID:                "1",
 			DisplayNameX:      0,

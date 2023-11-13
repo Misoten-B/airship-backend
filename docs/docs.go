@@ -43,7 +43,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/business_card_parts_coordinate": {
+        "/business_card_parts_coordinates": {
             "get": {
                 "tags": [
                     "BusinessCardPartsCoordinate"
@@ -61,7 +61,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user": {
+        "/users": {
             "post": {
                 "security": [
                     {
@@ -99,7 +99,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/ar_assets": {
+        "/users/ar_assets": {
             "get": {
                 "security": [
                     {
@@ -180,7 +180,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/ar_assets/{ar_assets_id}": {
+        "/users/ar_assets/{ar_assets_id}": {
             "get": {
                 "security": [
                     {
@@ -299,7 +299,72 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/business_card": {
+        "/users/business_card_backgrounds": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCardBackground"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.BusinessCardBackgroundResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCardBackground"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "BusinessCardBackground",
+                        "name": "dto.CreateBackgroundRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateBackgroundRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }
+        },
+        "/users/business_cards": {
             "get": {
                 "security": [
                     {
@@ -459,7 +524,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/business_card/{business_card_id}": {
+        "/users/business_cards/{business_card_id}": {
             "get": {
                 "security": [
                     {
@@ -576,72 +641,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/business_card_background": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "BusinessCardBackground"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer [Firebase JWT Token]",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dto.BusinessCardBackgroundResponse"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "BusinessCardBackground"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer [Firebase JWT Token]",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "BusinessCardBackground",
-                        "name": "dto.CreateBackgroundRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateBackgroundRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created"
-                    }
-                }
-            }
-        },
-        "/user/three_dimentional": {
+        "/users/three_dimentionals": {
             "get": {
                 "security": [
                     {
@@ -710,7 +710,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/three_dimentional/{three_dimentional_id}": {
+        "/users/three_dimentionals/{three_dimentional_id}": {
             "get": {
                 "security": [
                     {
@@ -821,7 +821,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/{user_id}": {
+        "/users/{user_id}": {
             "get": {
                 "security": [
                     {

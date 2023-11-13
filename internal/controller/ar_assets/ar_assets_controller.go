@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // @Tags ArAssets
-// @Router /user/ar_assets [POST]
+// @Router /users/ar_assets [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
@@ -26,6 +27,7 @@ func CreateArAssets(c *gin.Context) {
 	}
 	log.Printf("formData: %v", request)
 
+	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
 		ID:                   "1",
 		SpeakingDescription:  "こんにちは",
@@ -36,16 +38,16 @@ func CreateArAssets(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /user/ar_assets/{ar_assets_id} [GET]
+// @Router /users/ar_assets/{ar_assets_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param ar_assets_id path string true "ArAssets ID"
-// @Success 201 {object} dto.ArAssetsResponse
+// @Success 200 {object} dto.ArAssetsResponse
 func ReadArAssetsByID(c *gin.Context) {
 	log.Print("Authorization: ", c.Request.Header.Get("Authorization"))
 	log.Print("ar_assets_id: ", c.Param("ar_assets_id"))
 
-	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
+	c.JSON(http.StatusOK, dto.ArAssetsResponse{
 		ID:                   "1",
 		SpeakingDescription:  "こんにちは",
 		SpeakingAudioPath:    "https://example.com",
@@ -57,11 +59,11 @@ func ReadArAssetsByID(c *gin.Context) {
 // @Tags ArAssets
 // @Router /ar_assets/{ar_assets_id} [GET]
 // @Param ar_assets_id path string true "ArAssets ID"
-// @Success 201 {object} dto.ArAssetsResponse
+// @Success 200 {object} dto.ArAssetsResponse
 func ReadArAssetsByIDPublic(c *gin.Context) {
 	log.Print("ar_assets_id: ", c.Param("ar_assets_id"))
 
-	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
+	c.JSON(http.StatusOK, dto.ArAssetsResponse{
 		ID:                   "1",
 		SpeakingDescription:  "こんにちは",
 		SpeakingAudioPath:    "https://example.com",
@@ -71,7 +73,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /user/ar_assets [GET]
+// @Router /users/ar_assets [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.ArAssetsResponse
@@ -90,14 +92,14 @@ func ReadAllArAssets(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /user/ar_assets/{ar_assets_id} [PUT]
+// @Router /users/ar_assets/{ar_assets_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Accept multipart/form-data
 // @Param qrcodeIcon formData file false "Image file to be uploaded"
-// @Success 201 {object} nil
+// @Success 200 {object} dto.ArAssetsResponse
 func UpdateArAssets(c *gin.Context) {
 	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
 
@@ -108,11 +110,17 @@ func UpdateArAssets(c *gin.Context) {
 	}
 	log.Printf("formData: %v", request)
 
-	c.JSON(http.StatusCreated, nil)
+	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
+		ID:                   "1",
+		SpeakingDescription:  "こんにちは",
+		SpeakingAudioPath:    "https://example.com",
+		ThreeDimentionalPath: "https://example.com",
+		QrcodeIconImagePath:  "https://example.com",
+	})
 }
 
 // @Tags ArAssets
-// @Router /user/ar_assets/{ar_assets_id} [DELETE]
+// @Router /users/ar_assets/{ar_assets_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param ar_assets_id path string true "ArAssets ID"

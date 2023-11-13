@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // @Tags User
-// @Router /user [POST]
+// @Router /users [POST]
 // @Success 201 {object} dto.UserResponse
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
@@ -24,7 +25,7 @@ func CreateUser(c *gin.Context) {
 	}
 	log.Printf("body: %v", request)
 
-	// c.Header("Location", c.Request.Host+c.Request.URL.Path+"1")
+	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.UserResponse{
 		ID:                "1",
 		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
@@ -34,7 +35,7 @@ func CreateUser(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /user/{user_id} [GET]
+// @Router /users/{user_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"
@@ -52,12 +53,12 @@ func ReadUserByID(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /user/{user_id} [PUT]
+// @Router /users/{user_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param CreateUserRequest body dto.CreateUserRequest true "update user"
 // @Param user_id path string true "User ID"
-// @Success 200 {object} nil
+// @Success 200 {object} dto.UserResponse
 func UpdateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 
@@ -68,11 +69,16 @@ func UpdateUser(c *gin.Context) {
 	}
 	log.Printf("body: %v", request)
 
-	c.JSON(http.StatusOK, nil)
+	c.JSON(http.StatusOK, dto.UserResponse{
+		ID:                "1",
+		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
+		RecordedModelPath: "https://example.com/recorded_model.tflite",
+		IsToured:          false,
+	})
 }
 
 // @Tags User
-// @Router /user/{user_id} [DELETE]
+// @Router /users/{user_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"

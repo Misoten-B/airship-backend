@@ -228,7 +228,7 @@ paths:
             $ref: '#/definitions/dto.ArAssetsResponse'
       tags:
       - ArAssets
-  /business_card_parts_coordinate:
+  /business_card_parts_coordinates:
     get:
       responses:
         "201":
@@ -239,7 +239,7 @@ paths:
             type: array
       tags:
       - BusinessCardPartsCoordinate
-  /user:
+  /users:
     post:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -262,7 +262,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - User
-  /user/{user_id}:
+  /users/{user_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -328,7 +328,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - User
-  /user/ar_assets:
+  /users/ar_assets:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -378,7 +378,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - ArAssets
-  /user/ar_assets/{ar_assets_id}:
+  /users/ar_assets/{ar_assets_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -452,7 +452,46 @@ paths:
       - ApiKeyAuth: []
       tags:
       - ArAssets
-  /user/business_card:
+  /users/business_card_backgrounds:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/dto.BusinessCardBackgroundResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCardBackground
+    post:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BusinessCardBackground
+        in: body
+        name: dto.CreateBackgroundRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBackgroundRequest'
+      responses:
+        "201":
+          description: Created
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCardBackground
+  /users/business_cards:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -560,7 +599,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
-  /user/business_card/{business_card_id}:
+  /users/business_cards/{business_card_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -633,46 +672,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
-  /user/business_card_background:
-    get:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      responses:
-        "201":
-          description: Created
-          schema:
-            items:
-              $ref: '#/definitions/dto.BusinessCardBackgroundResponse'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - BusinessCardBackground
-    post:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: BusinessCardBackground
-        in: body
-        name: dto.CreateBackgroundRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBackgroundRequest'
-      responses:
-        "201":
-          description: Created
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - BusinessCardBackground
-  /user/three_dimentional:
+  /users/three_dimentionals:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -714,7 +714,7 @@ paths:
       - ApiKeyAuth: []
       tags:
       - ThreeDimentionalModel
-  /user/three_dimentional/{three_dimentional_id}:
+  /users/three_dimentionals/{three_dimentional_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
