@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/ar_assets/{ar_assets_id}": {
+        "/v1/ar_assets/{ar_assets_id}": {
             "get": {
                 "tags": [
                     "ArAssets"
@@ -34,8 +34,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.ArAssetsResponse"
                         }
@@ -43,14 +43,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/business_card_parts_coordinates": {
+        "/v1/business_card_parts_coordinates": {
             "get": {
                 "tags": [
                     "BusinessCardPartsCoordinate"
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -61,7 +61,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/v1/users": {
             "post": {
                 "security": [
                     {
@@ -99,7 +99,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/ar_assets": {
+        "/v1/users/ar_assets": {
             "get": {
                 "security": [
                     {
@@ -180,7 +180,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/ar_assets/{ar_assets_id}": {
+        "/v1/users/ar_assets/{ar_assets_id}": {
             "get": {
                 "security": [
                     {
@@ -207,8 +207,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.ArAssetsResponse"
                         }
@@ -262,8 +262,11 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created"
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArAssetsResponse"
+                        }
                     }
                 }
             },
@@ -299,7 +302,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/business_card_backgrounds": {
+        "/v1/users/business_card_backgrounds": {
             "get": {
                 "security": [
                     {
@@ -319,12 +322,12 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.BusinessCardBackgroundResponse"
+                                "$ref": "#/definitions/dto.BackgroundResponse"
                             }
                         }
                     }
@@ -359,12 +362,15 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BackgroundResponse"
+                        }
                     }
                 }
             }
         },
-        "/users/business_cards": {
+        "/v1/users/business_cards": {
             "get": {
                 "security": [
                     {
@@ -519,12 +525,15 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created"
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BusinessCardResponse"
+                        }
                     }
                 }
             }
         },
-        "/users/business_cards/{business_card_id}": {
+        "/v1/users/business_cards/{business_card_id}": {
             "get": {
                 "security": [
                     {
@@ -604,8 +613,11 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created"
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BusinessCardResponse"
+                        }
                     }
                 }
             },
@@ -641,7 +653,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/three_dimentionals": {
+        "/v1/users/three_dimentionals": {
             "get": {
                 "security": [
                     {
@@ -710,7 +722,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/three_dimentionals/{three_dimentional_id}": {
+        "/v1/users/three_dimentionals/{three_dimentional_id}": {
             "get": {
                 "security": [
                     {
@@ -781,8 +793,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.ThreeDimentionalResponse"
                         }
@@ -821,7 +833,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/{user_id}": {
+        "/v1/users/{user_id}": {
             "get": {
                 "security": [
                     {
@@ -892,7 +904,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
                     }
                 }
             },
@@ -955,7 +970,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.BusinessCardBackgroundResponse": {
+        "dto.BackgroundResponse": {
             "type": "object",
             "properties": {
                 "business_card_background_color": {

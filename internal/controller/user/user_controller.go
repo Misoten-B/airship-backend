@@ -10,7 +10,7 @@ import (
 )
 
 // @Tags User
-// @Router /users [POST]
+// @Router /v1/users [POST]
 // @Success 201 {object} dto.UserResponse
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
@@ -35,7 +35,7 @@ func CreateUser(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /users/{user_id} [GET]
+// @Router /v1/users/{user_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"
@@ -53,7 +53,7 @@ func ReadUserByID(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /users/{user_id} [PUT]
+// @Router /v1/users/{user_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param CreateUserRequest body dto.CreateUserRequest true "update user"
@@ -78,7 +78,7 @@ func UpdateUser(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /users/{user_id} [DELETE]
+// @Router /v1/users/{user_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param user_id path string true "User ID"

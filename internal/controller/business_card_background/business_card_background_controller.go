@@ -10,7 +10,7 @@ import (
 )
 
 // @Tags BusinessCardBackground
-// @Router /users/business_card_backgrounds [POST]
+// @Router /v1/users/business_card_backgrounds [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param dto.CreateBackgroundRequest body dto.CreateBackgroundRequest true "BusinessCardBackground"
@@ -34,10 +34,10 @@ func CreateBusinessCardBackground(c *gin.Context) {
 }
 
 // @Tags BusinessCardBackground
-// @Router /users/business_card_backgrounds [GET]
+// @Router /v1/users/business_card_backgrounds [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Success 200 {object} []dto.BusinessCardBackgroundResponse
+// @Success 200 {object} []dto.BackgroundResponse
 func ReadAllBusinessCardBackground(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 

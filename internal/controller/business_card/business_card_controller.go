@@ -10,7 +10,7 @@ import (
 )
 
 // @Tags BusinessCard
-// @Router /users/business_cards [POST]
+// @Router /v1/users/business_cards [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
@@ -57,7 +57,7 @@ func CreateBusinessCard(c *gin.Context) {
 }
 
 // @Tags BusinessCard
-// @Router /users/business_cards [GET]
+// @Router /v1/users/business_cards [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.BusinessCardResponse
@@ -87,7 +87,7 @@ func ReadAllBusinessCard(c *gin.Context) {
 }
 
 // @Tags BusinessCard
-// @Router /users/business_cards/{business_card_id} [GET]
+// @Router /v1/users/business_cards/{business_card_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
@@ -116,7 +116,7 @@ func ReadBusinessCardByID(c *gin.Context) {
 }
 
 // @Tags BusinessCard
-// @Router /users/business_cards/{business_card_id} [PUT]
+// @Router /v1/users/business_cards/{business_card_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
@@ -164,7 +164,7 @@ func UpdateBusinessCard(c *gin.Context) {
 }
 
 // @Tags BusinessCard
-// @Router /users/business_cards/{business_card_id} [DELETE]
+// @Router /v1/users/business_cards/{business_card_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"

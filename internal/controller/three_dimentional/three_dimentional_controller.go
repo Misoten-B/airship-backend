@@ -10,7 +10,7 @@ import (
 )
 
 // @Tags ThreeDimentionalModel
-// @Router /users/three_dimentionals [POST]
+// @Router /v1/users/three_dimentionals [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
@@ -35,7 +35,7 @@ func CreateThreeDimentional(c *gin.Context) {
 }
 
 // @Tags ThreeDimentionalModel
-// @Router /users/three_dimentionals [GET]
+// @Router /v1/users/three_dimentionals [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.ThreeDimentionalResponse
@@ -51,7 +51,7 @@ func ReadAllThreeDimentional(c *gin.Context) {
 }
 
 // @Tags ThreeDimentionalModel
-// @Router /users/three_dimentionals/{three_dimentional_id} [GET]
+// @Router /v1/users/three_dimentionals/{three_dimentional_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param three_dimentional_id path string true "ThreeDimentional ID"
@@ -67,7 +67,7 @@ func ReadThreeDimentionalByID(c *gin.Context) {
 }
 
 // @Tags ThreeDimentionalModel
-// @Router /users/three_dimentionals/{three_dimentional_id} [PUT]
+// @Router /v1/users/three_dimentionals/{three_dimentional_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param three_dimentional_id path string true "ThreeDimentional ID"
@@ -92,7 +92,7 @@ func UpdateThreeDimentional(c *gin.Context) {
 }
 
 // @Tags ThreeDimentionalModel
-// @Router /users/three_dimentionals/{three_dimentional_id} [DELETE]
+// @Router /v1/users/three_dimentionals/{three_dimentional_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param three_dimentional_id path string true "ThreeDimentional ID"

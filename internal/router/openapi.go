@@ -6,6 +6,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func openapi(r *gin.Engine) {
+func OpenapiRegister(r *gin.Engine) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

@@ -10,7 +10,7 @@ import (
 )
 
 // @Tags ArAssets
-// @Router /users/ar_assets [POST]
+// @Router /v1/users/ar_assets [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
@@ -38,7 +38,7 @@ func CreateArAssets(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /users/ar_assets/{ar_assets_id} [GET]
+// @Router /v1/users/ar_assets/{ar_assets_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param ar_assets_id path string true "ArAssets ID"
@@ -57,7 +57,7 @@ func ReadArAssetsByID(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /ar_assets/{ar_assets_id} [GET]
+// @Router /v1/ar_assets/{ar_assets_id} [GET]
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Success 200 {object} dto.ArAssetsResponse
 func ReadArAssetsByIDPublic(c *gin.Context) {
@@ -73,7 +73,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /users/ar_assets [GET]
+// @Router /v1/users/ar_assets [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.ArAssetsResponse
@@ -92,7 +92,7 @@ func ReadAllArAssets(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /users/ar_assets/{ar_assets_id} [PUT]
+// @Router /v1/users/ar_assets/{ar_assets_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
@@ -120,7 +120,7 @@ func UpdateArAssets(c *gin.Context) {
 }
 
 // @Tags ArAssets
-// @Router /users/ar_assets/{ar_assets_id} [DELETE]
+// @Router /v1/users/ar_assets/{ar_assets_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param ar_assets_id path string true "ArAssets ID"
