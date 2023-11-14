@@ -17,7 +17,7 @@ definitions:
         example: url
         type: string
     type: object
-  dto.BusinessCardBackgroundResponse:
+  dto.BackgroundResponse:
     properties:
       business_card_background_color:
         example: '#ffffff'
@@ -111,16 +111,7 @@ definitions:
         description: ar assets
         type: string
     type: object
-  dto.CreateArAssetsRequest:
-    properties:
-      speaking_description:
-        example: description
-        type: string
-      three_dimentional_ID:
-        example: url
-        type: string
-    type: object
-  dto.CreateBusinessCardBackgroundRequest:
+  dto.CreateBackgroundRequest:
     properties:
       business_card_background:
         example: '#ffffff'
@@ -222,7 +213,7 @@ info:
   title: AIRship API
   version: "1.0"
 paths:
-  /ar_assets/{ar_assets_id}:
+  /v1/ar_assets/{ar_assets_id}:
     get:
       parameters:
       - description: ArAssets ID
@@ -231,64 +222,24 @@ paths:
         required: true
         type: string
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/dto.ArAssetsResponse'
       tags:
       - ArAssets
-  /business_card_parts_coordinate:
+  /v1/business_card_parts_coordinates:
     get:
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             items:
               $ref: '#/definitions/dto.BusinessCardPartsCoordinateResponse'
             type: array
       tags:
       - BusinessCardPartsCoordinate
-  /user:
-    delete:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - User
-    get:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserResponse'
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - User
+  /v1/users:
     post:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -307,6 +258,49 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/dto.UserResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
+  /v1/users/{user_id}:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+      security:
+      - ApiKeyAuth: []
       tags:
       - User
     put:
@@ -330,11 +324,13 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - User
-  /user/ar_assets:
+  /v1/users/ar_assets:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -367,20 +363,24 @@ paths:
         name: qrcodeImage
         required: true
         type: file
-      - description: ArAssets
-        in: body
-        name: dto.CreateArAssetsRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      - example: description
+        in: formData
+        name: speaking_description
+        type: string
+      - example: url
+        in: formData
+        name: three_dimentional_ID
+        type: string
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.ArAssetsResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - ArAssets
-  /user/ar_assets/{ar_assets_id}:
+  /v1/users/ar_assets/{ar_assets_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -394,8 +394,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -413,8 +413,8 @@ paths:
         required: true
         type: string
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/dto.ArAssetsResponse'
       security:
@@ -430,12 +430,14 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: ArAssets
-        in: body
-        name: dto.CreateArAssetsRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateArAssetsRequest'
+      - example: description
+        in: formData
+        name: speaking_description
+        type: string
+      - example: url
+        in: formData
+        name: three_dimentional_ID
+        type: string
       - description: ArAssets ID
         in: path
         name: ar_assets_id
@@ -446,13 +448,56 @@ paths:
         name: qrcodeIcon
         type: file
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArAssetsResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - ArAssets
-  /user/business_card:
+  /v1/users/business_card_backgrounds:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.BackgroundResponse'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCardBackground
+    post:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: BusinessCardBackground
+        in: body
+        name: dto.CreateBackgroundRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateBackgroundRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.BackgroundResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCardBackground
+  /v1/users/business_cards:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -485,20 +530,84 @@ paths:
         name: BusinessCardBackgroundImage
         required: true
         type: file
-      - description: BusinessCard
-        in: body
-        name: CreateBusinessCardRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBusinessCardRequest'
+      - example: 東京都渋谷区神南1-1-1
+        in: formData
+        name: address
+        type: string
+        x-nullable: true
+      - description: ar assets
+        example: ar_assets_id
+        in: formData
+        name: ar_assets_id
+        type: string
+        x-nullable: true
+      - description: background
+        example: id
+        in: formData
+        name: business_card_background_id
+        type: string
+        x-nullable: true
+      - example: 会社
+        in: formData
+        name: business_card_name
+        type: string
+        x-nullable: true
+      - description: business card
+        example: id
+        in: formData
+        name: business_card_parts_coordinate
+        type: string
+        x-nullable: true
+      - example: 会社名
+        in: formData
+        name: company_name
+        type: string
+        x-nullable: true
+      - example: 部署
+        in: formData
+        name: department
+        type: string
+        x-nullable: true
+      - example: 名前
+        in: formData
+        name: display_name
+        type: string
+        x-nullable: true
+      - example: sample@example.com
+        in: formData
+        name: email
+        type: string
+        x-nullable: true
+      - example: 役職
+        in: formData
+        name: official_position
+        type: string
+        x-nullable: true
+      - example: 090-1234-5678
+        in: formData
+        name: phone_number
+        type: string
+        x-nullable: true
+      - example: 123-4567
+        in: formData
+        name: postal_code
+        type: string
+        x-nullable: true
+      - example: url
+        in: formData
+        name: qrcode_image_path
+        type: string
+        x-nullable: true
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.BusinessCardResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
-  /user/business_card/{business_card_id}:
+  /v1/users/business_cards/{business_card_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -512,8 +621,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -565,52 +674,15 @@ paths:
         schema:
           $ref: '#/definitions/dto.CreateBusinessCardRequest'
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BusinessCardResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
-  /user/business_card_background:
-    get:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      responses:
-        "201":
-          description: Created
-          schema:
-            items:
-              $ref: '#/definitions/dto.BusinessCardBackgroundResponse'
-            type: array
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - BusinessCardBackground
-    post:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: BusinessCardBackground
-        in: body
-        name: dto.CreateBusinessCardBackgroundRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBusinessCardBackgroundRequest'
-      responses:
-        "201":
-          description: Created
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - BusinessCardBackground
-  /user/three_dimentional:
+  /v1/users/three_dimentionals:
     get:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -646,11 +718,13 @@ paths:
       responses:
         "201":
           description: Created
+          schema:
+            $ref: '#/definitions/dto.ThreeDimentionalResponse'
       security:
       - ApiKeyAuth: []
       tags:
       - ThreeDimentionalModel
-  /user/three_dimentional/{three_dimentional_id}:
+  /v1/users/three_dimentionals/{three_dimentional_id}:
     delete:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -664,8 +738,8 @@ paths:
         required: true
         type: string
       responses:
-        "200":
-          description: OK
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -711,8 +785,10 @@ paths:
         required: true
         type: file
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ThreeDimentionalResponse'
       security:
       - ApiKeyAuth: []
       tags:

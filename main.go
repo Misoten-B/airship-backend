@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/routes"
 	"github.com/gin-gonic/gin"
 
 	_ "github.com/Misoten-B/airship-backend/docs"
+	"github.com/Misoten-B/airship-backend/internal/router"
+	v1 "github.com/Misoten-B/airship-backend/internal/router/v1"
 )
 
 // @title           AIRship API
@@ -20,12 +20,10 @@ import (
 // @name                       Authorization
 func main() {
 	r := gin.Default()
-	routes.Register(r)
 
-	_, err := database.ConnectDB()
-	if err != nil {
-		panic(err)
-	}
+	router.HealthCheckRegister(r)
+	router.OpenapiRegister(r)
+	v1.Register(r)
 
 	log.Fatal(r.Run())
 }

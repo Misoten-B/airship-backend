@@ -1,4 +1,4 @@
-package routes
+package router
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func healthCheck(r *gin.Engine) {
+func HealthCheckRegister(r *gin.Engine) {
 	r.GET("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "alive")
 	})
