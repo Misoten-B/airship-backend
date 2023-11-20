@@ -6,7 +6,7 @@ type ID string
 
 func NewID() (ID, error) {
 	id, err := uuid.NewRandom()
-	return id.String(), err
+	return ID(id.String()), err
 }
 
 func (i ID) String() string {
