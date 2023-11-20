@@ -1,0 +1,90 @@
+@startuml DomainModel
+
+skinparam PackageStyle rectangle
+
+package ユーザー集約 {
+    object "ユーザー" as User {
+        作成日時
+        削除日時
+        チュートリアル済み
+    }
+}
+
+package 音声集約 {
+    object "音声" as Voice {
+        音声ファイル
+        音声モデルパス
+    }
+}
+
+note right of Voice
+    * 音声モデルパスは、音声ファイルを
+    　音声合成APIに投げることで取得する
+end note
+
+' User "0..1" --- "1" Voice
+
+package 3Dモデル集約 {
+    object "ユーザー定義3Dモデル" as PersonalThreeDimentionalModel {
+        3Dモデルファイル
+    }
+}
+
+package ARアセット集約 {
+    object "ARアセット" as ARAsset {
+        QRコード画像ファイル
+    }
+
+    object "音声情報" as VoiceInformation {
+        発話内容
+        発話音声パス
+    }
+}
+
+note right of VoiceInformation
+    * 発話音声パスは、発話内容を
+      音声合成APIに投げることで取得する
+end note
+
+' ARAsset "1" --- "1" VoiceInformation
+' ARAsset "1" --- "0..*" PersonalThreeDimentionalModel
+
+package 名刺集約 {
+    object "名刺" as BusinessCard {
+        名刺名
+        作成日時
+        アクセス数
+    }
+
+    object "名刺情報詳細" as BusinessCardDetail {
+        表示名
+        会社名
+        部署
+        役職
+        電話番号
+        メールアドレス
+        郵便番号
+        住所
+    }
+
+    object "名刺パーツ座標（テンプレート）" as BusinessCardPartsCoordinate {
+        各種座標
+    }
+}
+
+note right of BusinessCardDetail
+    * 各項目はオプション可
+end note
+
+' User "1" --- "0..*" BusinessCard
+' BusinessCard "0..*" --- "1" BusinessCardPartsCoordinate
+' BusinessCard "0..*" --- "1" ARAsset
+
+package 名刺背景集約 {
+    object "ユーザー定義名刺背景" as PersonalBusinessCardBackground {
+        配色
+        画像ファイル
+    }
+}
+
+' BusinessCard "0..*" --- "1" PersonalBusinessCardBackground
