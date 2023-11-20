@@ -3,12 +3,11 @@ package middlewear
 import (
 	"context"
 	"log"
-	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/drivers"
 )
 
-func Guard(ctx context.Context, idToken string, next http.HandlerFunc) {
+func Guard(ctx context.Context, idToken string) {
 	app, err := drivers.InitFirebase()
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)
