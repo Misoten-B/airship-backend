@@ -8,6 +8,7 @@ import (
 
 type User struct {
 	id        id.ID
+	isToured  bool
 	createdAt time.Time
 	deletedAt time.Time
 }
@@ -22,6 +23,7 @@ func NewUser() (*User, error) {
 
 	return &User{
 		id:        id,
+		isToured:  false,
 		createdAt: createdAt,
 		deletedAt: time.Time{}, // zero value
 	}, nil
@@ -29,6 +31,10 @@ func NewUser() (*User, error) {
 
 func (u *User) ID() id.ID {
 	return u.id
+}
+
+func (u *User) IsToured() bool {
+	return u.isToured
 }
 
 func (u *User) CreatedAt() time.Time {

@@ -9,6 +9,7 @@ import (
 func ToUserORMModel(domain *domain.User) *model.User {
 	return &model.User{
 		ID:        domain.ID().String(),
+		IsToured:  domain.IsToured(),
 		CreatedAt: domain.CreatedAt(),
 		DeletedAt: domain.DeletedAt(),
 	}
