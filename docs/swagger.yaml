@@ -360,8 +360,7 @@ paths:
         type: string
       - description: Image file to be uploaded
         in: formData
-        name: qrcodeImage
-        required: true
+        name: qrcodeIcon
         type: file
       - example: description
         in: formData

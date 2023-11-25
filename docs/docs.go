@@ -153,9 +153,8 @@ const docTemplate = `{
                     {
                         "type": "file",
                         "description": "Image file to be uploaded",
-                        "name": "qrcodeImage",
-                        "in": "formData",
-                        "required": true
+                        "name": "qrcodeIcon",
+                        "in": "formData"
                     },
                     {
                         "type": "string",
