@@ -1,16 +1,25 @@
 package users
 
 import (
+	"log"
+
 	arController "github.com/Misoten-B/airship-backend/internal/controller/ar_assets"
 	bcController "github.com/Misoten-B/airship-backend/internal/controller/business_card"
 	bcbController "github.com/Misoten-B/airship-backend/internal/controller/business_card_background"
 	tdController "github.com/Misoten-B/airship-backend/internal/controller/three_dimentional"
 	userController "github.com/Misoten-B/airship-backend/internal/controller/user"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func Register(r *gin.RouterGroup) {
+	client, err := drivers.GetFirebaseAuthClient()
+	if err != nil {
+		log.Fatalf("error getting Auth client: %v\n", err)
+	}
 	users := r.Group("/users")
+	users.Use(middleware.Guard(client))
 	{
 		users.POST("", userController.CreateUser)
 		users.GET("/:user_id", userController.ReadUserByID)
