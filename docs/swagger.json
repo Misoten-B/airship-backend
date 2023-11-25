@@ -594,13 +594,98 @@
                         "required": true
                     },
                     {
-                        "description": "BusinessCard",
-                        "name": "CreateBusinessCardRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateBusinessCardRequest"
-                        }
+                        "type": "string",
+                        "example": "東京都渋谷区神南1-1-1",
+                        "x-nullable": true,
+                        "name": "address",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "ar_assets_id",
+                        "x-nullable": true,
+                        "description": "ar assets",
+                        "name": "ar_assets_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "id",
+                        "x-nullable": true,
+                        "description": "background",
+                        "name": "business_card_background_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "会社",
+                        "x-nullable": true,
+                        "name": "business_card_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "id",
+                        "x-nullable": true,
+                        "description": "business card",
+                        "name": "business_card_parts_coordinate",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "会社名",
+                        "x-nullable": true,
+                        "name": "company_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "部署",
+                        "x-nullable": true,
+                        "name": "department",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "名前",
+                        "x-nullable": true,
+                        "name": "display_name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "sample@example.com",
+                        "x-nullable": true,
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "役職",
+                        "x-nullable": true,
+                        "name": "official_position",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "090-1234-5678",
+                        "x-nullable": true,
+                        "name": "phone_number",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "123-4567",
+                        "x-nullable": true,
+                        "name": "postal_code",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "example": "url",
+                        "x-nullable": true,
+                        "name": "qrcode_image_path",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1108,79 +1193,6 @@
                     "example": "#ffffff"
                 },
                 "business_card_background_image": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
-                }
-            }
-        },
-        "dto.CreateBusinessCardRequest": {
-            "type": "object",
-            "properties": {
-                "address": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "東京都渋谷区神南1-1-1"
-                },
-                "ar_assets_id": {
-                    "description": "ar assets",
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "ar_assets_id"
-                },
-                "business_card_background_id": {
-                    "description": "background",
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "id"
-                },
-                "business_card_name": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "会社"
-                },
-                "business_card_parts_coordinate": {
-                    "description": "business card",
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "id"
-                },
-                "company_name": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "会社名"
-                },
-                "department": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "部署"
-                },
-                "display_name": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "名前"
-                },
-                "email": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "sample@example.com"
-                },
-                "official_position": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "役職"
-                },
-                "phone_number": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "090-1234-5678"
-                },
-                "postal_code": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "123-4567"
-                },
-                "qrcode_image_path": {
                     "type": "string",
                     "x-nullable": true,
                     "example": "url"
