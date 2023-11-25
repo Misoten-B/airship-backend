@@ -21,7 +21,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 		token, err := client.VerifyIDToken(c.Request.Context(), idToken)
 		if err != nil {
 			log.Printf("error verifying ID token: %v\n", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error: ": "Unauthorized"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error": "Unauthorized"})
 			return
 		}
 
