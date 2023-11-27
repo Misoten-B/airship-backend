@@ -122,7 +122,7 @@ func ReadBusinessCardByID(c *gin.Context) {
 // @Param business_card_id path string true "BusinessCard ID"
 // @Accept multipart/form-data
 // @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
-// @Param CreateBusinessCardRequest body dto.CreateBusinessCardRequest true "BusinessCard"
+// @Param CreateBusinessCardRequest formData dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 200 {object} dto.BusinessCardResponse
 func UpdateBusinessCard(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))

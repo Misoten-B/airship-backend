@@ -14,7 +14,7 @@ import (
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
-// @Param qrcodeImage formData file true "Image file to be uploaded"
+// @Param qrcodeIcon formData file false "Image file to be uploaded"
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
 // @Success 201 {object} dto.ArAssetsResponse
 func CreateArAssets(c *gin.Context) {

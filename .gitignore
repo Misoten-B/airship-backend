@@ -1,3 +1,4 @@
 # Air実行時の一時生成ファイル
 tmp
 .env
+serviceAccountKey.json
