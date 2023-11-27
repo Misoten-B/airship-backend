@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"firebase.google.com/go/v4/auth"
+	"github.com/Misoten-B/airship-backend/config"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func Guard(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		err := godotenv.Load()
-		if err != nil {
-			log.Println("Error loading .env file")
+		value, ok := c.Value("config").(*config.Config)
+		if !ok {
+			// TODO: 存在しない場合はどうするか
+			fmt.Println("config is not set")
 		}
+		devMode := value.DevMode
 
-		fmt.Printf("PRD_MODE: %s\n", os.Getenv("PRD_MODE"))
-
-		if os.Getenv("PRD_MODE") != "true" {
+		if devMode {
 			log.Println("Development mode - bypassing authentication")
 			c.Next()
 			return

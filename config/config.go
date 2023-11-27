@@ -14,9 +14,10 @@ type Config struct {
 		User     string
 		Password string
 	}
+	DevMode bool
 }
 
-func GetConfig() Config {
+func GetConfig() *Config {
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
@@ -28,6 +29,7 @@ func GetConfig() Config {
 	config.Database.Dbname = os.Getenv("POSTGRES_DB")
 	config.Database.User = os.Getenv("POSTGRES_USER")
 	config.Database.Password = os.Getenv("POSTGRES_PASSWORD")
+	config.DevMode = os.Getenv("DEV_MODE") == "true"
 
-	return config
+	return &config
 }
