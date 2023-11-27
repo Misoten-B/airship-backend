@@ -1,17 +1,26 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"firebase.google.com/go/v4/auth"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func Guard(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if os.Getenv("DEV_MODE") == "true" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Println("Error loading .env file")
+		}
+
+		fmt.Printf("PRD_MODE: %s\n", os.Getenv("PRD_MODE"))
+
+		if os.Getenv("PRD_MODE") != "true" {
 			log.Println("Development mode - bypassing authentication")
 			c.Next()
 			return
