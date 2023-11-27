@@ -1070,6 +1070,68 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.BusinessCardPartsCoordinate": {
+            "type": "object",
+            "properties": {
+                "address_x": {
+                    "type": "integer"
+                },
+                "address_y": {
+                    "type": "integer"
+                },
+                "company_name_x": {
+                    "type": "integer"
+                },
+                "company_name_y": {
+                    "type": "integer"
+                },
+                "department_x": {
+                    "type": "integer"
+                },
+                "department_y": {
+                    "type": "integer"
+                },
+                "display_name_x": {
+                    "type": "integer"
+                },
+                "display_name_y": {
+                    "type": "integer"
+                },
+                "email_x": {
+                    "type": "integer"
+                },
+                "email_y": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "official_position_x": {
+                    "type": "integer"
+                },
+                "official_position_y": {
+                    "type": "integer"
+                },
+                "phone_number_x": {
+                    "type": "integer"
+                },
+                "phone_number_y": {
+                    "type": "integer"
+                },
+                "postal_code_x": {
+                    "type": "integer"
+                },
+                "postal_code_y": {
+                    "type": "integer"
+                },
+                "qrcode_x": {
+                    "type": "integer"
+                },
+                "qrcode_y": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.BusinessCardPartsCoordinateResponse": {
             "type": "object",
             "properties": {
@@ -1155,7 +1217,11 @@ const docTemplate = `{
                 },
                 "businessCardPartsCoordinate": {
                     "description": "business card",
-                    "type": "string"
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/dto.BusinessCardPartsCoordinate"
+                        }
+                    ]
                 },
                 "companyName": {
                     "type": "string"
