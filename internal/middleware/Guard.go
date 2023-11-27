@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -15,7 +14,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 		value, ok := c.Value("config").(*config.Config)
 		if !ok {
 			// TODO: 存在しない場合はどうするか
-			fmt.Println("config is not set")
+			log.Println("config is not set")
 		}
 		devMode := value.DevMode
 
