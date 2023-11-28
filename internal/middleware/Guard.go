@@ -13,7 +13,6 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		value, ok := c.Value("config").(*config.Config)
 		if !ok {
-			// TODO: 存在しない場合はどうするか
 			log.Println("config is not set")
 		}
 		devMode := value.DevMode
