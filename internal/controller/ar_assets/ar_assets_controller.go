@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
 	"github.com/gin-gonic/gin"
 )
@@ -26,6 +29,38 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 	log.Printf("formData: %v", request)
+
+	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("file: %v", file)
+	log.Printf("fileHeader: %v", fileHeader)
+
+	// バリデーション
+
+	// AI側へリクエスト
+	// QRコードアイコン画像保存
+	ctx := context.Background()
+	connectionString, ok := os.LookupEnv("AZURE_STORAGE_CONNECTION_STRING")
+	if !ok {
+		log.Fatal("'AZURE_STORAGE_CONNECTION_STRING' not found")
+	}
+
+	// 接続文字列でクライアントを作成する
+	serviceClient, err := azblob.NewClientFromConnectionString(connectionString, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	r, err := serviceClient.UploadFile(ctx, "images", "sample.txt", file, &azblob.UploadFileOptions{})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%v\n", r)
+
+	// データベース保存
 
 	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
