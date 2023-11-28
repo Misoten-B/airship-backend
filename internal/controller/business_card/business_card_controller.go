@@ -36,6 +36,29 @@ func CreateBusinessCard(c *gin.Context) {
 	log.Printf("fileHeader: %v", fileHeader)
 
 	c.Header("Location", fmt.Sprintf("/%s", "1"))
+
+	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
+		ID:                "1",
+		DisplayNameX:      0,
+		DisplayNameY:      0,
+		CompanyNameX:      0,
+		CompanyNameY:      0,
+		DepartmentX:       0,
+		DepartmentY:       0,
+		OfficialPositionX: 0,
+		OfficialPositionY: 0,
+		PhoneNumberX:      0,
+		PhoneNumberY:      0,
+		EmailX:            0,
+		EmailY:            0,
+		PostalCodeX:       0,
+		PostalCodeY:       0,
+		AddressX:          0,
+		AddressY:          0,
+		QrcodeX:           0,
+		QrcodeY:           0,
+	}
+
 	c.JSON(http.StatusCreated, dto.BusinessCardResponse{
 		ID:                          "1",
 		BusinessCardBackgroundColor: "#ffffff",
@@ -44,7 +67,7 @@ func CreateBusinessCard(c *gin.Context) {
 		ThreeDimentionalModel:       "https://example.com/model.gltf",
 		SpeakingDescription:         "こんにちは",
 		SpeakingAudioPath:           "https://example.com/audio.mp3",
-		BusinessCardPartsCoordinate: "1",
+		BusinessCardPartsCoordinate: businessCardPartsCoordinate,
 		DisplayName:                 "山田太郎",
 		CompanyName:                 "株式会社山田",
 		Department:                  "開発部",
@@ -64,6 +87,28 @@ func CreateBusinessCard(c *gin.Context) {
 func ReadAllBusinessCard(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 
+	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
+		ID:                "1",
+		DisplayNameX:      0,
+		DisplayNameY:      0,
+		CompanyNameX:      0,
+		CompanyNameY:      0,
+		DepartmentX:       0,
+		DepartmentY:       0,
+		OfficialPositionX: 0,
+		OfficialPositionY: 0,
+		PhoneNumberX:      0,
+		PhoneNumberY:      0,
+		EmailX:            0,
+		EmailY:            0,
+		PostalCodeX:       0,
+		PostalCodeY:       0,
+		AddressX:          0,
+		AddressY:          0,
+		QrcodeX:           0,
+		QrcodeY:           0,
+	}
+
 	c.JSON(http.StatusOK, []dto.BusinessCardResponse{
 		{
 			ID:                          "1",
@@ -73,7 +118,7 @@ func ReadAllBusinessCard(c *gin.Context) {
 			ThreeDimentionalModel:       "https://example.com/model.gltf",
 			SpeakingDescription:         "こんにちは",
 			SpeakingAudioPath:           "https://example.com/audio.mp3",
-			BusinessCardPartsCoordinate: "1",
+			BusinessCardPartsCoordinate: businessCardPartsCoordinate,
 			DisplayName:                 "山田太郎",
 			CompanyName:                 "株式会社山田",
 			Department:                  "開発部",
@@ -95,6 +140,28 @@ func ReadAllBusinessCard(c *gin.Context) {
 func ReadBusinessCardByID(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 
+	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
+		ID:                "1",
+		DisplayNameX:      0,
+		DisplayNameY:      0,
+		CompanyNameX:      0,
+		CompanyNameY:      0,
+		DepartmentX:       0,
+		DepartmentY:       0,
+		OfficialPositionX: 0,
+		OfficialPositionY: 0,
+		PhoneNumberX:      0,
+		PhoneNumberY:      0,
+		EmailX:            0,
+		EmailY:            0,
+		PostalCodeX:       0,
+		PostalCodeY:       0,
+		AddressX:          0,
+		AddressY:          0,
+		QrcodeX:           0,
+		QrcodeY:           0,
+	}
+
 	c.JSON(http.StatusOK, dto.BusinessCardResponse{
 		ID:                          "1",
 		BusinessCardBackgroundColor: "#ffffff",
@@ -103,7 +170,7 @@ func ReadBusinessCardByID(c *gin.Context) {
 		ThreeDimentionalModel:       "https://example.com/model.gltf",
 		SpeakingDescription:         "こんにちは",
 		SpeakingAudioPath:           "https://example.com/audio.mp3",
-		BusinessCardPartsCoordinate: "1",
+		BusinessCardPartsCoordinate: businessCardPartsCoordinate,
 		DisplayName:                 "山田太郎",
 		CompanyName:                 "株式会社山田",
 		Department:                  "開発部",
@@ -143,6 +210,28 @@ func UpdateBusinessCard(c *gin.Context) {
 	log.Printf("file: %v", file)
 	log.Printf("fileHeader: %v", fileHeader)
 
+	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
+		ID:                "1",
+		DisplayNameX:      0,
+		DisplayNameY:      0,
+		CompanyNameX:      0,
+		CompanyNameY:      0,
+		DepartmentX:       0,
+		DepartmentY:       0,
+		OfficialPositionX: 0,
+		OfficialPositionY: 0,
+		PhoneNumberX:      0,
+		PhoneNumberY:      0,
+		EmailX:            0,
+		EmailY:            0,
+		PostalCodeX:       0,
+		PostalCodeY:       0,
+		AddressX:          0,
+		AddressY:          0,
+		QrcodeX:           0,
+		QrcodeY:           0,
+	}
+
 	c.JSON(http.StatusCreated, dto.BusinessCardResponse{
 		ID:                          "1",
 		BusinessCardBackgroundColor: "#ffffff",
@@ -151,7 +240,7 @@ func UpdateBusinessCard(c *gin.Context) {
 		ThreeDimentionalModel:       "https://example.com/model.gltf",
 		SpeakingDescription:         "こんにちは",
 		SpeakingAudioPath:           "https://example.com/audio.mp3",
-		BusinessCardPartsCoordinate: "1",
+		BusinessCardPartsCoordinate: businessCardPartsCoordinate,
 		DisplayName:                 "山田太郎",
 		CompanyName:                 "株式会社山田",
 		Department:                  "開発部",
