@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
@@ -43,10 +42,7 @@ func CreateArAssets(c *gin.Context) {
 	// AI側へリクエスト
 	// QRコードアイコン画像保存
 	ctx := context.Background()
-	connectionString, ok := os.LookupEnv("AZURE_STORAGE_CONNECTION_STRING")
-	if !ok {
-		log.Fatal("'AZURE_STORAGE_CONNECTION_STRING' not found")
-	}
+	connectionString := "DefaultEndpointsProtocol=https;AccountName=<account-name>;AccountKey=<account-key>"
 
 	// 接続文字列でクライアントを作成する
 	serviceClient, err := azblob.NewClientFromConnectionString(connectionString, nil)
@@ -54,11 +50,11 @@ func CreateArAssets(c *gin.Context) {
 		panic(err)
 	}
 
-	r, err := serviceClient.UploadFile(ctx, "images", "sample.txt", file, &azblob.UploadFileOptions{})
+	// ext := filepath.Ext(fileHeader.Filename)
+	_, err = serviceClient.UploadStream(ctx, "images", "test.png", file, &azblob.UploadStreamOptions{})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%v\n", r)
 
 	// データベース保存
 
