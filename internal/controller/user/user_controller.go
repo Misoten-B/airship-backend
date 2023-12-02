@@ -14,7 +14,7 @@ import (
 // @Success 201 {object} dto.UserResponse
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Param CreateUserRequest body dto.CreateUserRequest true "User ID"
+// @Param CreateUserRequest body dto.CreateUserRequest true "create user"
 func CreateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 
@@ -38,7 +38,6 @@ func CreateUser(c *gin.Context) {
 // @Router /v1/users/{user_id} [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Param user_id path string true "User ID"
 // @Success 200 {object} dto.UserResponse
 func ReadUserByID(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
@@ -57,7 +56,8 @@ func ReadUserByID(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param CreateUserRequest body dto.CreateUserRequest true "update user"
-// @Param user_id path string true "User ID"
+// @Accept multipart/form-data
+// @Param recorded_voice formData file true "Audio file to be uploaded"
 // @Success 200 {object} dto.UserResponse
 func UpdateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
@@ -81,7 +81,6 @@ func UpdateUser(c *gin.Context) {
 // @Router /v1/users/{user_id} [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Param user_id path string true "User ID"
 // @Success 204 {object} nil
 func DeleteUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))

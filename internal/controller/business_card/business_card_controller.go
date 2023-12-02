@@ -13,8 +13,6 @@ import (
 // @Router /v1/users/business_cards [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Accept multipart/form-data
-// @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
 // @Param CreateBusinessCardRequest formData dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 201 {object} dto.BusinessCardResponse
 func CreateBusinessCard(c *gin.Context) {

@@ -158,10 +158,6 @@ definitions:
       business_card_background:
         example: '#ffffff'
         type: string
-      business_card_background_image:
-        example: url
-        type: string
-        x-nullable: true
     type: object
   dto.CreateUserRequest:
     properties:
@@ -231,7 +227,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: User ID
+      - description: create user
         in: body
         name: CreateUserRequest
         required: true
@@ -254,11 +250,6 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
       responses:
         "204":
           description: No Content
@@ -273,11 +264,6 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
       responses:
         "200":
           description: OK
@@ -288,6 +274,8 @@ paths:
       tags:
       - User
     put:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
@@ -300,11 +288,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/dto.CreateUserRequest'
-      - description: User ID
-        in: path
-        name: user_id
+      - description: Audio file to be uploaded
+        in: formData
+        name: recorded_voice
         required: true
-        type: string
+        type: file
       responses:
         "200":
           description: OK
@@ -465,6 +453,11 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: Image file to be uploaded
+        in: formData
+        name: BusinessCardBackgroundImage
+        required: true
+        type: file
       - description: BusinessCardBackground
         in: body
         name: dto.CreateBackgroundRequest
@@ -500,19 +493,12 @@ paths:
       tags:
       - BusinessCard
     post:
-      consumes:
-      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
         name: Authorization
         required: true
         type: string
-      - description: Image file to be uploaded
-        in: formData
-        name: BusinessCardBackgroundImage
-        required: true
-        type: file
       - example: 東京都渋谷区神南1-1-1
         in: formData
         name: address

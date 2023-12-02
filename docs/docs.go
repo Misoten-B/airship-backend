@@ -80,7 +80,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "User ID",
+                        "description": "create user",
                         "name": "CreateUserRequest",
                         "in": "body",
                         "required": true,
@@ -350,6 +350,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "file",
+                        "description": "Image file to be uploaded",
+                        "name": "BusinessCardBackgroundImage",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "description": "BusinessCardBackground",
                         "name": "dto.CreateBackgroundRequest",
                         "in": "body",
@@ -406,9 +413,6 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
                 "tags": [
                     "BusinessCard"
                 ],
@@ -418,13 +422,6 @@ const docTemplate = `{
                         "description": "Bearer [Firebase JWT Token]",
                         "name": "Authorization",
                         "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Image file to be uploaded",
-                        "name": "BusinessCardBackgroundImage",
-                        "in": "formData",
                         "required": true
                     },
                     {
@@ -934,13 +931,6 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -957,6 +947,9 @@ const docTemplate = `{
                     {
                         "ApiKeyAuth": []
                     }
+                ],
+                "consumes": [
+                    "multipart/form-data"
                 ],
                 "tags": [
                     "User"
@@ -979,10 +972,10 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
+                        "type": "file",
+                        "description": "Audio file to be uploaded",
+                        "name": "recorded_voice",
+                        "in": "formData",
                         "required": true
                     }
                 ],
@@ -1010,13 +1003,6 @@ const docTemplate = `{
                         "description": "Bearer [Firebase JWT Token]",
                         "name": "Authorization",
                         "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
                         "required": true
                     }
                 ],
@@ -1265,11 +1251,6 @@ const docTemplate = `{
                 "business_card_background": {
                     "type": "string",
                     "example": "#ffffff"
-                },
-                "business_card_background_image": {
-                    "type": "string",
-                    "x-nullable": true,
-                    "example": "url"
                 }
             }
         },
