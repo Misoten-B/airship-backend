@@ -14,8 +14,6 @@ import (
 // @Success 201 {object} dto.UserResponse
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Accept multipart/form-data
-// @Param recorded_voice formData file true "Audio file to be uploaded"
 // @Param CreateUserRequest body dto.CreateUserRequest true "create user"
 func CreateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))

@@ -221,19 +221,12 @@ paths:
       - BusinessCardPartsCoordinate
   /v1/users:
     post:
-      consumes:
-      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
         name: Authorization
         required: true
         type: string
-      - description: Audio file to be uploaded
-        in: formData
-        name: recorded_voice
-        required: true
-        type: file
       - description: create user
         in: body
         name: CreateUserRequest

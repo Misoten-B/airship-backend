@@ -68,9 +68,6 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
                 "tags": [
                     "User"
                 ],
@@ -80,13 +77,6 @@ const docTemplate = `{
                         "description": "Bearer [Firebase JWT Token]",
                         "name": "Authorization",
                         "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Audio file to be uploaded",
-                        "name": "recorded_voice",
-                        "in": "formData",
                         "required": true
                     },
                     {
