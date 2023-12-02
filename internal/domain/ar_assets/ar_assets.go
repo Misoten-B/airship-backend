@@ -6,18 +6,16 @@ import (
 )
 
 type ARAssets struct {
-	ID             id.ID
-	UserID         string
-	AudioModelPath string
-	QRCodeImage    *file.File
-	AudioText      string
-	AudioID        string
-	AudioPath      string
+	ID          id.ID
+	UserID      string
+	QRCodeImage *file.File
+	AudioText   string
+	AudioID     string
+	AudioPath   string
 }
 
 func NewARAssets(
 	userID string,
-	audioModelPath string,
 	qrCodeImage *file.File,
 	audioText string,
 ) (*ARAssets, error) {
@@ -27,11 +25,10 @@ func NewARAssets(
 	}
 
 	return &ARAssets{
-		ID:             id,
-		UserID:         userID,
-		AudioModelPath: audioModelPath,
-		QRCodeImage:    qrCodeImage,
-		AudioText:      audioText,
+		ID:          id,
+		UserID:      userID,
+		QRCodeImage: qrCodeImage,
+		AudioText:   audioText,
 	}, nil
 }
 

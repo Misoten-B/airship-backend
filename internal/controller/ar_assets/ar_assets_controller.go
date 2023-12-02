@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/database"
+	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,6 +29,35 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 	log.Printf("formData: %v", request)
+
+	multipartFile, fileHeader, err := c.Request.FormFile("qrcodeIcon")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("file: %v", multipartFile)
+	log.Printf("fileHeader: %v", fileHeader)
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	file := file.NewMyFile(multipartFile, fileHeader)
+	uid := c.GetString("uid")
+	arasset, err := arassets.NewARAssets(
+		uid,
+		file,
+		request.SpeakingDescription,
+	)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	result := db.Create(&arasset)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	}
+	log.Printf("arasset: %v", arasset)
 
 	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{

@@ -31,7 +31,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 			return
 		}
 
-		log.Printf("Verified ID token: %v\n", token)
+		c.Set("uid", token.UID)
 		c.Next()
 	}
 }
