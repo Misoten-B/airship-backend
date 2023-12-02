@@ -3,15 +3,21 @@ package middleware
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"firebase.google.com/go/v4/auth"
+	"github.com/Misoten-B/airship-backend/config"
 	"github.com/gin-gonic/gin"
 )
 
 func Guard(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if os.Getenv("DEV_MODE") == "true" {
+		value, ok := c.Value("config").(*config.Config)
+		if !ok {
+			log.Println("config is not set")
+		}
+		devMode := value.DevMode
+
+		if devMode {
 			log.Println("Development mode - bypassing authentication")
 			c.Next()
 			return

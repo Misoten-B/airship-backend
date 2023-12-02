@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/Misoten-B/airship-backend/config"
 	_ "github.com/Misoten-B/airship-backend/docs"
 	"github.com/Misoten-B/airship-backend/internal/router"
 	v1 "github.com/Misoten-B/airship-backend/internal/router/v1"
@@ -20,6 +21,11 @@ import (
 // @name                       Authorization
 func main() {
 	r := gin.Default()
+
+	r.Use(func(ctx *gin.Context) {
+		ctx.Set("config", config.GetConfig())
+		ctx.Next()
+	})
 
 	router.HealthCheckRegister(r)
 	router.OpenapiRegister(r)
