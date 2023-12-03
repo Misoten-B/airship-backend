@@ -19,8 +19,8 @@ func main() {
 		&model.ThreeDimentionalModel{},
 		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
 		&model.ARAsset{},
-		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardBackground{},
+		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardPartsCoordinate{},
 		&model.BusinessCard{},
 	); err != nil {

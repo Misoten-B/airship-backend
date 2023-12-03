@@ -47,31 +47,24 @@ type BusinessCardPartsCoordinate struct {
 	QRCodeY           int
 }
 
-// TODO: 排他サブタイプのモデル最適化
-
 // BusinessCardBackgroundは名刺背景テーブルのORMモデルです。
 type BusinessCardBackground struct {
-	ID                             string         `gorm:"primaryKey"`
-	BusinessCards                  []BusinessCard `gorm:"foreignKey:BusinessCardBackground"`
-	BusinessCardBackgroundTemplate string         `gorm:"default:null"`
-	PersonalBusinessCardBackground string         `gorm:"default:null"`
+	ID                              string `gorm:"primaryKey"`
+	ColorCode                       string
+	ImagePath                       string
+	BusinessCardBackgroundTemplates []BusinessCardBackgroundTemplate `gorm:"foreignKey:ID"`
+	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:ID"`
 }
 
 // BusinessCardBackgroundTemplateは名刺背景テンプレートテーブルのORMモデルです。
 // BusinessCardBackgroundの排他的サブタイプです。
 type BusinessCardBackgroundTemplate struct {
-	ID                      string                   `gorm:"primaryKey"`
-	BusinessCardBackgrounds []BusinessCardBackground `gorm:"foreignKey:BusinessCardBackgroundTemplate"`
-	ColorCode               string
-	ImagePath               string
+	ID string `gorm:"primaryKey"`
 }
 
 // PersonalBusinessCardBackgroundはユーザー定義名刺背景テーブルのORMモデルです。
 // BusinessCardBackgroundの排他的サブタイプです。
 type PersonalBusinessCardBackground struct {
-	ID                      string                   `gorm:"primaryKey"`
-	BusinessCardBackgrounds []BusinessCardBackground `gorm:"foreignKey:PersonalBusinessCardBackground"`
-	User                    string
-	ColorCode               string
-	ImagePath               string
+	ID   string `gorm:"primaryKey"`
+	User string
 }

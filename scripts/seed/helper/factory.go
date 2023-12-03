@@ -30,26 +30,24 @@ func NewAppModel() *AppModel {
 	speakingAsset := newSpeakingAsset(user)
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
 
-	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
-		ID:        newID(),
-		ColorCode: "#ffffff",
-		ImagePath: "https://example.com/background_template.png",
-	}
-	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
-		ID:        newID(),
-		User:      user.ID,
-		ColorCode: "#ffffff",
-		ImagePath: "https://example.com/background.png",
-	}
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
-			ID:                             newID(),
-			BusinessCardBackgroundTemplate: businessCardBackgroundTemplate.ID,
+			ID:        "1",
+			ColorCode: "#000000",
+			ImagePath: "https://example.com/background-template.png",
 		},
 		{
-			ID:                             newID(),
-			PersonalBusinessCardBackground: personalBusinessCardBackground.ID,
+			ID:        "2",
+			ColorCode: "#ffffff",
+			ImagePath: "https://example.com/background-personal.png",
 		},
+	}
+	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
+		ID: businessCardBackgrounds[0].ID,
+	}
+	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
+		ID:   businessCardBackgrounds[1].ID,
+		User: user.ID,
 	}
 
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
