@@ -153,12 +153,6 @@ definitions:
         description: ar assets
         type: string
     type: object
-  dto.CreateBackgroundRequest:
-    properties:
-      business_card_background:
-        example: '#ffffff'
-        type: string
-    type: object
   dto.CreateUserRequest:
     properties:
       is_toured:
@@ -458,12 +452,10 @@ paths:
         name: BusinessCardBackgroundImage
         required: true
         type: file
-      - description: BusinessCardBackground
-        in: body
-        name: dto.CreateBackgroundRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBackgroundRequest'
+      - example: '#ffffff'
+        in: formData
+        name: business_card_background_color
+        type: string
       responses:
         "201":
           description: Created
@@ -560,11 +552,6 @@ paths:
       - example: 123-4567
         in: formData
         name: postal_code
-        type: string
-        x-nullable: true
-      - example: url
-        in: formData
-        name: qrcode_image_path
         type: string
         x-nullable: true
       responses:
@@ -697,11 +684,6 @@ paths:
       - example: 123-4567
         in: formData
         name: postal_code
-        type: string
-        x-nullable: true
-      - example: url
-        in: formData
-        name: qrcode_image_path
         type: string
         x-nullable: true
       responses:

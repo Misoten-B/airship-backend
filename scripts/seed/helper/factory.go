@@ -1,6 +1,10 @@
 package helper
 
-import "github.com/Misoten-B/airship-backend/internal/database/model"
+import (
+	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/id"
+	"github.com/Misoten-B/airship-backend/internal/testdata"
+)
 
 type AppModel struct {
 	User                              *model.User
@@ -30,23 +34,23 @@ func NewAppModel() *AppModel {
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
 
 	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
-		ID:        "1",
+		ID:        newID(),
 		ColorCode: "#ffffff",
 		ImagePath: "https://example.com/background_template.png",
 	}
 	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
-		ID:        "1",
+		ID:        newID(),
 		User:      user.ID,
 		ColorCode: "#ffffff",
 		ImagePath: "https://example.com/background.png",
 	}
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
-			ID:                             "1",
+			ID:                             newID(),
 			BusinessCardBackgroundTemplate: businessCardBackgroundTemplate.ID,
 		},
 		{
-			ID:                             "2",
+			ID:                             newID(),
 			PersonalBusinessCardBackground: personalBusinessCardBackground.ID,
 		},
 	}
@@ -77,7 +81,7 @@ func NewAppModel() *AppModel {
 
 func newUser() *model.User {
 	return &model.User{
-		ID:                "1",
+		ID:                testdata.DEV_UID,
 		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
 		RecordedModelPath: "https://example.com/recorded_model.gltf",
 		IsToured:          false,
@@ -86,14 +90,14 @@ func newUser() *model.User {
 
 func newThreeDimentionalModelTemplate() *model.ThreeDimentionalModelTemplate {
 	return &model.ThreeDimentionalModelTemplate{
-		ID:   "1",
+		ID:   newID(),
 		Path: "https://example.com/3d_model_template.gltf",
 	}
 }
 
 func newPersonalThreeDimentionalModel(user *model.User) *model.PersonalThreeDimentionalModel {
 	return &model.PersonalThreeDimentionalModel{
-		ID:     "1",
+		ID:     newID(),
 		UserID: user.ID,
 		Path:   "https://example.com/3d_model.gltf",
 	}
@@ -105,11 +109,11 @@ func newThreeDimentionalModels(
 ) []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
-			ID:                            "1",
+			ID:                            newID(),
 			ThreeDimentionalModelTemplate: threeDimentionalModelTemplate.ID,
 		},
 		{
-			ID:                            "2",
+			ID:                            newID(),
 			PersonalThreeDimentionalModel: personalThreeDimentionalModel.ID,
 		},
 	}
@@ -117,7 +121,7 @@ func newThreeDimentionalModels(
 
 func newSpeakingAsset(user *model.User) *model.SpeakingAsset {
 	return &model.SpeakingAsset{
-		ID:     "1",
+		ID:     newID(),
 		UserID: user.ID,
 	}
 }
@@ -128,7 +132,7 @@ func newARAsset(
 	threeDimentionalModel *model.ThreeDimentionalModel,
 ) *model.ARAsset {
 	return &model.ARAsset{
-		ID:                      "1",
+		ID:                      newID(),
 		UserID:                  user.ID,
 		SpeakingAssetID:         speakingAsset.ID,
 		ThreeDimentionalModelID: threeDimentionalModel.ID,
@@ -137,7 +141,7 @@ func newARAsset(
 
 func newBusinessCardPartsCoordinate() *model.BusinessCardPartsCoordinate {
 	return &model.BusinessCardPartsCoordinate{
-		ID:                "1",
+		ID:                newID(),
 		DisplayNameX:      0,
 		DisplayNameY:      0,
 		CompanyNameX:      0,
@@ -166,7 +170,7 @@ func newBusinessCard(
 	businessCardBackgrounds *model.BusinessCardBackground,
 ) *model.BusinessCard {
 	return &model.BusinessCard{
-		ID:                          "1",
+		ID:                          newID(),
 		User:                        user.ID,
 		ARAsset:                     arAsset.ID,
 		BusinessCardPathsCoordinate: businessCardPartsCoordinate.ID,
@@ -182,4 +186,13 @@ func newBusinessCard(
 		QRCodeImagePath:             "https://example.com/qr_code.png",
 		AccessCount:                 0,
 	}
+}
+
+func newID() string {
+	id, err := id.NewID()
+	if err != nil {
+		panic(err)
+	}
+
+	return id.String()
 }
