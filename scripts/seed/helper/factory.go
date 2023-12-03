@@ -46,8 +46,8 @@ func NewAppModel() *AppModel {
 		ID: businessCardBackgrounds[0].ID,
 	}
 	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
-		ID:   businessCardBackgrounds[1].ID,
-		User: user.ID,
+		ID:     businessCardBackgrounds[1].ID,
+		UserID: user.ID,
 	}
 
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
@@ -99,12 +99,12 @@ func newPersonalThreeDimentionalModel(id string, user *model.User) *model.Person
 func newThreeDimentionalModels() []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
-			ID:   "1",
-			Path: "https://example.com/3d_model.gltf",
+			ID:        "1",
+			ModelPath: "https://example.com/3d_model.gltf",
 		},
 		{
-			ID:   "2",
-			Path: "https://example.com/3d_model.gltf",
+			ID:        "2",
+			ModelPath: "https://example.com/3d_model.gltf",
 		},
 	}
 }
@@ -122,7 +122,9 @@ func newARAsset(
 	threeDimentionalModel *model.ThreeDimentionalModel,
 ) *model.ARAsset {
 	return &model.ARAsset{
-		ID:                      newID(),
+		ID:                      "1",
+		AccessCount:             0,
+		QRCodeImagePath:         "https://example.com/qr_code.png",
 		UserID:                  user.ID,
 		SpeakingAssetID:         speakingAsset.ID,
 		ThreeDimentionalModelID: threeDimentionalModel.ID,
@@ -160,21 +162,19 @@ func newBusinessCard(
 	businessCardBackgrounds *model.BusinessCardBackground,
 ) *model.BusinessCard {
 	return &model.BusinessCard{
-		ID:                          newID(),
-		User:                        user.ID,
-		ARAsset:                     arAsset.ID,
-		BusinessCardPathsCoordinate: businessCardPartsCoordinate.ID,
-		BusinessCardBackground:      businessCardBackgrounds.ID,
-		DisplayName:                 "山田太郎",
-		CompanyName:                 "株式会社山田",
-		Department:                  "開発部",
-		OfficialPosition:            "部長",
-		PhoneNumber:                 "090-1234-5678",
-		Email:                       "yamada@example.com",
-		PostalCode:                  "123-4567",
-		Address:                     "東京都渋谷区",
-		QRCodeImagePath:             "https://example.com/qr_code.png",
-		AccessCount:                 0,
+		ID:                            "1",
+		UserID:                        user.ID,
+		ARAssetID:                     arAsset.ID,
+		BusinessCardPathsCoordinateID: businessCardPartsCoordinate.ID,
+		BusinessCardBackgroundID:      businessCardBackgrounds.ID,
+		DisplayName:                   "山田太郎",
+		CompanyName:                   "株式会社山田",
+		Department:                    "開発部",
+		OfficialPosition:              "部長",
+		PhoneNumber:                   "090-1234-5678",
+		Email:                         "yamada@example.com",
+		PostalCode:                    "123-4567",
+		Address:                       "東京都渋谷区",
 	}
 }
 

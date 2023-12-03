@@ -3,7 +3,7 @@ package model
 // ThreeDimentionalModelは3DモデルテーブルのORMモデルです。
 type ThreeDimentionalModel struct {
 	ID                             string `gorm:"primaryKey"`
-	Path                           string
+	ModelPath                      string
 	ARAssets                       []ARAsset
 	ThreeDimentionalModelTemplates []ThreeDimentionalModelTemplate `gorm:"foreignKey:ID"`
 	PersonalThreeDimentionalModels []PersonalThreeDimentionalModel `gorm:"foreignKey:ID"`
@@ -33,8 +33,10 @@ type SpeakingAsset struct {
 
 // ARAssetはARアセットテーブルのORMモデルです。
 type ARAsset struct {
-	ID                      string         `gorm:"primaryKey"`
-	BusinessCards           []BusinessCard `gorm:"foreignKey:ARAsset"`
+	ID                      string `gorm:"primaryKey"`
+	AccessCount             int
+	QRCodeImagePath         string
+	BusinessCards           []BusinessCard
 	UserID                  string
 	SpeakingAssetID         string
 	ThreeDimentionalModelID string

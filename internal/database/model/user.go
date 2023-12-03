@@ -4,9 +4,9 @@ import "time"
 
 // UserはユーザーテーブルのORMモデルです。
 type User struct {
-	ID                              string                           `gorm:"primaryKey"`
-	BusinessCards                   []BusinessCard                   `gorm:"foreignKey:User"`
-	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:User"`
+	ID                              string `gorm:"primaryKey"`
+	BusinessCards                   []BusinessCard
+	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground
 	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
 	ARAssets                        []ARAsset
 	SpeakingAssets                  []SpeakingAsset
