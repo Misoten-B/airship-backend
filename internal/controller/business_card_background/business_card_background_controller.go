@@ -14,7 +14,7 @@ import (
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
-// @Param dto.CreateBackgroundRequest body dto.CreateBackgroundRequest true "BusinessCardBackground"
+// @Param dto.CreateBackgroundRequest formData dto.CreateBackgroundRequest true "BusinessCardBackground"
 // @Success 201 {object} dto.BackgroundResponse
 func CreateBusinessCardBackground(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))

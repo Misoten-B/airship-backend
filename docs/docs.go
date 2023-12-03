@@ -357,13 +357,10 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "BusinessCardBackground",
-                        "name": "dto.CreateBackgroundRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateBackgroundRequest"
-                        }
+                        "type": "string",
+                        "example": "#ffffff",
+                        "name": "business_card_background",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -963,20 +960,17 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "update user",
-                        "name": "CreateUserRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.CreateUserRequest"
-                        }
-                    },
-                    {
                         "type": "file",
                         "description": "Audio file to be uploaded",
                         "name": "recorded_voice",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "x-nullable": true,
+                        "name": "is_toured",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -1242,15 +1236,6 @@ const docTemplate = `{
                 "threeDimentionalModel": {
                     "description": "ar assets",
                     "type": "string"
-                }
-            }
-        },
-        "dto.CreateBackgroundRequest": {
-            "type": "object",
-            "properties": {
-                "business_card_background": {
-                    "type": "string",
-                    "example": "#ffffff"
                 }
             }
         },
