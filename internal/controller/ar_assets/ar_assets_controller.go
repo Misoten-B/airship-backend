@@ -8,7 +8,9 @@ import (
 	"path/filepath"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,20 +23,28 @@ import (
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
 // @Success 201 {object} dto.ArAssetsResponse
 func CreateArAssets(c *gin.Context) {
-	v := c.Value("uid")
-	uid, ok := v.(string)
+	// コンテキストから取得
+	config, ok := c.Value("config").(*config.Config)
 	if !ok {
+		log.Println("config is not set")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "config is not set"})
+		return
+	}
+
+	uid, ok := c.Value("uid").(string)
+	if !ok {
+		log.Printf("uid is not set")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "uid is not set"})
 		return
 	}
 	log.Printf("uid: %s", uid)
 
+	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
 	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("formData: %v", request)
 
 	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
 	if err != nil {
@@ -43,23 +53,34 @@ func CreateArAssets(c *gin.Context) {
 	}
 
 	// バリデーション
+	ext := filepath.Ext(fileHeader.Filename)
+	blobID, err := id.NewID()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	blobName := fmt.Sprintf("%s%s", blobID.String(), ext)
 
 	// AI側へリクエスト
+	//  - データベースから取得
+	//  - 音声モデル取得
+	//  - AI側へリクエスト
+
 	// QRコードアイコン画像保存
 	ctx := context.Background()
-	connectionString := "DefaultEndpointsProtocol=https;AccountName=<account-name>;AccountKey=<account-key>"
 
-	// 接続文字列でクライアントを作成する
-	serviceClient, err := azblob.NewClientFromConnectionString(connectionString, nil)
+	serviceClient, err := azblob.NewClientFromConnectionString(config.AzureBlobStorageConnectionString, nil)
 	if err != nil {
-		panic(err)
+		log.Printf("failed to create service client: %s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	ext := filepath.Ext(fileHeader.Filename)
-	log.Printf("ext: %s", ext)
-	_, err = serviceClient.UploadStream(ctx, "images", "test.png", file, &azblob.UploadStreamOptions{})
+	_, err = serviceClient.UploadStream(ctx, "images", blobName, file, &azblob.UploadStreamOptions{})
 	if err != nil {
-		panic(err)
+		log.Printf("failed to upload stream: %s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	// データベース保存
