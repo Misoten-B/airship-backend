@@ -7,7 +7,7 @@ type BusinessCard struct {
 	ID                            string `gorm:"primaryKey"`
 	UserID                        string
 	ARAssetID                     string
-	BusinessCardPathsCoordinateID string
+	BusinessCardPartsCoordinateID string
 	BusinessCardBackgroundID      string
 	BusinessCardName              string
 	DisplayName                   string
@@ -23,8 +23,8 @@ type BusinessCard struct {
 
 // BusinessCardPartsCoordinateは名刺パーツ座標テーブルのORMモデルです。
 type BusinessCardPartsCoordinate struct {
-	ID                string         `gorm:"primaryKey"`
-	BusinessCards     []BusinessCard `gorm:"foreignKey:ID"`
+	ID                string `gorm:"primaryKey"`
+	BusinessCards     []BusinessCard
 	DisplayNameX      int
 	DisplayNameY      int
 	CompanyNameX      int

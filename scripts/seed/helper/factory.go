@@ -165,7 +165,7 @@ func newBusinessCard(
 		ID:                            "1",
 		UserID:                        user.ID,
 		ARAssetID:                     arAsset.ID,
-		BusinessCardPathsCoordinateID: businessCardPartsCoordinate.ID,
+		BusinessCardPartsCoordinateID: businessCardPartsCoordinate.ID,
 		BusinessCardBackgroundID:      businessCardBackgrounds.ID,
 		DisplayName:                   "山田太郎",
 		CompanyName:                   "株式会社山田",
