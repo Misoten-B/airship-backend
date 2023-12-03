@@ -153,12 +153,6 @@ definitions:
         description: ar assets
         type: string
     type: object
-  dto.CreateBackgroundRequest:
-    properties:
-      business_card_background:
-        example: '#ffffff'
-        type: string
-    type: object
   dto.CreateUserRequest:
     properties:
       is_toured:
@@ -282,17 +276,15 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: update user
-        in: body
-        name: CreateUserRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateUserRequest'
       - description: Audio file to be uploaded
         in: formData
         name: recorded_voice
-        required: true
         type: file
+      - example: false
+        in: formData
+        name: is_toured
+        type: boolean
+        x-nullable: true
       responses:
         "200":
           description: OK
@@ -458,12 +450,10 @@ paths:
         name: BusinessCardBackgroundImage
         required: true
         type: file
-      - description: BusinessCardBackground
-        in: body
-        name: dto.CreateBackgroundRequest
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateBackgroundRequest'
+      - example: '#ffffff'
+        in: formData
+        name: business_card_background
+        type: string
       responses:
         "201":
           description: Created
