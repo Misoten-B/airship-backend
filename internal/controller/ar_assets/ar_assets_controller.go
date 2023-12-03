@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
-	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
 )
@@ -24,24 +24,25 @@ import (
 // @Success 201 {object} dto.ArAssetsResponse
 func CreateArAssets(c *gin.Context) {
 	// コンテキストから取得
-	config, ok := c.Value("config").(*config.Config)
-	if !ok {
-		log.Println("config is not set")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "config is not set"})
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		log.Printf("%s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	uid, ok := c.Value("uid").(string)
-	if !ok {
-		log.Printf("uid is not set")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "uid is not set"})
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		log.Printf("%s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	log.Printf("config: %v", config)
 	log.Printf("uid: %s", uid)
 
 	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
-	if err := c.ShouldBind(&request); err != nil {
+	if err = c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
