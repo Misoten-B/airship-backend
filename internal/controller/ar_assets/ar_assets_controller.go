@@ -12,6 +12,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 )
 
 // @Tags ArAssets
@@ -66,22 +67,35 @@ func CreateArAssets(c *gin.Context) {
 	//  - データベースから取得
 	//  - 音声モデル取得
 	//  - AI側へリクエスト
-
-	// QRコードアイコン画像保存
-	ctx := context.Background()
-
-	serviceClient, err := azblob.NewClientFromConnectionString(config.AzureBlobStorageConnectionString, nil)
-	if err != nil {
-		log.Printf("failed to create service client: %s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if !config.DevMode { // 開発用。AI側が完了次第、実装
+		client := resty.New()
+		_, err = client.R().
+			SetHeader("Content-Type", "application/json").
+			Post("http://localhost:8080/example/ai")
+		if err != nil {
+			log.Printf("failed to request ai: %s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
-	_, err = serviceClient.UploadStream(ctx, "images", blobName, file, &azblob.UploadStreamOptions{})
-	if err != nil {
-		log.Printf("failed to upload stream: %s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	// QRコードアイコン画像保存
+	if !config.DevMode { // 開発用。今後抽出する
+		ctx := context.Background()
+
+		serviceClient, azureError := azblob.NewClientFromConnectionString(config.AzureBlobStorageConnectionString, nil)
+		if azureError != nil {
+			log.Printf("failed to create service client: %s", azureError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
+			return
+		}
+
+		_, azureError = serviceClient.UploadStream(ctx, "images", blobName, file, &azblob.UploadStreamOptions{})
+		if azureError != nil {
+			log.Printf("failed to upload stream: %s", azureError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
+			return
+		}
 	}
 
 	// データベース保存
