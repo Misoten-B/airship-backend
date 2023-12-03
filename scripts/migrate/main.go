@@ -16,9 +16,9 @@ func main() {
 	if err = db.AutoMigrate(
 		&model.User{},
 		&model.SpeakingAsset{},
-		&model.ARAsset{},
-		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
 		&model.ThreeDimentionalModel{},
+		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
+		&model.ARAsset{},
 		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardBackground{},
 		&model.BusinessCardPartsCoordinate{},

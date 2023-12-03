@@ -23,12 +23,9 @@ type AppModel struct {
 func NewAppModel() *AppModel {
 	user := newUser()
 
-	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate()
-	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(user)
-	threeDimentionalModels := newThreeDimentionalModels(
-		threeDimentionalModelTemplate,
-		personalThreeDimentionalModel,
-	)
+	threeDimentionalModels := newThreeDimentionalModels()
+	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate(threeDimentionalModels[0].ID)
+	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[1].ID, user)
 
 	speakingAsset := newSpeakingAsset(user)
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
@@ -88,33 +85,28 @@ func newUser() *model.User {
 	}
 }
 
-func newThreeDimentionalModelTemplate() *model.ThreeDimentionalModelTemplate {
+func newThreeDimentionalModelTemplate(id string) *model.ThreeDimentionalModelTemplate {
 	return &model.ThreeDimentionalModelTemplate{
-		ID:   newID(),
-		Path: "https://example.com/3d_model_template.gltf",
+		ID: id,
 	}
 }
 
-func newPersonalThreeDimentionalModel(user *model.User) *model.PersonalThreeDimentionalModel {
+func newPersonalThreeDimentionalModel(id string, user *model.User) *model.PersonalThreeDimentionalModel {
 	return &model.PersonalThreeDimentionalModel{
-		ID:     newID(),
+		ID:     id,
 		UserID: user.ID,
-		Path:   "https://example.com/3d_model.gltf",
 	}
 }
 
-func newThreeDimentionalModels(
-	threeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate,
-	personalThreeDimentionalModel *model.PersonalThreeDimentionalModel,
-) []*model.ThreeDimentionalModel {
+func newThreeDimentionalModels() []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
-			ID:                            newID(),
-			ThreeDimentionalModelTemplate: threeDimentionalModelTemplate.ID,
+			ID:   "1",
+			Path: "https://example.com/3d_model.gltf",
 		},
 		{
-			ID:                            newID(),
-			PersonalThreeDimentionalModel: personalThreeDimentionalModel.ID,
+			ID:   "2",
+			Path: "https://example.com/3d_model.gltf",
 		},
 	}
 }

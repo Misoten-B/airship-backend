@@ -8,6 +8,7 @@ type User struct {
 	BusinessCards                   []BusinessCard                   `gorm:"foreignKey:User"`
 	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:User"`
 	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
+	ARAssets                        []ARAsset
 	SpeakingAssets                  []SpeakingAsset
 	RecordedVoicePath               string
 	RecordedModelPath               string

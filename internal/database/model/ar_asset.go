@@ -1,30 +1,25 @@
 package model
 
-// TODO: 排他サブタイプのモデル最適化
-
 // ThreeDimentionalModelは3DモデルテーブルのORMモデルです。
 type ThreeDimentionalModel struct {
-	ID                            string `gorm:"primaryKey"`
-	ThreeDimentionalModelTemplate string `gorm:"default:null"`
-	PersonalThreeDimentionalModel string `gorm:"default:null"`
-	ARAssets                      []ARAsset
+	ID                             string `gorm:"primaryKey"`
+	Path                           string
+	ARAssets                       []ARAsset
+	ThreeDimentionalModelTemplates []ThreeDimentionalModelTemplate `gorm:"foreignKey:ID"`
+	PersonalThreeDimentionalModels []PersonalThreeDimentionalModel `gorm:"foreignKey:ID"`
 }
 
 // ThreeDimentionalModelTemplateは3DモデルテンプレートテーブルのORMモデルです。
 // ThreeDimentionalModelの排他的サブタイプです。
 type ThreeDimentionalModelTemplate struct {
-	ID                     string                  `gorm:"primaryKey"`
-	ThreeDimentionalModels []ThreeDimentionalModel `gorm:"foreignKey:ThreeDimentionalModelTemplate"`
-	Path                   string
+	ID string `gorm:"primaryKey"`
 }
 
 // PersonalThreeDimentionalModelはユーザー定義3DモデルテーブルのORMモデルです。
 // ThreeDimentionalModelの排他的サブタイプです。
 type PersonalThreeDimentionalModel struct {
-	ID                     string                  `gorm:"primaryKey"`
-	ThreeDimentionalModels []ThreeDimentionalModel `gorm:"foreignKey:PersonalThreeDimentionalModel"`
-	UserID                 string
-	Path                   string
+	ID     string `gorm:"primaryKey"`
+	UserID string
 }
 
 // SpeakingAssetは音声アセットテーブルのORMモデルです。
