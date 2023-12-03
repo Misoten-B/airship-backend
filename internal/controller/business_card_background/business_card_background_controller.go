@@ -20,11 +20,17 @@ func CreateBusinessCardBackground(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 
 	request := dto.CreateBackgroundRequest{}
-	if err := c.ShouldBindJSON(&request); err != nil {
+	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("body: %v", request)
+	log.Printf("formData: %v", request)
+
+	_, _, err := c.Request.FormFile("BusinessCardBackgroundImage")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.BackgroundResponse{

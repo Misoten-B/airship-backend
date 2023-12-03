@@ -7,6 +7,7 @@ import (
 
 	"github.com/Misoten-B/airship-backend/config"
 	_ "github.com/Misoten-B/airship-backend/docs"
+	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/router"
 	v1 "github.com/Misoten-B/airship-backend/internal/router/v1"
 )
@@ -23,7 +24,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(func(ctx *gin.Context) {
-		ctx.Set("config", config.GetConfig())
+		ctx.Set(frameworks.ContextKeyConfig, config.GetConfig())
 		ctx.Next()
 	})
 

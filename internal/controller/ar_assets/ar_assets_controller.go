@@ -1,12 +1,18 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"path/filepath"
 
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/frameworks"
+	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 )
 
 // @Tags ArAssets
@@ -18,14 +24,81 @@ import (
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
 // @Success 201 {object} dto.ArAssetsResponse
 func CreateArAssets(c *gin.Context) {
-	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		log.Printf("%s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		log.Printf("%s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	log.Printf("config: %v", config)
+	log.Printf("uid: %s", uid)
+
+	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
-	if err := c.ShouldBind(&request); err != nil {
+	if err = c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("formData: %v", request)
+
+	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// バリデーション
+	ext := filepath.Ext(fileHeader.Filename)
+	blobID, err := id.NewID()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	blobName := fmt.Sprintf("%s%s", blobID.String(), ext)
+
+	// AI側へリクエスト
+	//  - データベースから取得
+	//  - 音声モデル取得
+	//  - AI側へリクエスト
+	if !config.DevMode { // 開発用。AI側が完了次第、実装
+		client := resty.New()
+		_, err = client.R().
+			SetHeader("Content-Type", "application/json").
+			Post("http://localhost:8080/example/ai")
+		if err != nil {
+			log.Printf("failed to request ai: %s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	// QRコードアイコン画像保存
+	if !config.DevMode { // 開発用。今後抽出する
+		ctx := context.Background()
+
+		serviceClient, azureError := azblob.NewClientFromConnectionString(config.AzureBlobStorageConnectionString, nil)
+		if azureError != nil {
+			log.Printf("failed to create service client: %s", azureError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
+			return
+		}
+
+		_, azureError = serviceClient.UploadStream(ctx, "images", blobName, file, &azblob.UploadStreamOptions{})
+		if azureError != nil {
+			log.Printf("failed to upload stream: %s", azureError)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
+			return
+		}
+	}
+
+	// データベース保存
 
 	c.Header("Location", fmt.Sprintf("/%s", "1"))
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{

@@ -14,7 +14,8 @@ type Config struct {
 		User     string
 		Password string
 	}
-	DevMode bool
+	DevMode                          bool
+	AzureBlobStorageConnectionString string
 }
 
 func GetConfig() *Config {
@@ -24,12 +25,16 @@ func GetConfig() *Config {
 	}
 
 	var config Config
+
 	config.Database.Host = os.Getenv("POSTGRES_HOST")
 	config.Database.Port = os.Getenv("POSTGRES_PORT")
 	config.Database.Dbname = os.Getenv("POSTGRES_DB")
 	config.Database.User = os.Getenv("POSTGRES_USER")
 	config.Database.Password = os.Getenv("POSTGRES_PASSWORD")
+
 	config.DevMode = os.Getenv("DEV_MODE") == "true"
+
+	config.AzureBlobStorageConnectionString = os.Getenv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
 
 	return &config
 }

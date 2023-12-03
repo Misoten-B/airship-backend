@@ -16,5 +16,4 @@ type CreateBusinessCardRequest struct {
 	Email                         string `form:"email,omitempty" example:"sample@example.com" extensions:"x-nullable"`
 	PostalCode                    string `form:"postal_code,omitempty" example:"123-4567" extensions:"x-nullable"`
 	Address                       string `form:"address,omitempty" example:"東京都渋谷区神南1-1-1" extensions:"x-nullable"`
-	QrcodeImageIconPath           string `form:"qrcode_image_path,omitempty" example:"url" extensions:"x-nullable"`
 }

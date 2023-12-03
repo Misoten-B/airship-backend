@@ -359,7 +359,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "#ffffff",
-                        "name": "business_card_background",
+                        "name": "business_card_background_color",
                         "in": "formData"
                     }
                 ],
@@ -506,13 +506,6 @@ const docTemplate = `{
                         "example": "123-4567",
                         "x-nullable": true,
                         "name": "postal_code",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "example": "url",
-                        "x-nullable": true,
-                        "name": "qrcode_image_path",
                         "in": "formData"
                     }
                 ],
@@ -680,13 +673,6 @@ const docTemplate = `{
                         "example": "123-4567",
                         "x-nullable": true,
                         "name": "postal_code",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "example": "url",
-                        "x-nullable": true,
-                        "name": "qrcode_image_path",
                         "in": "formData"
                     }
                 ],

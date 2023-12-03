@@ -452,7 +452,7 @@ paths:
         type: file
       - example: '#ffffff'
         in: formData
-        name: business_card_background
+        name: business_card_background_color
         type: string
       responses:
         "201":
@@ -550,11 +550,6 @@ paths:
       - example: 123-4567
         in: formData
         name: postal_code
-        type: string
-        x-nullable: true
-      - example: url
-        in: formData
-        name: qrcode_image_path
         type: string
         x-nullable: true
       responses:
@@ -687,11 +682,6 @@ paths:
       - example: 123-4567
         in: formData
         name: postal_code
-        type: string
-        x-nullable: true
-      - example: url
-        in: formData
-        name: qrcode_image_path
         type: string
         x-nullable: true
       responses:
