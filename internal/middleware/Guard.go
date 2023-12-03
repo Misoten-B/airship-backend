@@ -6,6 +6,7 @@ import (
 
 	"firebase.google.com/go/v4/auth"
 	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/testdata"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 
 		if devMode {
 			log.Println("Development mode - bypassing authentication")
+			c.Set("uid", testdata.DEV_UID)
 			c.Next()
 			return
 		}
@@ -31,7 +33,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 			return
 		}
 
-		log.Printf("Verified ID token: %v\n", token)
+		c.Set("uid", token.UID)
 		c.Next()
 	}
 }

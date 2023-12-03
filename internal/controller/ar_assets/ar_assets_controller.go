@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
@@ -20,7 +21,13 @@ import (
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
 // @Success 201 {object} dto.ArAssetsResponse
 func CreateArAssets(c *gin.Context) {
-	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
+	v := c.Value("uid")
+	uid, ok := v.(string)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "uid is not set"})
+		return
+	}
+	log.Printf("uid: %s", uid)
 
 	request := dto.CreateArAssetsRequest{}
 	if err := c.ShouldBind(&request); err != nil {
@@ -34,8 +41,6 @@ func CreateArAssets(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("file: %v", file)
-	log.Printf("fileHeader: %v", fileHeader)
 
 	// バリデーション
 
@@ -50,7 +55,8 @@ func CreateArAssets(c *gin.Context) {
 		panic(err)
 	}
 
-	// ext := filepath.Ext(fileHeader.Filename)
+	ext := filepath.Ext(fileHeader.Filename)
+	log.Printf("ext: %s", ext)
 	_, err = serviceClient.UploadStream(ctx, "images", "test.png", file, &azblob.UploadStreamOptions{})
 	if err != nil {
 		panic(err)
