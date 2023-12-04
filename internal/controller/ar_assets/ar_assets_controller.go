@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/database"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
@@ -52,6 +53,34 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
+	// TODO: 後々DIコンテナから
+	var arassetsRepository service.ARAssetsRepository
+	var qrCodeImageStorage service.QRCodeImageStorage
+	var voiceModelAdapter voiceservice.VoiceModelAdapter
+
+	if config.DevMode {
+		arassetsRepository = &service.MockARAssetsRepository{}
+		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
+		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			log.Printf("%s", dbErr)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": dbErr.Error()})
+			return
+		}
+
+		arassetsRepository = arassets.NewGormARAssetsRepository(db)
+		qrCodeImageStorage = arassets.NewAzureQRCodeImageStorage(config)
+		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
+	}
+
+	usecaseImpl := usecase.NewARAssetsUsecaseImpl(
+		arassetsRepository,
+		qrCodeImageStorage,
+		voiceModelAdapter,
+	)
+
 	// ユースケース実行
 	input := usecase.ARAssetsCreateInput{
 		UID:                 uid,
@@ -61,24 +90,7 @@ func CreateArAssets(c *gin.Context) {
 		FileHeader:          fileHeader,
 	}
 
-	// TODO: 後々DIコンテナから
-	var qrCodeImageStorage service.QRCodeImageStorage
-	var voiceModelAdapter voiceservice.VoiceModelAdapter
-
-	if config.DevMode {
-		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
-		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
-	} else {
-		qrCodeImageStorage = arassets.NewAzureQRCodeImageStorage(config)
-		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
-	}
-
-	usecase := usecase.NewARAssetsUsecaseImpl(
-		qrCodeImageStorage,
-		voiceModelAdapter,
-	)
-
-	output, err := usecase.Create(input)
+	output, err := usecaseImpl.Create(input)
 
 	if err != nil {
 		log.Printf("%s", err)

@@ -1,15 +1,11 @@
 package usecase
 
 import (
-	"fmt"
 	"mime/multipart"
-	"path/filepath"
 
-	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/database/model"
+	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type ARAssetsUsecase interface {
@@ -17,15 +13,18 @@ type ARAssetsUsecase interface {
 }
 
 type ARAssetsUsecaseImpl struct {
+	arAssetsRepository service.ARAssetsRepository
 	qrCodeImageStorage service.QRCodeImageStorage
 	voiceModelAdapter  voiceservice.VoiceModelAdapter
 }
 
 func NewARAssetsUsecaseImpl(
+	arAssetsRepository service.ARAssetsRepository,
 	qrCodeImageStorage service.QRCodeImageStorage,
 	voiceModelAdapter voiceservice.VoiceModelAdapter,
 ) *ARAssetsUsecaseImpl {
 	return &ARAssetsUsecaseImpl{
+		arAssetsRepository: arAssetsRepository,
 		qrCodeImageStorage: qrCodeImageStorage,
 		voiceModelAdapter:  voiceModelAdapter,
 	}
@@ -50,88 +49,60 @@ type ARAssetsCreateOutput struct {
 func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateOutput, error) {
 	var output ARAssetsCreateOutput
 
-	// バリデーション
-	ext := filepath.Ext(input.FileHeader.Filename)
-	blobID, err := id.NewID()
+	// バリデーション & オブジェクト生成
+	qrCodeImage, err := arassets.NewQRCodeImage(input.File, input.FileHeader)
 	if err != nil {
 		return output, err
 	}
-	blobName := fmt.Sprintf("%s%s", blobID.String(), ext)
+	speakingAsset, err := arassets.NewSpeakingAsset(input.UID, input.SpeakingDescription)
+	if err != nil {
+		return output, err
+	}
+	arAssets := arassets.NewARAssets(
+		speakingAsset,
+		qrCodeImage,
+		input.ThreeDimentionalID,
+	)
 
-	speekingAssetID, err := id.NewID()
-	if err != nil {
-		return output, err
-	}
-	audioPath := fmt.Sprintf("%s.wav", speekingAssetID.String())
+	blobName := qrCodeImage.Name()
 
 	// 3Dモデルが存在するかつ、ユーザーが所有しているか
 
 	// AIへ音声ファイル生成を依頼
 	request := voiceservice.GenerateAudioFileRequest{
-		UID:            input.UID,
-		OutputFilePath: audioPath,
+		UID:            arAssets.UserID(),
+		OutputFilePath: speakingAsset.AudioPath(),
 		Language:       "ja",
-		Content:        input.SpeakingDescription,
+		Content:        speakingAsset.Description(),
 	}
 	err = u.voiceModelAdapter.GenerateAudioFile(request)
 	if err != nil {
 		return output, err
 	}
 
-	// QRコードアイコン画像保存
-	err = u.qrCodeImageStorage.Save(blobName, input.File)
+	// QRコードアイコン画像の保存
+	err = u.qrCodeImageStorage.Save(blobName, qrCodeImage.File())
 	if err != nil {
 		return output, err
 	}
 
-	// QRコード外コン画像のURL取得
+	// QRコードアイコン画像のURL取得
 	qrCodeImagePath, err := u.qrCodeImageStorage.GetImageURL(blobName)
 	if err != nil {
 		return output, err
 	}
 
 	// データベース保存
-	speekingAssetModel := model.SpeakingAsset{
-		ID:          speekingAssetID.String(),
-		UserID:      input.UID,
-		Description: input.SpeakingDescription,
-		AudioPath:   audioPath,
-	}
-
-	arAssetModel := model.ARAsset{
-		ID:                      speekingAssetModel.ID,
-		UserID:                  input.UID,
-		SpeakingAssetID:         speekingAssetModel.ID,
-		ThreeDimentionalModelID: input.ThreeDimentionalID,
-		QRCodeImagePath:         blobName,
-		AccessCount:             0,
-	}
-
-	db, err := database.ConnectDB()
-	if err != nil {
-		return output, err
-	}
-
-	tx := db.Begin()
-
-	if err = tx.Create(&speekingAssetModel).Error; err != nil {
-		return output, err
-	}
-
-	if err = tx.Create(&arAssetModel).Error; err != nil {
-		return output, err
-	}
-
-	err = tx.Commit().Error
+	err = u.arAssetsRepository.Save(arAssets)
 	if err != nil {
 		return output, err
 	}
 
 	return ARAssetsCreateOutput{
-		ID:                   arAssetModel.ID,
-		SpeakingDescription:  speekingAssetModel.Description,
+		ID:                   arAssets.ID().String(),
+		SpeakingDescription:  speakingAsset.Description(),
 		ThreeDimentionalPath: "https://example.com",
-		SpeakingAudioPath:    "https://example.com",
+		SpeakingAudioPath:    "",
 		QrcodeIconImagePath:  qrCodeImagePath,
 	}, nil
 }
