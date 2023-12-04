@@ -24,7 +24,7 @@ type BusinessCardPartsCoordinateResponse struct {
 	QrcodeY           int    `json:"qrcode_y"`
 }
 
-func ConvertToBusinessCardPartsCoordinateResponse(bcpc model.BusinessCardPartsCoordinate) BusinessCardPartsCoordinateResponse {
+func ConvertToBCPCResponse(bcpc model.BusinessCardPartsCoordinate) BusinessCardPartsCoordinateResponse {
 	return BusinessCardPartsCoordinateResponse{
 		ID:                bcpc.ID,
 		DisplayNameX:      bcpc.DisplayNameX,

@@ -31,7 +31,7 @@ func ReadAllBusinessCardPartsCoordinate(c *gin.Context) {
 	// レスポンスに変換
 	bcpcr := []dto.BusinessCardPartsCoordinateResponse{}
 	for _, bcpc := range bcpcs {
-		bcpcr = append(bcpcr, dto.ConvertToBusinessCardPartsCoordinateResponse(bcpc))
+		bcpcr = append(bcpcr, dto.ConvertToBCPCResponse(bcpc))
 	}
 
 	c.JSON(http.StatusOK, bcpcr)
