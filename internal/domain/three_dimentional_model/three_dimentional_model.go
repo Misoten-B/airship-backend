@@ -24,6 +24,23 @@ func NewThreeDimentionalModel(userID id.ID, file file.File) (*ThreeDimentionalMo
 	}, nil
 }
 
+func ReconstructThreeDimentionalModel(id id.ID, userID id.ID) *ThreeDimentionalModel {
+	return &ThreeDimentionalModel{
+		id:     id,
+		userID: userID,
+	}
+}
+
+func ReconstructThreeDimentionalModelTemplate(id id.ID) *ThreeDimentionalModel {
+	return &ThreeDimentionalModel{
+		id: id,
+	}
+}
+
+func (t *ThreeDimentionalModel) IsTemplate() bool {
+	return t.userID == ""
+}
+
 func (t *ThreeDimentionalModel) ID() id.ID {
 	return t.id
 }

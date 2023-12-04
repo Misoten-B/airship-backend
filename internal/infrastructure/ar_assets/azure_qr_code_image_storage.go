@@ -2,12 +2,12 @@ package arassets
 
 import (
 	"context"
-	"mime/multipart"
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
 	"github.com/Misoten-B/airship-backend/config"
+	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 )
 
 type AzureQRCodeImageStorage struct {
@@ -26,7 +26,7 @@ func NewAzureQRCodeImageStorage(config *config.Config) *AzureQRCodeImageStorage 
 	}
 }
 
-func (s *AzureQRCodeImageStorage) Save(name string, file multipart.File) error {
+func (s *AzureQRCodeImageStorage) Save(qrCodeImage arassets.QRCodeImage) error {
 	ctx := context.Background()
 
 	serviceClient, err := s.newClient()
@@ -34,7 +34,7 @@ func (s *AzureQRCodeImageStorage) Save(name string, file multipart.File) error {
 		return err
 	}
 
-	_, err = serviceClient.UploadStream(ctx, containerName, name, file, nil)
+	_, err = serviceClient.UploadStream(ctx, containerName, qrCodeImage.Name(), qrCodeImage.File(), nil)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func (s *AzureQRCodeImageStorage) Save(name string, file multipart.File) error {
 	return nil
 }
 
-func (s *AzureQRCodeImageStorage) GetImageURL(name string) (string, error) {
+func (s *AzureQRCodeImageStorage) GetImageURL(qrCodeImage arassets.QRCodeImage) (string, error) {
 	serviceClient, err := s.newClient()
 	if err != nil {
 		return "", err
@@ -50,7 +50,7 @@ func (s *AzureQRCodeImageStorage) GetImageURL(name string) (string, error) {
 
 	blobClient := serviceClient.ServiceClient().
 		NewContainerClient(containerName).
-		NewBlobClient(name)
+		NewBlobClient(qrCodeImage.Name())
 
 	permissions := sas.BlobPermissions{
 		Read: true,

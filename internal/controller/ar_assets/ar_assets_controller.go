@@ -8,9 +8,11 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
 	"github.com/Misoten-B/airship-backend/internal/database"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
+	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/Misoten-B/airship-backend/internal/usecase"
 	"github.com/gin-gonic/gin"
@@ -57,11 +59,16 @@ func CreateArAssets(c *gin.Context) {
 	var arassetsRepository service.ARAssetsRepository
 	var qrCodeImageStorage service.QRCodeImageStorage
 	var voiceModelAdapter voiceservice.VoiceModelAdapter
+	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
 
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		arassetsRepository = &service.MockARAssetsRepository{}
 		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
 		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
+
+		threeDimentionalModelRepository := &threeservice.MockThreeDimentionalModelRepository{}
+		threeDimentionalModelService = *threeservice.NewThreeDimentionalModelService(threeDimentionalModelRepository)
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -73,12 +80,16 @@ func CreateArAssets(c *gin.Context) {
 		arassetsRepository = arassets.NewGormARAssetsRepository(db)
 		qrCodeImageStorage = arassets.NewAzureQRCodeImageStorage(config)
 		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
+
+		threeDimentionalModelRepository := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
+		threeDimentionalModelService = *threeservice.NewThreeDimentionalModelService(threeDimentionalModelRepository)
 	}
 
 	usecaseImpl := usecase.NewARAssetsUsecaseImpl(
 		arassetsRepository,
 		qrCodeImageStorage,
 		voiceModelAdapter,
+		threeDimentionalModelService,
 	)
 
 	// ユースケース実行

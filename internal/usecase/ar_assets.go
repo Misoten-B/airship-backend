@@ -1,11 +1,14 @@
 package usecase
 
 import (
+	"errors"
 	"mime/multipart"
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
+	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type ARAssetsUsecase interface {
@@ -13,20 +16,23 @@ type ARAssetsUsecase interface {
 }
 
 type ARAssetsUsecaseImpl struct {
-	arAssetsRepository service.ARAssetsRepository
-	qrCodeImageStorage service.QRCodeImageStorage
-	voiceModelAdapter  voiceservice.VoiceModelAdapter
+	arAssetsRepository           service.ARAssetsRepository
+	qrCodeImageStorage           service.QRCodeImageStorage
+	voiceModelAdapter            voiceservice.VoiceModelAdapter
+	threeDimentionalModelService threeservice.ThreeDimentionalModelService
 }
 
 func NewARAssetsUsecaseImpl(
 	arAssetsRepository service.ARAssetsRepository,
 	qrCodeImageStorage service.QRCodeImageStorage,
 	voiceModelAdapter voiceservice.VoiceModelAdapter,
+	threeservice threeservice.ThreeDimentionalModelService,
 ) *ARAssetsUsecaseImpl {
 	return &ARAssetsUsecaseImpl{
-		arAssetsRepository: arAssetsRepository,
-		qrCodeImageStorage: qrCodeImageStorage,
-		voiceModelAdapter:  voiceModelAdapter,
+		arAssetsRepository:           arAssetsRepository,
+		qrCodeImageStorage:           qrCodeImageStorage,
+		voiceModelAdapter:            voiceModelAdapter,
+		threeDimentionalModelService: threeservice,
 	}
 }
 
@@ -64,9 +70,17 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		input.ThreeDimentionalID,
 	)
 
-	blobName := qrCodeImage.Name()
-
 	// 3Dモデルが存在するかつ、ユーザーが所有しているか
+	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
+	uid := id.ReconstructID(input.UID)
+	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, uid)
+
+	if err != nil {
+		return output, err
+	}
+	if !hasPermission {
+		return output, errors.New("user does not have permission to use this 3D model")
+	}
 
 	// AIへ音声ファイル生成を依頼
 	request := voiceservice.GenerateAudioFileRequest{
@@ -81,13 +95,13 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// QRコードアイコン画像の保存
-	err = u.qrCodeImageStorage.Save(blobName, qrCodeImage.File())
+	err = u.qrCodeImageStorage.Save(qrCodeImage)
 	if err != nil {
 		return output, err
 	}
 
 	// QRコードアイコン画像のURL取得
-	qrCodeImagePath, err := u.qrCodeImageStorage.GetImageURL(blobName)
+	qrCodeImagePath, err := u.qrCodeImageStorage.GetImageURL(qrCodeImage)
 	if err != nil {
 		return output, err
 	}

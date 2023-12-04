@@ -29,7 +29,7 @@ func NewARAssets(
 }
 
 // ID は ARAssets の ID を返します。
-// ARアセット・音声ともに一意なので、内部的には SpeakingAsset の ID を返します。
+// ARアセット・音声ファイルともに1対1の関係なので、内部的には SpeakingAsset の ID を返します。
 func (a *ARAssets) ID() id.ID {
 	return a.speakingAsset.ID()
 }
@@ -94,9 +94,8 @@ func (s *SpeakingAsset) AudioPath() string {
 }
 
 type QRCodeImage struct {
-	id         id.ID
-	file       multipart.File
-	fileHeader *multipart.FileHeader
+	name string
+	file multipart.File
 }
 
 func NewQRCodeImage(file multipart.File, fileHeader *multipart.FileHeader) (QRCodeImage, error) {
@@ -105,15 +104,16 @@ func NewQRCodeImage(file multipart.File, fileHeader *multipart.FileHeader) (QRCo
 		return QRCodeImage{}, err
 	}
 
+	name := fmt.Sprintf("%s%s", id.String(), filepath.Ext(fileHeader.Filename))
+
 	return QRCodeImage{
-		id:         id,
-		file:       file,
-		fileHeader: fileHeader,
+		name: name,
+		file: file,
 	}, nil
 }
 
 func (q *QRCodeImage) Name() string {
-	return fmt.Sprintf("%s%s", q.id.String(), filepath.Ext(q.fileHeader.Filename))
+	return q.name
 }
 
 func (q *QRCodeImage) File() multipart.File {
