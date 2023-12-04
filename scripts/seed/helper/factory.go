@@ -23,36 +23,31 @@ type AppModel struct {
 func NewAppModel() *AppModel {
 	user := newUser()
 
-	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate()
-	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(user)
-	threeDimentionalModels := newThreeDimentionalModels(
-		threeDimentionalModelTemplate,
-		personalThreeDimentionalModel,
-	)
+	threeDimentionalModels := newThreeDimentionalModels()
+	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate(threeDimentionalModels[0].ID)
+	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[1].ID, user)
 
 	speakingAsset := newSpeakingAsset(user)
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
 
-	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
-		ID:        newID(),
-		ColorCode: "#ffffff",
-		ImagePath: "https://example.com/background_template.png",
-	}
-	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
-		ID:        newID(),
-		User:      user.ID,
-		ColorCode: "#ffffff",
-		ImagePath: "https://example.com/background.png",
-	}
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
-			ID:                             newID(),
-			BusinessCardBackgroundTemplate: businessCardBackgroundTemplate.ID,
+			ID:        "1",
+			ColorCode: "#000000",
+			ImagePath: "https://example.com/background-template.png",
 		},
 		{
-			ID:                             newID(),
-			PersonalBusinessCardBackground: personalBusinessCardBackground.ID,
+			ID:        "2",
+			ColorCode: "#ffffff",
+			ImagePath: "https://example.com/background-personal.png",
 		},
+	}
+	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
+		ID: businessCardBackgrounds[0].ID,
+	}
+	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
+		ID:     businessCardBackgrounds[1].ID,
+		UserID: user.ID,
 	}
 
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
@@ -88,33 +83,28 @@ func newUser() *model.User {
 	}
 }
 
-func newThreeDimentionalModelTemplate() *model.ThreeDimentionalModelTemplate {
+func newThreeDimentionalModelTemplate(id string) *model.ThreeDimentionalModelTemplate {
 	return &model.ThreeDimentionalModelTemplate{
-		ID:   newID(),
-		Path: "https://example.com/3d_model_template.gltf",
+		ID: id,
 	}
 }
 
-func newPersonalThreeDimentionalModel(user *model.User) *model.PersonalThreeDimentionalModel {
+func newPersonalThreeDimentionalModel(id string, user *model.User) *model.PersonalThreeDimentionalModel {
 	return &model.PersonalThreeDimentionalModel{
-		ID:     newID(),
+		ID:     id,
 		UserID: user.ID,
-		Path:   "https://example.com/3d_model.gltf",
 	}
 }
 
-func newThreeDimentionalModels(
-	threeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate,
-	personalThreeDimentionalModel *model.PersonalThreeDimentionalModel,
-) []*model.ThreeDimentionalModel {
+func newThreeDimentionalModels() []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
-			ID:                            newID(),
-			ThreeDimentionalModelTemplate: threeDimentionalModelTemplate.ID,
+			ID:        "1",
+			ModelPath: "https://example.com/3d_model.gltf",
 		},
 		{
-			ID:                            newID(),
-			PersonalThreeDimentionalModel: personalThreeDimentionalModel.ID,
+			ID:        "2",
+			ModelPath: "https://example.com/3d_model.gltf",
 		},
 	}
 }
@@ -132,7 +122,9 @@ func newARAsset(
 	threeDimentionalModel *model.ThreeDimentionalModel,
 ) *model.ARAsset {
 	return &model.ARAsset{
-		ID:                      newID(),
+		ID:                      "1",
+		AccessCount:             0,
+		QRCodeImagePath:         "https://example.com/qr_code.png",
 		UserID:                  user.ID,
 		SpeakingAssetID:         speakingAsset.ID,
 		ThreeDimentionalModelID: threeDimentionalModel.ID,
@@ -170,21 +162,19 @@ func newBusinessCard(
 	businessCardBackgrounds *model.BusinessCardBackground,
 ) *model.BusinessCard {
 	return &model.BusinessCard{
-		ID:                          newID(),
-		User:                        user.ID,
-		ARAsset:                     arAsset.ID,
-		BusinessCardPathsCoordinate: businessCardPartsCoordinate.ID,
-		BusinessCardBackground:      businessCardBackgrounds.ID,
-		DisplayName:                 "山田太郎",
-		CompanyName:                 "株式会社山田",
-		Department:                  "開発部",
-		OfficialPosition:            "部長",
-		PhoneNumber:                 "090-1234-5678",
-		Email:                       "yamada@example.com",
-		PostalCode:                  "123-4567",
-		Address:                     "東京都渋谷区",
-		QRCodeImagePath:             "https://example.com/qr_code.png",
-		AccessCount:                 0,
+		ID:                            "1",
+		UserID:                        user.ID,
+		ARAssetID:                     arAsset.ID,
+		BusinessCardPartsCoordinateID: businessCardPartsCoordinate.ID,
+		BusinessCardBackgroundID:      businessCardBackgrounds.ID,
+		DisplayName:                   "山田太郎",
+		CompanyName:                   "株式会社山田",
+		Department:                    "開発部",
+		OfficialPosition:              "部長",
+		PhoneNumber:                   "090-1234-5678",
+		Email:                         "yamada@example.com",
+		PostalCode:                    "123-4567",
+		Address:                       "東京都渋谷区",
 	}
 }
 

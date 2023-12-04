@@ -16,11 +16,11 @@ func main() {
 	if err = db.AutoMigrate(
 		&model.User{},
 		&model.SpeakingAsset{},
-		&model.ARAsset{},
-		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
 		&model.ThreeDimentionalModel{},
-		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
+		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
+		&model.ARAsset{},
 		&model.BusinessCardBackground{},
+		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardPartsCoordinate{},
 		&model.BusinessCard{},
 	); err != nil {

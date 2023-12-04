@@ -18,14 +18,14 @@ func main() {
 	// User
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.User)
 
+	// ThreeDimentionalModel
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.ThreeDimentionalModels)
+
 	// ThreeDimentionalModelTemplate
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.TempThreeDimentionalModelTemplate)
 
 	// PersonalThreeDimentionalModel
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.PersonalThreeDimentionalModel)
-
-	// ThreeDimentionalModel
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.ThreeDimentionalModels)
 
 	// SpeakingAsset
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.SpeakingAsset)
@@ -33,14 +33,14 @@ func main() {
 	// ARAsset
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.ARAsset)
 
+	// BusinessCardBackground
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgrounds)
+
 	// BusinessCardBackgroundTemplate
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgroundTemplate)
 
 	// PersonalBusinessCardBackground
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.PersonalBusinessCardBackground)
-
-	// BusinessCardBackground
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgrounds)
 
 	// BusinessCardPartsCoordinate
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardPartsCoordinate)

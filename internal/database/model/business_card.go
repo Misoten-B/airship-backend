@@ -4,29 +4,27 @@ import "time"
 
 // BusinessCardは名刺テーブルのORMモデルです。
 type BusinessCard struct {
-	ID                          string `gorm:"primaryKey"`
-	User                        string
-	ARAsset                     string
-	BusinessCardPathsCoordinate string
-	BusinessCardBackground      string
-	BusinessCardName            string
-	DisplayName                 string
-	CompanyName                 string
-	Department                  string
-	OfficialPosition            string
-	PhoneNumber                 string
-	Email                       string
-	PostalCode                  string
-	Address                     string
-	QRCodeImagePath             string
-	CreatedAt                   time.Time
-	AccessCount                 int
+	ID                            string `gorm:"primaryKey"`
+	UserID                        string
+	ARAssetID                     string
+	BusinessCardPartsCoordinateID string
+	BusinessCardBackgroundID      string
+	BusinessCardName              string
+	DisplayName                   string
+	CompanyName                   string
+	Department                    string
+	OfficialPosition              string
+	PhoneNumber                   string
+	Email                         string
+	PostalCode                    string
+	Address                       string
+	CreatedAt                     time.Time
 }
 
 // BusinessCardPartsCoordinateは名刺パーツ座標テーブルのORMモデルです。
 type BusinessCardPartsCoordinate struct {
-	ID                string         `gorm:"primaryKey"`
-	BusinessCards     []BusinessCard `gorm:"foreignKey:BusinessCardPathsCoordinate"`
+	ID                string `gorm:"primaryKey"`
+	BusinessCards     []BusinessCard
 	DisplayNameX      int
 	DisplayNameY      int
 	CompanyNameX      int
@@ -47,31 +45,25 @@ type BusinessCardPartsCoordinate struct {
 	QRCodeY           int
 }
 
-// TODO: 排他サブタイプのモデル最適化
-
 // BusinessCardBackgroundは名刺背景テーブルのORMモデルです。
 type BusinessCardBackground struct {
-	ID                             string         `gorm:"primaryKey"`
-	BusinessCards                  []BusinessCard `gorm:"foreignKey:BusinessCardBackground"`
-	BusinessCardBackgroundTemplate string         `gorm:"default:null"`
-	PersonalBusinessCardBackground string         `gorm:"default:null"`
+	ID                              string `gorm:"primaryKey"`
+	ColorCode                       string
+	ImagePath                       string
+	BusinessCardBackgroundTemplates []BusinessCardBackgroundTemplate `gorm:"foreignKey:ID"`
+	PersonalBusinessCardBackgrounds []PersonalBusinessCardBackground `gorm:"foreignKey:ID"`
+	BusinessCards                   []BusinessCard
 }
 
 // BusinessCardBackgroundTemplateは名刺背景テンプレートテーブルのORMモデルです。
 // BusinessCardBackgroundの排他的サブタイプです。
 type BusinessCardBackgroundTemplate struct {
-	ID                      string                   `gorm:"primaryKey"`
-	BusinessCardBackgrounds []BusinessCardBackground `gorm:"foreignKey:BusinessCardBackgroundTemplate"`
-	ColorCode               string
-	ImagePath               string
+	ID string `gorm:"primaryKey"`
 }
 
 // PersonalBusinessCardBackgroundはユーザー定義名刺背景テーブルのORMモデルです。
 // BusinessCardBackgroundの排他的サブタイプです。
 type PersonalBusinessCardBackground struct {
-	ID                      string                   `gorm:"primaryKey"`
-	BusinessCardBackgrounds []BusinessCardBackground `gorm:"foreignKey:PersonalBusinessCardBackground"`
-	User                    string
-	ColorCode               string
-	ImagePath               string
+	ID     string `gorm:"primaryKey"`
+	UserID string
 }
