@@ -60,9 +60,9 @@ func CreateArAssets(c *gin.Context) {
 	var qrCodeImageStorage service.QRCodeImageStorage
 	var voiceModelAdapter voiceservice.VoiceModelAdapter
 	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
+	threeDimentionalModelStorage := &threeservice.MockThreeDimentionalModelStorage{}
 
-	// if config.DevMode {
-	if false {
+	if config.DevMode {
 		arassetsRepository = &service.MockARAssetsRepository{}
 		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
 		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
@@ -90,6 +90,7 @@ func CreateArAssets(c *gin.Context) {
 		qrCodeImageStorage,
 		voiceModelAdapter,
 		threeDimentionalModelService,
+		threeDimentionalModelStorage,
 	)
 
 	// ユースケース実行
