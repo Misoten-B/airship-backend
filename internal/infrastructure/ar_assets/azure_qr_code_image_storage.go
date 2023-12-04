@@ -1,7 +1,7 @@
 package arassets
 
 import (
-	"fmt"
+	"context"
 	"mime/multipart"
 	"time"
 
@@ -14,6 +14,12 @@ type AzureQRCodeImageStorage struct {
 	connectionString string
 }
 
+const (
+	// sasExpiryDuration は、SASの有効期限の猶予です。
+	sasExpiryDuration = 24 * time.Hour
+	containerName     = "images"
+)
+
 func NewAzureQRCodeImageStorage(config *config.Config) *AzureQRCodeImageStorage {
 	return &AzureQRCodeImageStorage{
 		connectionString: config.AzureBlobStorageConnectionString,
@@ -21,31 +27,45 @@ func NewAzureQRCodeImageStorage(config *config.Config) *AzureQRCodeImageStorage 
 }
 
 func (s *AzureQRCodeImageStorage) Save(name string, file multipart.File) error {
-	// ctx := context.Background()
+	ctx := context.Background()
 
-	serviceClient, err := azblob.NewClientFromConnectionString(s.connectionString, nil)
+	serviceClient, err := s.newClient()
 	if err != nil {
 		return err
 	}
 
-	url, err := serviceClient.ServiceClient().
-		NewContainerClient("images").
-		NewBlobClient("3b3baec3-7417-490f-bd2f-b8c700b4d1b1.png").
-		GetSASURL(
-			sas.BlobPermissions{
-				Read: true,
-			},
-			time.Now().Add(24*time.Hour),
-			nil,
-		)
-	fmt.Println(url)
+	_, err = serviceClient.UploadStream(ctx, containerName, name, file, nil)
 	if err != nil {
 		return err
 	}
 
-	// _, err = serviceClient.UploadStream(ctx, "images", name, file, &azblob.UploadStreamOptions{})
-	// if err != nil {
-	// 	return err
-	// }
 	return nil
+}
+
+func (s *AzureQRCodeImageStorage) GetImageURL(name string) (string, error) {
+	serviceClient, err := s.newClient()
+	if err != nil {
+		return "", err
+	}
+
+	blobClient := serviceClient.ServiceClient().
+		NewContainerClient(containerName).
+		NewBlobClient(name)
+
+	permissions := sas.BlobPermissions{
+		Read: true,
+	}
+	expiry := time.Now().Add(sasExpiryDuration)
+
+	url, err := blobClient.GetSASURL(permissions, expiry, nil)
+	if err != nil {
+		return "", err
+	}
+
+	return url, err
+}
+
+func (s *AzureQRCodeImageStorage) newClient() (*azblob.Client, error) {
+	serviceClient, err := azblob.NewClientFromConnectionString(s.connectionString, nil)
+	return serviceClient, err
 }

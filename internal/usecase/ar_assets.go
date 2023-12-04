@@ -84,6 +84,12 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		return output, err
 	}
 
+	// QRコード外コン画像のURL取得
+	qrCodeImagePath, err := u.qrCodeImageStorage.GetImageURL(blobName)
+	if err != nil {
+		return output, err
+	}
+
 	// データベース保存
 	speekingAssetModel := model.SpeakingAsset{
 		ID:          speekingAssetID.String(),
@@ -126,6 +132,6 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		SpeakingDescription:  speekingAssetModel.Description,
 		ThreeDimentionalPath: "https://example.com",
 		SpeakingAudioPath:    "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		QrcodeIconImagePath:  qrCodeImagePath,
 	}, nil
 }
