@@ -19,6 +19,7 @@ type ARAssetsUsecaseImpl struct {
 	arAssetsRepository           service.ARAssetsRepository
 	qrCodeImageStorage           service.QRCodeImageStorage
 	voiceModelAdapter            voiceservice.VoiceModelAdapter
+	voiceService                 voiceservice.VoiceService
 	threeDimentionalModelService threeservice.ThreeDimentionalModelService
 }
 
@@ -26,12 +27,14 @@ func NewARAssetsUsecaseImpl(
 	arAssetsRepository service.ARAssetsRepository,
 	qrCodeImageStorage service.QRCodeImageStorage,
 	voiceModelAdapter voiceservice.VoiceModelAdapter,
+	voiceService voiceservice.VoiceService,
 	threeservice threeservice.ThreeDimentionalModelService,
 ) *ARAssetsUsecaseImpl {
 	return &ARAssetsUsecaseImpl{
 		arAssetsRepository:           arAssetsRepository,
 		qrCodeImageStorage:           qrCodeImageStorage,
 		voiceModelAdapter:            voiceModelAdapter,
+		voiceService:                 voiceService,
 		threeDimentionalModelService: threeservice,
 	}
 }
@@ -66,9 +69,19 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		input.ThreeDimentionalID,
 	)
 
-	// 3Dモデルが存在するかつ、ユーザーが所有しているか
 	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
 	uid := id.ReconstructID(input.UID)
+
+	// 音声モデルの生成が完了しているかどうか
+	isCompleted, err := u.voiceService.IsModelGenerated(uid)
+	if err != nil {
+		return output, err
+	}
+	if !isCompleted {
+		return output, errors.New("voice model generation has not been completed")
+	}
+
+	// 3Dモデルが存在するかつ、ユーザーが所有しているか
 	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, uid)
 
 	if err != nil {

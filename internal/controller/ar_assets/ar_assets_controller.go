@@ -60,11 +60,15 @@ func CreateArAssets(c *gin.Context) {
 	var arassetsRepository service.ARAssetsRepository
 	var qrCodeImageStorage service.QRCodeImageStorage
 	var voiceModelAdapter voiceservice.VoiceModelAdapter
+	var voiceService voiceservice.VoiceService
 	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
 
 	if config.DevMode {
 		arassetsRepository = &service.MockARAssetsRepository{}
 		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
+
+		voiceRepo := voiceservice.MockVoiceRepository{}
+		voiceService = *voiceservice.NewVoiceService(&voiceRepo)
 		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
 
 		threeDimentionalModelRepository := &threeservice.MockThreeDimentionalModelRepository{}
@@ -79,6 +83,9 @@ func CreateArAssets(c *gin.Context) {
 
 		arassetsRepository = arassets.NewGormARAssetsRepository(db)
 		qrCodeImageStorage = arassets.NewAzureQRCodeImageStorage(config)
+
+		voiceRepo := voice.NewGormVoiceRepository(db)
+		voiceService = *voiceservice.NewVoiceService(&voiceRepo)
 		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
 
 		threeDimentionalModelRepository := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
@@ -89,6 +96,7 @@ func CreateArAssets(c *gin.Context) {
 		arassetsRepository,
 		qrCodeImageStorage,
 		voiceModelAdapter,
+		voiceService,
 		threeDimentionalModelService,
 	)
 
