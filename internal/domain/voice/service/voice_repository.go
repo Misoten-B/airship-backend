@@ -13,6 +13,10 @@ type VoiceRepository interface {
 
 type MockVoiceRepository struct{}
 
+func NewMockVoiceRepository() *MockVoiceRepository {
+	return &MockVoiceRepository{}
+}
+
 func (m *MockVoiceRepository) FetchStatus(_ id.ID) (shared.Status, error) {
 	log.Print("Mock VoiceRepository - FetchStatus")
 	return shared.StatusCompleted{}, nil

@@ -11,8 +11,8 @@ type GormVoiceRepository struct {
 	db *gorm.DB
 }
 
-func NewGormVoiceRepository(db *gorm.DB) GormVoiceRepository {
-	return GormVoiceRepository{
+func NewGormVoiceRepository(db *gorm.DB) *GormVoiceRepository {
+	return &GormVoiceRepository{
 		db: db,
 	}
 }
