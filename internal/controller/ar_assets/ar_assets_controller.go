@@ -69,7 +69,7 @@ func CreateArAssets(c *gin.Context) {
 
 		voiceRepo := voiceservice.MockVoiceRepository{}
 		voiceService = *voiceservice.NewVoiceService(&voiceRepo)
-		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
+		voiceModelAdapter = voiceservice.NewMockVoiceModelAdapter()
 
 		threeDimentionalModelRepository := threeservice.NewMockThreeDimentionalModelRepository()
 		threeDimentionalModelService = threeservice.NewThreeDimentionalModelServiceImpl(threeDimentionalModelRepository)
