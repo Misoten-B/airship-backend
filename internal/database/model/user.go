@@ -10,7 +10,6 @@ type User struct {
 	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
 	ARAssets                        []ARAsset
 	SpeakingAssets                  []SpeakingAsset
-	RecordedVoicePath               string
 	RecordedModelPath               string
 	CreatedAt                       time.Time
 	DeletedAt                       time.Time

@@ -36,7 +36,6 @@ func CreateUser(c *gin.Context) {
 
 	user := model.User{
 		ID:                uid,
-		RecordedVoicePath: "",
 		RecordedModelPath: "",
 		IsToured:          false,
 	}
@@ -56,7 +55,6 @@ func CreateUser(c *gin.Context) {
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusCreated, dto.UserResponse{
 		ID:                user.ID,
-		RecordedVoicePath: user.RecordedVoicePath,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
 	})
@@ -91,7 +89,6 @@ func ReadUserByID(c *gin.Context) {
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusOK, dto.UserResponse{
 		ID:                user.ID,
-		RecordedVoicePath: user.RecordedVoicePath,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
 	})
@@ -138,7 +135,6 @@ func UpdateUser(c *gin.Context) {
 
 	user := model.User{
 		ID:                uid,
-		RecordedVoicePath: "",
 		RecordedModelPath: "",
 		IsToured:          request.IsToured,
 	}
@@ -151,7 +147,6 @@ func UpdateUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, dto.UserResponse{
 		ID:                user.ID,
-		RecordedVoicePath: user.RecordedVoicePath,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
 	})
