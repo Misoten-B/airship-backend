@@ -55,22 +55,22 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	var output ARAssetsCreateOutput
 
 	// バリデーション & オブジェクト生成
+	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
+	uid := id.ReconstructID(input.UID)
+
 	qrCodeImage, err := arassets.NewQRCodeImage(input.File, input.FileHeader)
 	if err != nil {
 		return output, err
 	}
-	speakingAsset, err := arassets.NewSpeakingAsset(input.UID, input.SpeakingDescription)
+	speakingAsset, err := arassets.NewSpeakingAsset(uid, input.SpeakingDescription)
 	if err != nil {
 		return output, err
 	}
 	arAssets := arassets.NewARAssets(
 		speakingAsset,
 		qrCodeImage,
-		input.ThreeDimentionalID,
+		threedimentionalmodelID,
 	)
-
-	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
-	uid := id.ReconstructID(input.UID)
 
 	// 音声モデルの生成が完了しているかどうか
 	isCompleted, err := u.voiceService.IsModelGenerated(uid)
@@ -93,7 +93,7 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	// AIへ音声ファイル生成を依頼
 	request := voiceservice.GenerateAudioFileRequest{
-		UID:            arAssets.UserID(),
+		UID:            arAssets.UserID().String(),
 		OutputFilePath: speakingAsset.AudioPath(),
 		Language:       "ja",
 		Content:        speakingAsset.Description(),

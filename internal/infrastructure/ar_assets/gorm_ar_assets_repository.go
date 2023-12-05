@@ -26,16 +26,16 @@ func (r GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 
 	speakingAssetModel := model.SpeakingAsset{
 		ID:          speakingAsset.ID().String(),
-		UserID:      speakingAsset.UserID(),
+		UserID:      speakingAsset.UserID().String(),
 		Description: speakingAsset.Description(),
 		AudioPath:   speakingAsset.AudioPath(),
 	}
 
 	arAssetModel := model.ARAsset{
 		ID:                      arassets.ID().String(),
-		UserID:                  arassets.UserID(),
+		UserID:                  arassets.UserID().String(),
 		SpeakingAssetID:         speakingAssetModel.ID,
-		ThreeDimentionalModelID: arassets.ThreeDimentionalModelID(),
+		ThreeDimentionalModelID: arassets.ThreeDimentionalModelID().String(),
 		QRCodeImagePath:         qrCodeImage.Name(),
 		AccessCount:             arassets.AccessCount(),
 		Status:                  model.GormStatusInProgress,

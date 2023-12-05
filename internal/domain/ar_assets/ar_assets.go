@@ -11,14 +11,14 @@ import (
 type ARAssets struct {
 	speakingAsset           SpeakingAsset
 	qRCodeImage             QRCodeImage
-	threeDimentionalModelID string
+	threeDimentionalModelID id.ID
 	accessCount             int
 }
 
 func NewARAssets(
 	speakingAsset SpeakingAsset,
 	qrCodeImage QRCodeImage,
-	threedimentionalModelID string,
+	threedimentionalModelID id.ID,
 ) ARAssets {
 	return ARAssets{
 		speakingAsset:           speakingAsset,
@@ -34,7 +34,7 @@ func (a *ARAssets) ID() id.ID {
 	return a.speakingAsset.ID()
 }
 
-func (a *ARAssets) UserID() string {
+func (a *ARAssets) UserID() id.ID {
 	return a.speakingAsset.UserID()
 }
 
@@ -42,7 +42,7 @@ func (a *ARAssets) QRCodeImage() QRCodeImage {
 	return a.qRCodeImage
 }
 
-func (a *ARAssets) ThreeDimentionalModelID() string {
+func (a *ARAssets) ThreeDimentionalModelID() id.ID {
 	return a.threeDimentionalModelID
 }
 
@@ -56,12 +56,12 @@ func (a *ARAssets) AccessCount() int {
 
 type SpeakingAsset struct {
 	id          id.ID
-	userID      string
+	userID      id.ID
 	description string
 	audioPath   string
 }
 
-func NewSpeakingAsset(userID string, description string) (SpeakingAsset, error) {
+func NewSpeakingAsset(userID id.ID, description string) (SpeakingAsset, error) {
 	id, err := id.NewID()
 	if err != nil {
 		return SpeakingAsset{}, err
@@ -81,7 +81,7 @@ func (s *SpeakingAsset) ID() id.ID {
 	return s.id
 }
 
-func (s *SpeakingAsset) UserID() string {
+func (s *SpeakingAsset) UserID() id.ID {
 	return s.userID
 }
 
