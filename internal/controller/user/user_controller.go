@@ -6,6 +6,9 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/controller/user/dto"
+	"github.com/Misoten-B/airship-backend/internal/database"
+	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,7 +20,13 @@ import (
 // @Param CreateUserRequest body dto.CreateUserRequest true "create user"
 func CreateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -25,12 +34,31 @@ func CreateUser(c *gin.Context) {
 	}
 	log.Printf("body: %v", request)
 
-	c.Header("Location", fmt.Sprintf("/%s", "1"))
+	user := model.User{
+		ID:                uid,
+		RecordedVoicePath: "",
+		RecordedModelPath: "",
+		IsToured:          false,
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	result := db.Create(&user)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	// TODO レスポンスをDTOに変換
+	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusCreated, dto.UserResponse{
-		ID:                "1",
-		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
-		RecordedModelPath: "https://example.com/recorded_model.tflite",
-		IsToured:          request.IsToured,
+		ID:                user.ID,
+		RecordedVoicePath: user.RecordedVoicePath,
+		RecordedModelPath: user.RecordedModelPath,
+		IsToured:          user.IsToured,
 	})
 }
 
@@ -40,14 +68,32 @@ func CreateUser(c *gin.Context) {
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} dto.UserResponse
 func ReadUserByID(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
-	log.Printf("user_id: %s", c.Param("user_id"))
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user := model.User{}
+	result := db.First(&user, "id = ?", uid)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	// TODO: レスポンスをDTOに変換
+	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusOK, dto.UserResponse{
-		ID:                "1",
-		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
-		RecordedModelPath: "https://example.com/recorded_model.tflite",
-		IsToured:          false,
+		ID:                user.ID,
+		RecordedVoicePath: user.RecordedVoicePath,
+		RecordedModelPath: user.RecordedModelPath,
+		IsToured:          user.IsToured,
 	})
 }
 
@@ -61,19 +107,53 @@ func ReadUserByID(c *gin.Context) {
 // @Success 200 {object} dto.UserResponse
 func UpdateUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
-	if err := c.ShouldBindJSON(&request); err != nil {
+	if err := c.ShouldBind(&request); err != nil {
+		log.Print("aaaa")
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("body: %v", request)
+
+	// TODO: AI側に送信
+	file, fileHeader, err := c.Request.FormFile("recorded_voice")
+	log.Printf("file: %v", file)
+	log.Printf("fileHeader: %v", fileHeader)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user := model.User{
+		ID:                uid,
+		RecordedVoicePath: "",
+		RecordedModelPath: "",
+		IsToured:          request.IsToured,
+	}
+
+	result := db.Model(&user).Updates(user)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, dto.UserResponse{
-		ID:                "1",
-		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
-		RecordedModelPath: "https://example.com/recorded_model.tflite",
-		IsToured:          false,
+		ID:                user.ID,
+		RecordedVoicePath: user.RecordedVoicePath,
+		RecordedModelPath: user.RecordedModelPath,
+		IsToured:          user.IsToured,
 	})
 }
 
@@ -85,6 +165,25 @@ func UpdateUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 	log.Printf("user_id: %s", c.Param("user_id"))
+
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	db, err := database.ConnectDB()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user := model.User{}
+	result := db.Model(&user).Where("id = ?", uid).Delete(&user)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
 
 	c.JSON(http.StatusNoContent, nil)
 }

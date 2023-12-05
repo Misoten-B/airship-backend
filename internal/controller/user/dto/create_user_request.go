@@ -1,5 +1,5 @@
 package dto
 
 type CreateUserRequest struct {
-	IsToured bool `json:"is_toured" example:"false" extensions:"x-nullable"`
+	IsToured bool `form:"is_toured" example:"false" extensions:"x-nullable"`
 }
