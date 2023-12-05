@@ -65,7 +65,7 @@ func CreateArAssets(c *gin.Context) {
 
 	if config.DevMode {
 		arassetsRepository = service.NewMockARAssetsRepository()
-		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
+		qrCodeImageStorage = service.NewMockQRCodeImageStorage()
 
 		voiceRepo := voiceservice.MockVoiceRepository{}
 		voiceService = *voiceservice.NewVoiceService(&voiceRepo)

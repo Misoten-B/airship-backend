@@ -14,6 +14,10 @@ type QRCodeImageStorage interface {
 
 type MockQRCodeImageStorage struct{}
 
+func NewMockQRCodeImageStorage() *MockQRCodeImageStorage {
+	return &MockQRCodeImageStorage{}
+}
+
 func (s *MockQRCodeImageStorage) Save(_ arassets.QRCodeImage) error {
 	log.Println("Mock QRCode Image Storage - Save")
 	return nil
