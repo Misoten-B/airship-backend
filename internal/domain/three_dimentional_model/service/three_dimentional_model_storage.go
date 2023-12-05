@@ -11,6 +11,10 @@ type ThreeDimentionalModelStorage interface {
 
 type MockThreeDimentionalModelStorage struct{}
 
+func NewMockThreeDimentionalModelStorage() *MockThreeDimentionalModelStorage {
+	return &MockThreeDimentionalModelStorage{}
+}
+
 func (s *MockThreeDimentionalModelStorage) GetModelURL(modelName string) (string, error) {
 	log.Println("Mock 3D Model Storage - GetURL")
 
