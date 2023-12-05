@@ -175,8 +175,6 @@ definitions:
         type: boolean
       recorded_model_path:
         type: string
-      recorded_voice_path:
-        type: string
     type: object
 host: localhost:8080
 info:
