@@ -5,19 +5,23 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
-type VoiceService struct {
+type VoiceService interface {
+	IsModelGenerated(userID id.ID) (bool, error)
+}
+
+type VoiceServiceImpl struct {
 	repository VoiceRepository
 }
 
-func NewVoiceService(repository VoiceRepository) *VoiceService {
-	return &VoiceService{
+func NewVoiceServiceImpl(repository VoiceRepository) *VoiceServiceImpl {
+	return &VoiceServiceImpl{
 		repository: repository,
 	}
 }
 
 // IsModelGenerated は音声モデルが生成済みかどうかを判定します。
 // 既に生成が完了している場合はtrueを返します。
-func (s *VoiceService) IsModelGenerated(userID id.ID) (bool, error) {
+func (s *VoiceServiceImpl) IsModelGenerated(userID id.ID) (bool, error) {
 	status, err := s.repository.FetchStatus(userID)
 	if err != nil {
 		return false, err
