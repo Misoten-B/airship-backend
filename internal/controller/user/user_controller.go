@@ -28,8 +28,8 @@ func CreateUser(c *gin.Context) {
 
 	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
-	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if requestErr := c.ShouldBindJSON(&request); requestErr != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": requestErr.Error()})
 		return
 	}
 	log.Printf("body: %v", request)
@@ -112,9 +112,9 @@ func UpdateUser(c *gin.Context) {
 
 	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
-	if err := c.ShouldBind(&request); err != nil {
+	if requestErr := c.ShouldBind(&request); requestErr != nil {
 		log.Print("aaaa")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": requestErr.Error()})
 		return
 	}
 
