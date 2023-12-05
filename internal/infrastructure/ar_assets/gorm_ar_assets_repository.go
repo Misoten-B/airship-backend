@@ -38,6 +38,7 @@ func (r GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 		ThreeDimentionalModelID: arassets.ThreeDimentionalModelID(),
 		QRCodeImagePath:         qrCodeImage.Name(),
 		AccessCount:             arassets.AccessCount(),
+		Status:                  model.GormStatusInProgress,
 	}
 
 	tx := r.db.Begin()

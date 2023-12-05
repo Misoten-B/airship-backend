@@ -40,4 +40,5 @@ type ARAsset struct {
 	UserID                  string
 	SpeakingAssetID         string
 	ThreeDimentionalModelID string
+	Status                  int
 }

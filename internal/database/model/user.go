@@ -10,9 +10,10 @@ type User struct {
 	PersonalThreeDimentionalModels  []PersonalThreeDimentionalModel
 	ARAssets                        []ARAsset
 	SpeakingAssets                  []SpeakingAsset
-	RecordedVoicePath               string
 	RecordedModelPath               string
 	CreatedAt                       time.Time
 	DeletedAt                       time.Time
 	IsToured                        bool
+	// Status は音声モデルの生成状態を表します
+	Status int
 }
