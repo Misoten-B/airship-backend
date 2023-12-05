@@ -13,7 +13,11 @@ type ThreeDimentionalModelRepository interface {
 
 type MockThreeDimentionalModelRepository struct{}
 
-func (r MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
+func NewMockThreeDimentionalModelRepository() *MockThreeDimentionalModelRepository {
+	return &MockThreeDimentionalModelRepository{}
+}
+
+func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
 	log.Println("Mock ThreeDimentionalModel Repository - Find")
 	return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
 }

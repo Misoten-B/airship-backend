@@ -71,7 +71,7 @@ func CreateArAssets(c *gin.Context) {
 		voiceService = *voiceservice.NewVoiceService(&voiceRepo)
 		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
 
-		threeDimentionalModelRepository := &threeservice.MockThreeDimentionalModelRepository{}
+		threeDimentionalModelRepository := threeservice.NewMockThreeDimentionalModelRepository()
 		threeDimentionalModelService = *threeservice.NewThreeDimentionalModelService(threeDimentionalModelRepository)
 	} else {
 		db, dbErr := database.ConnectDB()
