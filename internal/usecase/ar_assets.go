@@ -20,7 +20,6 @@ type ARAssetsUsecaseImpl struct {
 	qrCodeImageStorage           service.QRCodeImageStorage
 	voiceModelAdapter            voiceservice.VoiceModelAdapter
 	threeDimentionalModelService threeservice.ThreeDimentionalModelService
-	threeDimentionalModelStorage threeservice.ThreeDimentionalModelStorage
 }
 
 func NewARAssetsUsecaseImpl(
@@ -28,14 +27,12 @@ func NewARAssetsUsecaseImpl(
 	qrCodeImageStorage service.QRCodeImageStorage,
 	voiceModelAdapter voiceservice.VoiceModelAdapter,
 	threeservice threeservice.ThreeDimentionalModelService,
-	threedimentionalmodelstorage threeservice.ThreeDimentionalModelStorage,
 ) *ARAssetsUsecaseImpl {
 	return &ARAssetsUsecaseImpl{
 		arAssetsRepository:           arAssetsRepository,
 		qrCodeImageStorage:           qrCodeImageStorage,
 		voiceModelAdapter:            voiceModelAdapter,
 		threeDimentionalModelService: threeservice,
-		threeDimentionalModelStorage: threedimentionalmodelstorage,
 	}
 }
 
@@ -48,11 +45,7 @@ type ARAssetsCreateInput struct {
 }
 
 type ARAssetsCreateOutput struct {
-	ID                   string
-	SpeakingDescription  string
-	SpeakingAudioPath    string
-	ThreeDimentionalPath string
-	QrcodeIconImagePath  string
+	ID string
 }
 
 func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateOutput, error) {
@@ -103,18 +96,6 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		return output, err
 	}
 
-	// QRコードアイコン画像のURL取得
-	qrCodeImagePath, err := u.qrCodeImageStorage.GetImageURL(qrCodeImage)
-	if err != nil {
-		return output, err
-	}
-
-	// 3DモデルのURL取得
-	threeDimentionalPath, err := u.threeDimentionalModelStorage.GetModelURL("example.gltf")
-	if err != nil {
-		return output, err
-	}
-
 	// データベース保存
 	err = u.arAssetsRepository.Save(arAssets)
 	if err != nil {
@@ -122,10 +103,6 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	return ARAssetsCreateOutput{
-		ID:                   arAssets.ID().String(),
-		SpeakingDescription:  speakingAsset.Description(),
-		ThreeDimentionalPath: threeDimentionalPath,
-		SpeakingAudioPath:    "",
-		QrcodeIconImagePath:  qrCodeImagePath,
+		ID: arAssets.ID().String(),
 	}, nil
 }

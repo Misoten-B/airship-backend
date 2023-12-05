@@ -25,7 +25,8 @@ import (
 // @Accept multipart/form-data
 // @Param qrcodeIcon formData file false "Image file to be uploaded"
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
-// @Success 201 {object} dto.ArAssetsResponse
+// @Success 201 {object} nil
+// @Header 201 {string} Location "/{ar_assets_id}"
 func CreateArAssets(c *gin.Context) {
 	// コンテキストから取得
 	config, err := frameworks.GetConfig(c)
@@ -60,7 +61,6 @@ func CreateArAssets(c *gin.Context) {
 	var qrCodeImageStorage service.QRCodeImageStorage
 	var voiceModelAdapter voiceservice.VoiceModelAdapter
 	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
-	threeDimentionalModelStorage := &threeservice.MockThreeDimentionalModelStorage{}
 
 	if config.DevMode {
 		arassetsRepository = &service.MockARAssetsRepository{}
@@ -90,7 +90,6 @@ func CreateArAssets(c *gin.Context) {
 		qrCodeImageStorage,
 		voiceModelAdapter,
 		threeDimentionalModelService,
-		threeDimentionalModelStorage,
 	)
 
 	// ユースケース実行
@@ -111,13 +110,7 @@ func CreateArAssets(c *gin.Context) {
 	}
 
 	c.Header("Location", fmt.Sprintf("/%s", output.ID))
-	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
-		ID:                   output.ID,
-		SpeakingDescription:  output.SpeakingDescription,
-		SpeakingAudioPath:    output.SpeakingAudioPath,
-		ThreeDimentionalPath: output.ThreeDimentionalPath,
-		QrcodeIconImagePath:  output.QrcodeIconImagePath,
-	})
+	c.JSON(http.StatusCreated, nil)
 }
 
 // @Tags ArAssets

@@ -337,8 +337,10 @@ paths:
       responses:
         "201":
           description: Created
-          schema:
-            $ref: '#/definitions/dto.ArAssetsResponse'
+          headers:
+            Location:
+              description: /{ar_assets_id}
+              type: string
       security:
       - ApiKeyAuth: []
       tags:

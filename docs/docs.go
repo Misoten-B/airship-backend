@@ -172,8 +172,11 @@ const docTemplate = `{
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ArAssetsResponse"
+                        "headers": {
+                            "Location": {
+                                "type": "string",
+                                "description": "/{ar_assets_id}"
+                            }
                         }
                     }
                 }
