@@ -72,7 +72,7 @@ func CreateArAssets(c *gin.Context) {
 		voiceModelAdapter = &voiceservice.MockVoiceModelAdapter{}
 
 		threeDimentionalModelRepository := threeservice.NewMockThreeDimentionalModelRepository()
-		threeDimentionalModelService = *threeservice.NewThreeDimentionalModelService(threeDimentionalModelRepository)
+		threeDimentionalModelService = threeservice.NewThreeDimentionalModelServiceImpl(threeDimentionalModelRepository)
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -89,7 +89,7 @@ func CreateArAssets(c *gin.Context) {
 		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
 
 		threeDimentionalModelRepository := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
-		threeDimentionalModelService = *threeservice.NewThreeDimentionalModelService(threeDimentionalModelRepository)
+		threeDimentionalModelService = threeservice.NewThreeDimentionalModelServiceImpl(threeDimentionalModelRepository)
 	}
 
 	usecaseImpl := usecase.NewARAssetsUsecaseImpl(
