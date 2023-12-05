@@ -12,7 +12,11 @@ type ARAssetsRepository interface {
 
 type MockARAssetsRepository struct{}
 
-func (r MockARAssetsRepository) Save(_ arassets.ARAssets) error {
+func NewMockARAssetsRepository() *MockARAssetsRepository {
+	return &MockARAssetsRepository{}
+}
+
+func (r *MockARAssetsRepository) Save(_ arassets.ARAssets) error {
 	log.Println("Mock ARAssets Repository - Save")
 	return nil
 }

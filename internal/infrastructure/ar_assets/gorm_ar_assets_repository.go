@@ -3,7 +3,6 @@ package arassets
 import (
 	"github.com/Misoten-B/airship-backend/internal/database/model"
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
-	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	"gorm.io/gorm"
 )
 
@@ -11,8 +10,8 @@ type GormARAssetsRepository struct {
 	db *gorm.DB
 }
 
-func NewGormARAssetsRepository(db *gorm.DB) service.ARAssetsRepository {
-	return GormARAssetsRepository{
+func NewGormARAssetsRepository(db *gorm.DB) *GormARAssetsRepository {
+	return &GormARAssetsRepository{
 		db: db,
 	}
 }
@@ -20,22 +19,26 @@ func NewGormARAssetsRepository(db *gorm.DB) service.ARAssetsRepository {
 // Save はARAssetsの永続化を行ないます。
 // 現状、トランザクションをこの層で行っています。トランザクションをどの層で行なうべきかは要検討
 // https://sano11o1.com/posts/handle-transaction-in-usecase-layer
-func (r GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
+func (r *GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 	speakingAsset := arassets.SpeakingAsset()
 	qrCodeImage := arassets.QRCodeImage()
 
+	id := arassets.ID().String()
+	userID := arassets.UserID().String()
+	threedimentionalmodelID := arassets.ThreeDimentionalModelID().String()
+
 	speakingAssetModel := model.SpeakingAsset{
-		ID:          speakingAsset.ID().String(),
-		UserID:      speakingAsset.UserID().String(),
+		ID:          id,
+		UserID:      userID,
 		Description: speakingAsset.Description(),
 		AudioPath:   speakingAsset.AudioPath(),
 	}
 
 	arAssetModel := model.ARAsset{
-		ID:                      arassets.ID().String(),
-		UserID:                  arassets.UserID().String(),
+		ID:                      id,
+		UserID:                  userID,
 		SpeakingAssetID:         speakingAssetModel.ID,
-		ThreeDimentionalModelID: arassets.ThreeDimentionalModelID().String(),
+		ThreeDimentionalModelID: threedimentionalmodelID,
 		QRCodeImagePath:         qrCodeImage.Name(),
 		AccessCount:             arassets.AccessCount(),
 		Status:                  model.GormStatusInProgress,

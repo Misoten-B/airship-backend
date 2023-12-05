@@ -64,7 +64,7 @@ func CreateArAssets(c *gin.Context) {
 	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
 
 	if config.DevMode {
-		arassetsRepository = &service.MockARAssetsRepository{}
+		arassetsRepository = service.NewMockARAssetsRepository()
 		qrCodeImageStorage = &service.MockQRCodeImageStorage{}
 
 		voiceRepo := voiceservice.MockVoiceRepository{}
