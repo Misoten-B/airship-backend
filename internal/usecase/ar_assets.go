@@ -62,10 +62,12 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		return output, err
 	}
+
 	speakingAsset, err := arassets.NewSpeakingAsset(uid, input.SpeakingDescription)
 	if err != nil {
 		return output, err
 	}
+
 	arAssets := arassets.NewARAssets(
 		speakingAsset,
 		qrCodeImage,
@@ -83,7 +85,6 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	// 3Dモデルが存在するかつ、ユーザーが所有しているか
 	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, uid)
-
 	if err != nil {
 		return output, err
 	}
@@ -98,6 +99,7 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 		Language:       "ja",
 		Content:        speakingAsset.Description(),
 	}
+
 	err = u.voiceModelAdapter.GenerateAudioFile(request)
 	if err != nil {
 		return output, err

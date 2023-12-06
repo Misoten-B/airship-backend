@@ -7,11 +7,9 @@ import (
 
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
 	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
-	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/Misoten-B/airship-backend/internal/usecase"
@@ -56,23 +54,26 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
-	// TODO: 後々DIコンテナから
-	var arassetsRepository service.ARAssetsRepository
-	var qrCodeImageStorage service.QRCodeImageStorage
-	var voiceModelAdapter voiceservice.VoiceModelAdapter
-	var voiceService voiceservice.VoiceService
-	var threeDimentionalModelService threeservice.ThreeDimentionalModelService
+	var usecaseImpl usecase.ARAssetsUsecase
 
+	// ARAssetsUsecaseの生成
+	// TODO: 後々DIコンテナなどから
 	if config.DevMode {
-		arassetsRepository = service.NewMockARAssetsRepository()
-		qrCodeImageStorage = service.NewMockQRCodeImageStorage()
-
 		voiceRepo := voiceservice.NewMockVoiceRepository()
-		voiceService = voiceservice.NewVoiceServiceImpl(voiceRepo)
-		voiceModelAdapter = voiceservice.NewMockVoiceModelAdapter()
+		tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
 
-		threeDimentionalModelRepository := threeservice.NewMockThreeDimentionalModelRepository()
-		threeDimentionalModelService = threeservice.NewThreeDimentionalModelServiceImpl(threeDimentionalModelRepository)
+		usecaseImpl, err = usecase.NewARAssetsUsecase(
+			usecase.WithMockARAssetsRepository(),
+			usecase.WithMockQRCodeImageStorage(),
+			usecase.WithMockVoiceModelAdapter(),
+			usecase.WithVoiceServiceImpl(voiceRepo),
+			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+		)
+		if err != nil {
+			log.Printf("%s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -81,24 +82,22 @@ func CreateArAssets(c *gin.Context) {
 			return
 		}
 
-		arassetsRepository = arassets.NewGormARAssetsRepository(db)
-		qrCodeImageStorage = arassets.NewAzureQRCodeImageStorage(config)
-
 		voiceRepo := voice.NewGormVoiceRepository(db)
-		voiceService = voiceservice.NewVoiceServiceImpl(voiceRepo)
-		voiceModelAdapter = voice.NewExternalAPIVoiceModelAdapter()
+		tmodelRepo := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
 
-		threeDimentionalModelRepository := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
-		threeDimentionalModelService = threeservice.NewThreeDimentionalModelServiceImpl(threeDimentionalModelRepository)
+		usecaseImpl, err = usecase.NewARAssetsUsecase(
+			usecase.WithGormARAssetsRepository(db),
+			usecase.WithAzureQRCodeImageStorage(config),
+			usecase.WithExternalAPIVoiceModelAdapter(),
+			usecase.WithVoiceServiceImpl(voiceRepo),
+			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+		)
+		if err != nil {
+			log.Printf("%s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
-
-	usecaseImpl := usecase.NewARAssetsUsecaseImpl(
-		arassetsRepository,
-		qrCodeImageStorage,
-		voiceModelAdapter,
-		voiceService,
-		threeDimentionalModelService,
-	)
 
 	// ユースケース実行
 	input := usecase.ARAssetsCreateInput{
