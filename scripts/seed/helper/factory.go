@@ -77,6 +77,7 @@ func NewAppModel() *AppModel {
 func newUser() *model.User {
 	return &model.User{
 		ID:                testdata.DEV_UID,
+		RecordedVoicePath: "https://example.com/recorded_voice.mp3",
 		RecordedModelPath: "https://example.com/recorded_model.gltf",
 		IsToured:          false,
 	}
