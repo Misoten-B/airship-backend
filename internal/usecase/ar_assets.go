@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"mime/multipart"
 	"net/http"
 
@@ -87,9 +86,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		msg := "failed to check if voice model generation is complete"
 		return output, customerror.NewApplicationError(
+			err,
 			msg,
 			http.StatusInternalServerError,
-			fmt.Sprintf("%s: %s", msg, err.Error()),
 		)
 	}
 	if !isCompleted {
@@ -104,9 +103,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		msg := "failed to check if user has permission to use this 3D model"
 		return output, customerror.NewApplicationError(
+			err,
 			msg,
 			http.StatusInternalServerError,
-			fmt.Sprintf("%s: %s", msg, err.Error()),
 		)
 	}
 	if !hasPermission {
@@ -128,9 +127,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		msg := "failed to generate audio file"
 		return output, customerror.NewApplicationError(
+			err,
 			msg,
 			http.StatusInternalServerError,
-			fmt.Sprintf("%s: %s", msg, err.Error()),
 		)
 	}
 
@@ -139,9 +138,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		msg := "failed to save QR code image"
 		return output, customerror.NewApplicationError(
+			err,
 			msg,
 			http.StatusInternalServerError,
-			fmt.Sprintf("%s: %s", msg, err.Error()),
 		)
 	}
 
@@ -150,9 +149,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	if err != nil {
 		msg := "failed to save AR assets"
 		return output, customerror.NewApplicationError(
+			err,
 			msg,
 			http.StatusInternalServerError,
-			fmt.Sprintf("%s: %s", msg, err.Error()),
 		)
 	}
 

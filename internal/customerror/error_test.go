@@ -9,10 +9,9 @@ import (
 )
 
 func TestApplicationError(t *testing.T) {
-	err := customerror.NewApplicationError(
+	err := customerror.NewApplicationErrorWithoutDetails(
 		"test error",
 		http.StatusBadRequest,
-		"test details",
 	)
 
 	var appErr *customerror.ApplicationError

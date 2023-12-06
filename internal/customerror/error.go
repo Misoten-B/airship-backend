@@ -1,6 +1,9 @@
 package customerror
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 type ApplicationError struct {
 	message    string
@@ -9,7 +12,9 @@ type ApplicationError struct {
 	details string
 }
 
-func NewApplicationError(message string, statusCode int, details string) error {
+func NewApplicationError(err error, message string, statusCode int) error {
+	details := fmt.Sprintf("%s: %s", message, err.Error())
+
 	return &ApplicationError{
 		message:    message,
 		statusCode: statusCode,
