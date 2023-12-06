@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"github.com/Misoten-B/airship-backend/internal/database/model"
+)
+
 type BusinessCardResponse struct {
 	ID string
 	// background
@@ -43,4 +47,49 @@ type BusinessCardPartsCoordinate struct {
 	AddressY          int    `json:"address_y"`
 	QrcodeX           int    `json:"qrcode_x"`
 	QrcodeY           int    `json:"qrcode_y"`
+}
+
+func ConvertToBCPC(bcpc model.BusinessCardPartsCoordinate) BusinessCardPartsCoordinate {
+	return BusinessCardPartsCoordinate{
+		ID:                bcpc.ID,
+		DisplayNameX:      bcpc.DisplayNameX,
+		DisplayNameY:      bcpc.DisplayNameY,
+		CompanyNameX:      bcpc.CompanyNameX,
+		CompanyNameY:      bcpc.CompanyNameY,
+		DepartmentX:       bcpc.DepartmentX,
+		DepartmentY:       bcpc.DepartmentY,
+		OfficialPositionX: bcpc.OfficialPositionX,
+		OfficialPositionY: bcpc.OfficialPositionY,
+		PhoneNumberX:      bcpc.PhoneNumberX,
+		PhoneNumberY:      bcpc.PhoneNumberY,
+		EmailX:            bcpc.EmailX,
+		EmailY:            bcpc.EmailY,
+		PostalCodeX:       bcpc.PostalCodeX,
+		PostalCodeY:       bcpc.PostalCodeY,
+		AddressX:          bcpc.AddressX,
+		AddressY:          bcpc.AddressY,
+		QrcodeX:           bcpc.QRCodeX,
+		QrcodeY:           bcpc.QRCodeY,
+	}
+}
+
+func ConvertToBCResponse(bc model.BusinessCard, bcbc model.BusinessCardBackground, td model.ThreeDimentionalModel, sa model.SpeakingAsset, bcpc model.BusinessCardPartsCoordinate) BusinessCardResponse {
+	return BusinessCardResponse{
+		ID:                          bc.ID,
+		BusinessCardBackgroundColor: bcbc.ColorCode,
+		BusinessCardBackgroundImage: bcbc.ImagePath,
+		BusinessCardName:            bc.BusinessCardName,
+		ThreeDimentionalModel:       td.ModelPath,
+		SpeakingDescription:         sa.Description,
+		SpeakingAudioPath:           sa.AudioPath,
+		BusinessCardPartsCoordinate: ConvertToBCPC(bcpc),
+		DisplayName:                 bc.DisplayName,
+		CompanyName:                 bc.CompanyName,
+		Department:                  bc.Department,
+		OfficialPosition:            bc.OfficialPosition,
+		PhoneNumber:                 bc.PhoneNumber,
+		Email:                       bc.Email,
+		PostalCode:                  bc.PostalCode,
+		Address:                     bc.Address,
+	}
 }

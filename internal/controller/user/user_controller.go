@@ -28,8 +28,8 @@ func CreateUser(c *gin.Context) {
 
 	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
-	if requestErr := c.ShouldBindJSON(&request); requestErr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": requestErr.Error()})
+	if err = c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	log.Printf("body: %v", request)
@@ -45,13 +45,13 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	result := db.Create(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+
+	err = db.Create(&user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// TODO レスポンスをDTOに変換
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusCreated, dto.UserResponse{
 		ID:                user.ID,
@@ -79,9 +79,9 @@ func ReadUserByID(c *gin.Context) {
 	}
 
 	user := model.User{}
-	result := db.First(&user, "id = ?", uid)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.First(&user, "id = ?", uid).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -112,9 +112,9 @@ func UpdateUser(c *gin.Context) {
 
 	// TODO: リクエストのバリデーション
 	request := dto.CreateUserRequest{}
-	if requestErr := c.ShouldBind(&request); requestErr != nil {
+	if err = c.ShouldBind(&request); err != nil {
 		log.Print("aaaa")
-		c.JSON(http.StatusBadRequest, gin.H{"error": requestErr.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -139,9 +139,9 @@ func UpdateUser(c *gin.Context) {
 		IsToured:          request.IsToured,
 	}
 
-	result := db.Model(&user).Updates(user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.Model(&user).Updates(user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -174,9 +174,9 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	user := model.User{}
-	result := db.Model(&user).Where("id = ?", uid).Delete(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.Model(&user).Where("id = ?", uid).Delete(&user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
