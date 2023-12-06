@@ -6,12 +6,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/database"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
+	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/Misoten-B/airship-backend/internal/usecase"

@@ -3,9 +3,9 @@ package controller
 import (
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/internal/controller/business_card_parts_coordinate/dto"
 	"github.com/Misoten-B/airship-backend/internal/database"
 	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/business_card_parts_coordinate/dto"
 	"github.com/gin-gonic/gin"
 )
 

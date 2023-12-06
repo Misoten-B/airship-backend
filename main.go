@@ -8,8 +8,8 @@ import (
 	"github.com/Misoten-B/airship-backend/config"
 	_ "github.com/Misoten-B/airship-backend/docs"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
-	"github.com/Misoten-B/airship-backend/internal/router"
-	v1 "github.com/Misoten-B/airship-backend/internal/router/v1"
+	"github.com/Misoten-B/airship-backend/internal/frameworks/router"
+	v1 "github.com/Misoten-B/airship-backend/internal/frameworks/router/v1"
 )
 
 // @title           AIRship API

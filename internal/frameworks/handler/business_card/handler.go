@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/internal/controller/business_card/dto"
+	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/business_card/dto"
 	"github.com/gin-gonic/gin"
 )
 
