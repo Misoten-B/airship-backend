@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/database"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -111,7 +113,17 @@ func CreateArAssets(c *gin.Context) {
 	output, err := usecaseImpl.Create(input)
 
 	if err != nil {
-		log.Printf("%s", err)
+		var appErr *customerror.ApplicationError
+
+		if !errors.As(err, &appErr) {
+			log.Printf("%s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		if appErr.IsInternalError() {
+			log.Printf("%s", err)
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
