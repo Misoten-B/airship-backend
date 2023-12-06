@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/Misoten-B/airship-backend/internal/database/model"
+import "github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 
 type BusinessCardPartsCoordinateResponse struct {
 	ID                string `json:"id"`

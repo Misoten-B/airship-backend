@@ -1,8 +1,8 @@
 package mapper
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database/model"
 	domain "github.com/Misoten-B/airship-backend/internal/domain/user"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 )
 
 // ToUserModelはUser集約をORMモデルに変換します。

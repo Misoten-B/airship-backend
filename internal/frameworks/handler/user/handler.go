@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
 	"github.com/gin-gonic/gin"

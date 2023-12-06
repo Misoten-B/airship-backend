@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/scripts/seed/helper"
 	"gorm.io/gorm/clause"
 )
