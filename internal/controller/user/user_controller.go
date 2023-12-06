@@ -45,13 +45,12 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	result := db.Create(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.Create(&user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// TODO レスポンスをDTOに変換
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusCreated, dto.UserResponse{
 		ID:                user.ID,
@@ -79,13 +78,12 @@ func ReadUserByID(c *gin.Context) {
 	}
 
 	user := model.User{}
-	result := db.First(&user, "id = ?", uid)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.First(&user, "id = ?", uid).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// TODO: レスポンスをDTOに変換
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusOK, dto.UserResponse{
 		ID:                user.ID,
@@ -139,9 +137,9 @@ func UpdateUser(c *gin.Context) {
 		IsToured:          request.IsToured,
 	}
 
-	result := db.Model(&user).Updates(user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.Model(&user).Updates(user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -174,9 +172,9 @@ func DeleteUser(c *gin.Context) {
 	}
 
 	user := model.User{}
-	result := db.Model(&user).Where("id = ?", uid).Delete(&user)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	err = db.Model(&user).Where("id = ?", uid).Delete(&user).Error
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
