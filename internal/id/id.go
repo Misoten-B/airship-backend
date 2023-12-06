@@ -9,6 +9,10 @@ func NewID() (ID, error) {
 	return ID(id.String()), err
 }
 
+func ReconstructID(id string) ID {
+	return ID(id)
+}
+
 func (i ID) String() string {
 	return string(i)
 }

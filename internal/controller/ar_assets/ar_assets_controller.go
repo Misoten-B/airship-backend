@@ -1,18 +1,19 @@
 package controller
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
-	"path/filepath"
 
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/database"
+	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
+	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
-	"github.com/Misoten-B/airship-backend/internal/id"
+	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
+	"github.com/Misoten-B/airship-backend/internal/usecase"
 	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
 )
 
 // @Tags ArAssets
@@ -22,7 +23,8 @@ import (
 // @Accept multipart/form-data
 // @Param qrcodeIcon formData file false "Image file to be uploaded"
 // @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
-// @Success 201 {object} dto.ArAssetsResponse
+// @Success 201 {object} nil
+// @Header 201 {string} Location "/{ar_assets_id}"
 func CreateArAssets(c *gin.Context) {
 	// コンテキストから取得
 	config, err := frameworks.GetConfig(c)
@@ -38,8 +40,6 @@ func CreateArAssets(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("config: %v", config)
-	log.Printf("uid: %s", uid)
 
 	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
@@ -54,60 +54,70 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
-	// バリデーション
-	ext := filepath.Ext(fileHeader.Filename)
-	blobID, err := id.NewID()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	blobName := fmt.Sprintf("%s%s", blobID.String(), ext)
+	var usecaseImpl usecase.ARAssetsUsecase
 
-	// AI側へリクエスト
-	//  - データベースから取得
-	//  - 音声モデル取得
-	//  - AI側へリクエスト
-	if !config.DevMode { // 開発用。AI側が完了次第、実装
-		client := resty.New()
-		_, err = client.R().
-			SetHeader("Content-Type", "application/json").
-			Post("http://localhost:8080/example/ai")
+	// ARAssetsUsecaseの生成
+	// TODO: 後々DIコンテナなどから
+	if config.DevMode {
+		voiceRepo := voiceservice.NewMockVoiceRepository()
+		tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
+
+		usecaseImpl, err = usecase.NewARAssetsUsecase(
+			usecase.WithMockARAssetsRepository(),
+			usecase.WithMockQRCodeImageStorage(),
+			usecase.WithMockVoiceModelAdapter(),
+			usecase.WithVoiceServiceImpl(voiceRepo),
+			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+		)
 		if err != nil {
-			log.Printf("failed to request ai: %s", err)
+			log.Printf("%s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			log.Printf("%s", dbErr)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": dbErr.Error()})
+			return
+		}
+
+		voiceRepo := voice.NewGormVoiceRepository(db)
+		tmodelRepo := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
+
+		usecaseImpl, err = usecase.NewARAssetsUsecase(
+			usecase.WithGormARAssetsRepository(db),
+			usecase.WithAzureQRCodeImageStorage(config),
+			usecase.WithExternalAPIVoiceModelAdapter(),
+			usecase.WithVoiceServiceImpl(voiceRepo),
+			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+		)
+		if err != nil {
+			log.Printf("%s", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 	}
 
-	// QRコードアイコン画像保存
-	if !config.DevMode { // 開発用。今後抽出する
-		ctx := context.Background()
-
-		serviceClient, azureError := azblob.NewClientFromConnectionString(config.AzureBlobStorageConnectionString, nil)
-		if azureError != nil {
-			log.Printf("failed to create service client: %s", azureError)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
-			return
-		}
-
-		_, azureError = serviceClient.UploadStream(ctx, "images", blobName, file, &azblob.UploadStreamOptions{})
-		if azureError != nil {
-			log.Printf("failed to upload stream: %s", azureError)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": azureError.Error()})
-			return
-		}
+	// ユースケース実行
+	input := usecase.ARAssetsCreateInput{
+		UID:                 uid,
+		SpeakingDescription: request.SpeakingDescription,
+		ThreeDimentionalID:  request.ThreeDimentionalID,
+		File:                file,
+		FileHeader:          fileHeader,
 	}
 
-	// データベース保存
+	output, err := usecaseImpl.Create(input)
 
-	c.Header("Location", fmt.Sprintf("/%s", "1"))
-	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
-	})
+	if err != nil {
+		log.Printf("%s", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Header("Location", fmt.Sprintf("/%s", output.ID))
+	c.JSON(http.StatusCreated, nil)
 }
 
 // @Tags ArAssets
