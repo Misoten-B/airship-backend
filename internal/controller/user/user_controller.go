@@ -85,6 +85,7 @@ func ReadUserByID(c *gin.Context) {
 		return
 	}
 
+	// TODO: レスポンスをDTOに変換
 	c.Header("Location", fmt.Sprintf("/%s", uid))
 	c.JSON(http.StatusOK, dto.UserResponse{
 		ID:                user.ID,
