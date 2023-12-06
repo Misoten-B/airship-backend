@@ -1260,9 +1260,6 @@ const docTemplate = `{
                 },
                 "recorded_model_path": {
                     "type": "string"
-                },
-                "recorded_voice_path": {
-                    "type": "string"
                 }
             }
         }
