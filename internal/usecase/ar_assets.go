@@ -1,9 +1,10 @@
 package usecase
 
 import (
-	"errors"
 	"mime/multipart"
+	"net/http"
 
+	"github.com/Misoten-B/airship-backend/internal/customerror"
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
@@ -60,12 +61,18 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	qrCodeImage, err := arassets.NewQRCodeImage(input.File, input.FileHeader)
 	if err != nil {
-		return output, err
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			err.Error(),
+			http.StatusBadRequest,
+		)
 	}
 
 	speakingAsset, err := arassets.NewSpeakingAsset(uid, input.SpeakingDescription)
 	if err != nil {
-		return output, err
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			err.Error(),
+			http.StatusBadRequest,
+		)
 	}
 
 	arAssets := arassets.NewARAssets(
@@ -77,19 +84,35 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	// 音声モデルの生成が完了しているかどうか
 	isCompleted, err := u.voiceService.IsModelGenerated(uid)
 	if err != nil {
-		return output, err
+		msg := "failed to check if voice model generation is complete"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
 	}
 	if !isCompleted {
-		return output, errors.New("voice model generation has not been completed")
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			"voice model generation has not been completed",
+			http.StatusBadRequest,
+		)
 	}
 
 	// 3Dモデルが存在するかつ、ユーザーが所有しているか
 	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, uid)
 	if err != nil {
-		return output, err
+		msg := "failed to check if user has permission to use this 3D model"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
 	}
 	if !hasPermission {
-		return output, errors.New("user does not have permission to use this 3D model")
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			"user does not have permission to use this 3D model",
+			http.StatusForbidden,
+		)
 	}
 
 	// AIへ音声ファイル生成を依頼
@@ -102,19 +125,34 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	err = u.voiceModelAdapter.GenerateAudioFile(request)
 	if err != nil {
-		return output, err
+		msg := "failed to generate audio file"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
 	}
 
 	// QRコードアイコン画像の保存
 	err = u.qrCodeImageStorage.Save(qrCodeImage)
 	if err != nil {
-		return output, err
+		msg := "failed to save QR code image"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
 	}
 
 	// データベース保存
 	err = u.arAssetsRepository.Save(arAssets)
 	if err != nil {
-		return output, err
+		msg := "failed to save AR assets"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
 	}
 
 	return ARAssetsCreateOutput{

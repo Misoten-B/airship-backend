@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/controller/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/database"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -29,28 +31,26 @@ func CreateArAssets(c *gin.Context) {
 	// コンテキストから取得
 	config, err := frameworks.GetConfig(c)
 	if err != nil {
-		log.Printf("%s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 		return
 	}
 
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
-		log.Printf("%s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 		return
 	}
 
 	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
 	if err = c.ShouldBind(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
 		return
 	}
 
 	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
 		return
 	}
 
@@ -70,15 +70,13 @@ func CreateArAssets(c *gin.Context) {
 			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
 		)
 		if err != nil {
-			log.Printf("%s", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 			return
 		}
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
-			log.Printf("%s", dbErr)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": dbErr.Error()})
+			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
 		}
 
@@ -93,8 +91,7 @@ func CreateArAssets(c *gin.Context) {
 			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
 		)
 		if err != nil {
-			log.Printf("%s", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 			return
 		}
 	}
@@ -111,8 +108,13 @@ func CreateArAssets(c *gin.Context) {
 	output, err := usecaseImpl.Create(input)
 
 	if err != nil {
-		log.Printf("%s", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 		return
 	}
 
