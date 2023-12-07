@@ -3,8 +3,8 @@ package threedimentionalmodel
 import (
 	"errors"
 
-	"github.com/Misoten-B/airship-backend/internal/database/model"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	idlib "github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )

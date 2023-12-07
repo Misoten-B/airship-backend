@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )

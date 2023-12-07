@@ -1,8 +1,8 @@
 package arassets
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database/model"
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"gorm.io/gorm"
 )
 

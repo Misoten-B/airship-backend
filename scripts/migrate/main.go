@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database"
-	"github.com/Misoten-B/airship-backend/internal/database/model"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 )
 
 func main() {

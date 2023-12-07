@@ -1,8 +1,8 @@
 package voice
 
 import (
-	"github.com/Misoten-B/airship-backend/internal/database/model"
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )
