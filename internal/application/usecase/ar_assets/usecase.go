@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"log"
 	"mime/multipart"
 	"net/http"
 
@@ -178,12 +179,24 @@ type ARAssetsFetchByIDOutput struct {
 	QrcodeIconImagePath  string
 }
 
-func (u *ARAssetsUsecaseImpl) FetchByID(_ ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error) {
-	var _ ARAssetsFetchByIDOutput
+func (u *ARAssetsUsecaseImpl) FetchByID(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error) {
+	var output ARAssetsFetchByIDOutput
 
 	// バリデーション & オブジェクト生成
+	id := id.ReconstructID(input.ID)
 
 	// リポジトリから取得
+	model, err := u.arAssetsRepository.FetchByID(id)
+	if err != nil {
+		msg := "failed to fetch AR assets"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
+	}
+
+	log.Println(model)
 
 	// 権限確認
 

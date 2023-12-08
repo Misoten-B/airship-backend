@@ -34,12 +34,12 @@ func NewAppModel() *AppModel {
 		{
 			ID:        "1",
 			ColorCode: "#000000",
-			ImagePath: "https://example.com/background-template.png",
+			ImagePath: "seed_background-template.png",
 		},
 		{
 			ID:        "2",
 			ColorCode: "#ffffff",
-			ImagePath: "https://example.com/background-personal.png",
+			ImagePath: "seed_background-personal.png",
 		},
 	}
 	businessCardBackgroundTemplate := &model.BusinessCardBackgroundTemplate{
@@ -77,7 +77,7 @@ func NewAppModel() *AppModel {
 func newUser() *model.User {
 	return &model.User{
 		ID:                testdata.DEV_UID,
-		RecordedModelPath: "https://example.com/recorded_model.gltf",
+		RecordedModelPath: "seed_recorded_model.gltf",
 		IsToured:          false,
 		Status:            model.GormStatusCompleted,
 	}
@@ -100,19 +100,21 @@ func newThreeDimentionalModels() []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
 			ID:        "1",
-			ModelPath: "https://example.com/3d_model.gltf",
+			ModelPath: "seed_3d_model.gltf",
 		},
 		{
 			ID:        "2",
-			ModelPath: "https://example.com/3d_model.gltf",
+			ModelPath: "seed_3d_model.gltf",
 		},
 	}
 }
 
 func newSpeakingAsset(user *model.User) *model.SpeakingAsset {
 	return &model.SpeakingAsset{
-		ID:     newID(),
-		UserID: user.ID,
+		ID:          newID(),
+		UserID:      user.ID,
+		Description: "こんにちは",
+		AudioPath:   "seed_example.mp3",
 	}
 }
 
@@ -124,7 +126,7 @@ func newARAsset(
 	return &model.ARAsset{
 		ID:                      "1",
 		AccessCount:             0,
-		QRCodeImagePath:         "https://example.com/qr_code.png",
+		QRCodeImagePath:         "seed_qr_code.png",
 		UserID:                  user.ID,
 		SpeakingAssetID:         speakingAsset.ID,
 		ThreeDimentionalModelID: threeDimentionalModel.ID,

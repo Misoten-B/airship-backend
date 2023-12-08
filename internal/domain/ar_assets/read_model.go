@@ -7,6 +7,7 @@ type ReadModel struct {
 	speakingAudioPath    string
 	threeDimentionalPath string
 	qrcodeIconImagePath  string
+	isCreated            bool
 }
 
 func NewReadModel(
@@ -16,14 +17,16 @@ func NewReadModel(
 	speakingAudioPath string,
 	threeDimentionalPath string,
 	qrcodeIconImagePath string,
-) *ReadModel {
-	return &ReadModel{
+	isCreated bool,
+) ReadModel {
+	return ReadModel{
 		id:                   id,
 		uID:                  uID,
 		speakingDescription:  speakingDescription,
 		speakingAudioPath:    speakingAudioPath,
 		threeDimentionalPath: threeDimentionalPath,
 		qrcodeIconImagePath:  qrcodeIconImagePath,
+		isCreated:            isCreated,
 	}
 }
 
@@ -49,4 +52,8 @@ func (r *ReadModel) ThreeDimentionalPath() string {
 
 func (r *ReadModel) QrcodeIconImagePath() string {
 	return r.qrcodeIconImagePath
+}
+
+func (r *ReadModel) IsCreated() bool {
+	return r.isCreated
 }

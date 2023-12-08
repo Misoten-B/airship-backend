@@ -3,6 +3,7 @@ package arassets
 import (
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
+	"github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )
 
@@ -66,4 +67,29 @@ func (r *GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 	}
 
 	return tx.Commit().Error
+}
+
+func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error) {
+	var arAssetModel model.ARAsset
+	var readModel arassets.ReadModel
+
+	// FIXME: gorm 取得最適化
+	if err := r.db.Model(&arAssetModel).
+		Where("id = ?", id).
+		Preload("SpeakingAsset").
+		Preload("ThreeDimentionalModel").
+		First(&arAssetModel).Error; err != nil {
+		return readModel, err
+	}
+
+	isCreated := arAssetModel.Status == model.GormStatusCompleted
+	return arassets.NewReadModel(
+		arAssetModel.ID,
+		arAssetModel.UserID,
+		arAssetModel.SpeakingAsset.Description,
+		arAssetModel.SpeakingAsset.AudioPath,
+		arAssetModel.ThreeDimentionalModel.ModelPath,
+		arAssetModel.QRCodeImagePath,
+		isCreated,
+	), nil
 }

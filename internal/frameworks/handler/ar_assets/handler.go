@@ -354,8 +354,14 @@ func newUsecaseDev() (*usecase.ARAssetsUsecaseImpl, error) {
 	voiceRepo := voiceservice.NewMockVoiceRepository()
 	tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
 
+	db, err := database.ConnectDB()
+	if err != nil {
+		return nil, err
+	}
+
 	usecaseImpl, err := usecase.NewARAssetsUsecase(
-		usecase.WithMockARAssetsRepository(),
+		// usecase.WithMockARAssetsRepository(),
+		usecase.WithGormARAssetsRepository(db),
 		usecase.WithMockQRCodeImageStorage(),
 		usecase.WithMockVoiceModelAdapter(),
 		usecase.WithVoiceServiceImpl(voiceRepo),
