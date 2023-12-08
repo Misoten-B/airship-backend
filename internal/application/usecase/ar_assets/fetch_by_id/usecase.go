@@ -10,16 +10,16 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
-type ARAssetsFetchByIDUsecase interface {
-	Execute(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error)
+type Usecase interface {
+	Execute(input Input) (Output, error)
 }
 
-type ARAssetsFetchByIDInput struct {
+type Input struct {
 	ID     string
 	UserID string
 }
 
-type ARAssetsFetchByIDOutput struct {
+type Output struct {
 	ID                   string
 	SpeakingDescription  string
 	SpeakingAudioPath    string
@@ -27,20 +27,20 @@ type ARAssetsFetchByIDOutput struct {
 	QrcodeIconImagePath  string
 }
 
-type ARAssetsFetchByIDInteractor struct {
+type Interactor struct {
 	arAssetsRepository           service.ARAssetsRepository
 	qrCodeImageStorage           service.QRCodeImageStorage
 	speakingAudioStorage         vservice.SpeakingAudioStorage
 	threeDimentionalModelStorage tdmservice.ThreeDimentionalModelStorage
 }
 
-func NewARAssetsFetchByIDInteractor(
+func NewInteractor(
 	arAssetsRepository service.ARAssetsRepository,
 	qrCodeImageStorage service.QRCodeImageStorage,
 	speakingAudioStorage vservice.SpeakingAudioStorage,
 	threeDimentionalModelStorage tdmservice.ThreeDimentionalModelStorage,
-) *ARAssetsFetchByIDInteractor {
-	return &ARAssetsFetchByIDInteractor{
+) *Interactor {
+	return &Interactor{
 		arAssetsRepository:           arAssetsRepository,
 		qrCodeImageStorage:           qrCodeImageStorage,
 		speakingAudioStorage:         speakingAudioStorage,
@@ -48,8 +48,8 @@ func NewARAssetsFetchByIDInteractor(
 	}
 }
 
-func (i *ARAssetsFetchByIDInteractor) Execute(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error) {
-	var output ARAssetsFetchByIDOutput
+func (i *Interactor) Execute(input Input) (Output, error) {
+	var output Output
 
 	// バリデーション & オブジェクト生成
 	id := id.ReconstructID(input.ID)
@@ -111,7 +111,7 @@ func (i *ARAssetsFetchByIDInteractor) Execute(input ARAssetsFetchByIDInput) (ARA
 		)
 	}
 
-	return ARAssetsFetchByIDOutput{
+	return Output{
 		ID:                   model.ID(),
 		SpeakingDescription:  model.SpeakingDescription(),
 		SpeakingAudioPath:    speakingAudioPath,
