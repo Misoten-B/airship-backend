@@ -10,46 +10,46 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
-type FetchByPublicIDUsecase interface {
-	Execute(input FetchByPublicIDInput) (FetchByPublicIDOutput, error)
+type Usecase interface {
+	Execute(input Input) (Output, error)
 }
 
-type FetchByPublicIDInput struct {
+type Input struct {
 	ID string
 }
 
-type FetchByPublicIDOutput struct {
+type Output struct {
 	ID                   string
 	SpeakingDescription  string
 	SpeakingAudioPath    string
 	ThreeDimentionalPath string
 }
 
-type FetchByPublicIDInteractor struct {
+type Interactor struct {
 	arAssetsRepository           service.ARAssetsRepository
 	speakingAudioStorage         vservice.SpeakingAudioStorage
 	threeDimentionalModelStorage tdmservice.ThreeDimentionalModelStorage
 }
 
-func NewFetchByPublicIDInteractor(
+func NewInteractor(
 	arAssetsRepository service.ARAssetsRepository,
 	speakingAudioStorage vservice.SpeakingAudioStorage,
 	threeDimentionalModelStorage tdmservice.ThreeDimentionalModelStorage,
-) *FetchByPublicIDInteractor {
-	return &FetchByPublicIDInteractor{
+) *Interactor {
+	return &Interactor{
 		arAssetsRepository:           arAssetsRepository,
 		speakingAudioStorage:         speakingAudioStorage,
 		threeDimentionalModelStorage: threeDimentionalModelStorage,
 	}
 }
 
-func (i *FetchByPublicIDInteractor) Execute(
-	input FetchByPublicIDInput,
+func (i *Interactor) Execute(
+	input Input,
 ) (
-	FetchByPublicIDOutput,
+	Output,
 	error,
 ) {
-	var output FetchByPublicIDOutput
+	var output Output
 
 	// バリデーション & オブジェクト生成
 	id := id.ReconstructID(input.ID)
@@ -95,7 +95,7 @@ func (i *FetchByPublicIDInteractor) Execute(
 		)
 	}
 
-	return FetchByPublicIDOutput{
+	return Output{
 		ID:                   model.ID(),
 		SpeakingDescription:  model.SpeakingDescription(),
 		SpeakingAudioPath:    speakingAudioPath,

@@ -210,13 +210,13 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 	}
 
 	// ユースケース実行
-	var usecaseImpl fetchbyidpublic.FetchByPublicIDUsecase
+	var usecaseImpl fetchbyidpublic.Usecase
 	if config.DevMode {
 		arRepo := service.NewMockARAssetsRepository()
 		speakingAudioStorage := voiceservice.NewMockSpeakingAudioStorage()
 		threeDimentionalModelStorage := threeservice.NewMockThreeDimentionalModelStorage()
 
-		usecaseImpl = fetchbyidpublic.NewFetchByPublicIDInteractor(
+		usecaseImpl = fetchbyidpublic.NewInteractor(
 			arRepo,
 			speakingAudioStorage,
 			threeDimentionalModelStorage,
@@ -232,14 +232,14 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 		speakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config)
 		threeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config)
 
-		usecaseImpl = fetchbyidpublic.NewFetchByPublicIDInteractor(
+		usecaseImpl = fetchbyidpublic.NewInteractor(
 			arRepo,
 			speakingAudioStorage,
 			threeDimentionalModelStorage,
 		)
 	}
 
-	input := fetchbyidpublic.FetchByPublicIDInput{
+	input := fetchbyidpublic.Input{
 		ID: id,
 	}
 
