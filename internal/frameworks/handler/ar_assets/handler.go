@@ -9,6 +9,7 @@ import (
 	"github.com/Misoten-B/airship-backend/config"
 	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
+	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
@@ -209,14 +210,57 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 	}
 
 	// ユースケース実行
+	var usecaseImpl fetchbyidpublic.FetchByPublicIDUsecase
+	if config.DevMode {
+		arRepo := service.NewMockARAssetsRepository()
+		speakingAudioStorage := voiceservice.NewMockSpeakingAudioStorage()
+		threeDimentionalModelStorage := threeservice.NewMockThreeDimentionalModelStorage()
+
+		usecaseImpl = fetchbyidpublic.NewFetchByPublicIDInteractor(
+			arRepo,
+			speakingAudioStorage,
+			threeDimentionalModelStorage,
+		)
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		arRepo := arassets.NewGormARAssetsRepository(db)
+		speakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config)
+		threeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config)
+
+		usecaseImpl = fetchbyidpublic.NewFetchByPublicIDInteractor(
+			arRepo,
+			speakingAudioStorage,
+			threeDimentionalModelStorage,
+		)
+	}
+
+	input := fetchbyidpublic.FetchByPublicIDInput{
+		ID: id,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
 	c.JSON(http.StatusOK, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		ID:                   output.ID,
+		SpeakingDescription:  output.SpeakingDescription,
+		SpeakingAudioPath:    output.SpeakingAudioPath,
+		ThreeDimentionalPath: output.ThreeDimentionalPath,
 	})
 }
 
