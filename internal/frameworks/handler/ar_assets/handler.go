@@ -6,12 +6,14 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Misoten-B/airship-backend/config"
 	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 )
 
@@ -185,4 +187,62 @@ func DeleteArAssets(c *gin.Context) {
 	log.Printf("ar_assets_id: %s", c.Param("ar_assets_id"))
 
 	c.JSON(http.StatusNoContent, nil)
+}
+
+// TODO: 後々DIコンテナなどから
+func newUsecase(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
+	if config.DevMode {
+		usecaseImpl, err := newUsecaseDev()
+		if err != nil {
+			return nil, err
+		}
+		return usecaseImpl, nil
+	} else {
+		usecaseImpl, err := newUsecaseProd(config)
+		if err != nil {
+			return nil, err
+		}
+		return usecaseImpl, nil
+	}
+}
+
+func newUsecaseProd(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
+	db, err := database.ConnectDB()
+	if err != nil {
+		return nil, err
+	}
+
+	voiceRepo := voice.NewGormVoiceRepository(db)
+	tmodelRepo := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
+
+	usecase, err := usecase.NewARAssetsUsecase(
+		usecase.WithGormARAssetsRepository(db),
+		usecase.WithAzureQRCodeImageStorage(config),
+		usecase.WithExternalAPIVoiceModelAdapter(),
+		usecase.WithVoiceServiceImpl(voiceRepo),
+		usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return usecase, nil
+}
+
+func newUsecaseDev() (*usecase.ARAssetsUsecaseImpl, error) {
+	voiceRepo := voiceservice.NewMockVoiceRepository()
+	tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
+
+	usecaseImpl, err := usecase.NewARAssetsUsecase(
+		usecase.WithMockARAssetsRepository(),
+		usecase.WithMockQRCodeImageStorage(),
+		usecase.WithMockVoiceModelAdapter(),
+		usecase.WithVoiceServiceImpl(voiceRepo),
+		usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return usecaseImpl, nil
 }
