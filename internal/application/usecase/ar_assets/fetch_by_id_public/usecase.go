@@ -25,6 +25,7 @@ type Output struct {
 	ThreeDimentionalPath string
 }
 
+// Interactor はARアセットID検索（Public）ユースケースの実装です。
 type Interactor struct {
 	arAssetsRepository           service.ARAssetsRepository
 	speakingAudioStorage         vservice.SpeakingAudioStorage
@@ -43,6 +44,7 @@ func NewInteractor(
 	}
 }
 
+// Execute はARアセットID検索（Public）ユースケースを実行します。
 func (i *Interactor) Execute(
 	input Input,
 ) (

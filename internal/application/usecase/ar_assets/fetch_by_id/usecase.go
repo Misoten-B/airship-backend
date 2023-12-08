@@ -27,6 +27,7 @@ type Output struct {
 	QrcodeIconImagePath  string
 }
 
+// Interactor はARアセットID検索ユースケースの実装です。
 type Interactor struct {
 	arAssetsRepository           service.ARAssetsRepository
 	qrCodeImageStorage           service.QRCodeImageStorage
@@ -48,6 +49,7 @@ func NewInteractor(
 	}
 }
 
+// Execute はARアセットID検索ユースケースを実行します。
 func (i *Interactor) Execute(input Input) (Output, error) {
 	var output Output
 
