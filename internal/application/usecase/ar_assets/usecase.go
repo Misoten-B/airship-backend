@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"mime/multipart"
 	"net/http"
 
@@ -210,15 +211,26 @@ func (u *ARAssetsUsecaseImpl) FetchByID(input ARAssetsFetchByIDInput) (ARAssetsF
 		)
 	}
 
-	// ルートパス取得
-
 	// URL生成
+	// TODO: 実装
+	speakingAudioPath := fmt.Sprintf("%s/%s", "https://example.com", model.SpeakingAudioPath())
+	threeDimentionalPath := fmt.Sprintf("%s/%s", "https://example.com", model.ThreeDimentionalPath())
+
+	qrcodeIconImagePath, err := u.qrCodeImageStorage.GetImageURL(model.QrcodeIconImagePath())
+	if err != nil {
+		msg := "failed to get QR code image URL"
+		return output, customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
+	}
 
 	return ARAssetsFetchByIDOutput{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		ID:                   model.ID(),
+		SpeakingDescription:  model.SpeakingDescription(),
+		SpeakingAudioPath:    speakingAudioPath,
+		ThreeDimentionalPath: threeDimentionalPath,
+		QrcodeIconImagePath:  qrcodeIconImagePath,
 	}, nil
 }
