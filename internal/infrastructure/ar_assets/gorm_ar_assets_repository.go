@@ -1,6 +1,8 @@
 package arassets
 
 import (
+	"fmt"
+
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
@@ -79,7 +81,7 @@ func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 		Preload("SpeakingAsset").
 		Preload("ThreeDimentionalModel").
 		First(&arAssetModel).Error; err != nil {
-		return readModel, err
+		return readModel, fmt.Errorf("failed to fetch ar asset by id: %w", err)
 	}
 
 	isCreated := arAssetModel.Status == model.GormStatusCompleted

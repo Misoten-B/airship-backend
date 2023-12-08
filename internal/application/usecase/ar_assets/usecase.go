@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"log"
 	"mime/multipart"
 	"net/http"
 
@@ -196,9 +195,20 @@ func (u *ARAssetsUsecaseImpl) FetchByID(input ARAssetsFetchByIDInput) (ARAssetsF
 		)
 	}
 
-	log.Println(model)
+	if !model.IsCreated() {
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			"AR assets has not been created",
+			http.StatusBadRequest,
+		)
+	}
 
 	// 権限確認
+	if model.UID() != input.UID {
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			"user does not have permission to use this AR assets",
+			http.StatusForbidden,
+		)
+	}
 
 	// ルートパス取得
 
