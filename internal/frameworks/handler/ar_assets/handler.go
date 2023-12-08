@@ -8,11 +8,17 @@ import (
 
 	"github.com/Misoten-B/airship-backend/config"
 	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
+	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
+	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
+	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
+	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 )
@@ -121,18 +127,45 @@ func ReadArAssetsByID(c *gin.Context) {
 	}
 
 	// ユースケース実行
-	usecaseImpl, err := newUsecase(config)
-	if err != nil {
-		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
-		return
+	var usecaseImpl fetchbyid.ARAssetsFetchByIDUsecase
+	if config.DevMode {
+		arRepo := service.NewMockARAssetsRepository()
+		qrCodeImageStorage := service.NewMockQRCodeImageStorage()
+		speakingAudioStorage := voiceservice.NewMockSpeakingAudioStorage()
+		threeDimentionalModelStorage := threeservice.NewMockThreeDimentionalModelStorage()
+
+		usecaseImpl = fetchbyid.NewARAssetsFetchByIDInteractor(
+			arRepo,
+			qrCodeImageStorage,
+			speakingAudioStorage,
+			threeDimentionalModelStorage,
+		)
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		arRepo := arassets.NewGormARAssetsRepository(db)
+		qrCodeImageStorage := arassets.NewAzureQRCodeImageStorage(config)
+		speakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config)
+		threeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config)
+
+		usecaseImpl = fetchbyid.NewARAssetsFetchByIDInteractor(
+			arRepo,
+			qrCodeImageStorage,
+			speakingAudioStorage,
+			threeDimentionalModelStorage,
+		)
 	}
 
-	input := usecase.ARAssetsFetchByIDInput{
-		ID:  id,
-		UID: uid,
+	input := fetchbyid.ARAssetsFetchByIDInput{
+		ID:     id,
+		UserID: uid,
 	}
 
-	output, err := usecaseImpl.FetchByID(input)
+	output, err := usecaseImpl.Execute(input)
 	if err != nil {
 		var appErr *customerror.ApplicationError
 

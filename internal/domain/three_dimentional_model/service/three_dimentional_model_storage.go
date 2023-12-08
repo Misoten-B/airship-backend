@@ -18,6 +18,6 @@ func NewMockThreeDimentionalModelStorage() *MockThreeDimentionalModelStorage {
 func (s *MockThreeDimentionalModelStorage) GetModelURL(modelName string) (string, error) {
 	log.Println("Mock 3D Model Storage - GetURL")
 
-	url := fmt.Sprintf("http://example.com/%s", modelName)
+	url := fmt.Sprintf("http://example.com/mock/%s", modelName)
 	return url, nil
 }

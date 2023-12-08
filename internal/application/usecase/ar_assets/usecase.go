@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"mime/multipart"
 	"net/http"
 
@@ -15,11 +14,6 @@ import (
 
 type ARAssetsUsecase interface {
 	Create(input ARAssetsCreateInput) (ARAssetsCreateOutput, error)
-	FetchByID(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error)
-	// FetchByIDPublic
-	// FetchAll
-	// Update
-	// Remove
 }
 
 type ARAssetsUsecaseImpl struct {
@@ -163,74 +157,5 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	return ARAssetsCreateOutput{
 		ID: arAssets.ID().String(),
-	}, nil
-}
-
-type ARAssetsFetchByIDInput struct {
-	ID  string
-	UID string
-}
-
-type ARAssetsFetchByIDOutput struct {
-	ID                   string
-	SpeakingDescription  string
-	SpeakingAudioPath    string
-	ThreeDimentionalPath string
-	QrcodeIconImagePath  string
-}
-
-func (u *ARAssetsUsecaseImpl) FetchByID(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error) {
-	var output ARAssetsFetchByIDOutput
-
-	// バリデーション & オブジェクト生成
-	id := id.ReconstructID(input.ID)
-
-	// リポジトリから取得
-	model, err := u.arAssetsRepository.FetchByID(id)
-	if err != nil {
-		msg := "failed to fetch AR assets"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
-
-	if !model.IsCreated() {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			"AR assets has not been created",
-			http.StatusBadRequest,
-		)
-	}
-
-	// 権限確認
-	if model.UID() != input.UID {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			"user does not have permission to use this AR assets",
-			http.StatusForbidden,
-		)
-	}
-
-	// URL生成
-	// TODO: 実装
-	speakingAudioPath := fmt.Sprintf("%s/%s", "https://example.com", model.SpeakingAudioPath())
-	threeDimentionalPath := fmt.Sprintf("%s/%s", "https://example.com", model.ThreeDimentionalPath())
-
-	qrcodeIconImagePath, err := u.qrCodeImageStorage.GetImageURL(model.QrcodeIconImagePath())
-	if err != nil {
-		msg := "failed to get QR code image URL"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
-
-	return ARAssetsFetchByIDOutput{
-		ID:                   model.ID(),
-		SpeakingDescription:  model.SpeakingDescription(),
-		SpeakingAudioPath:    speakingAudioPath,
-		ThreeDimentionalPath: threeDimentionalPath,
-		QrcodeIconImagePath:  qrcodeIconImagePath,
 	}, nil
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
+	"github.com/Misoten-B/airship-backend/config"
 )
 
 type AzureThreeDimentionalModelStorage struct {
@@ -17,9 +18,9 @@ const (
 	containerName     = "three-dimentional-models"
 )
 
-func NewAzureThreeDimentionalModelStorage(connectionString string) *AzureThreeDimentionalModelStorage {
+func NewAzureThreeDimentionalModelStorage(config *config.Config) *AzureThreeDimentionalModelStorage {
 	return &AzureThreeDimentionalModelStorage{
-		connectionString: connectionString,
+		connectionString: config.AzureBlobStorageConnectionString,
 	}
 }
 

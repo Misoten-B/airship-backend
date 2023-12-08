@@ -6,6 +6,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
+	"github.com/Misoten-B/airship-backend/config"
 )
 
 type AzureSpeakingAudioStorage struct {
@@ -18,9 +19,9 @@ const (
 	containerName     = "speaking-audios"
 )
 
-func NewAzureSpeakingAudioStorage(connectionString string) *AzureSpeakingAudioStorage {
+func NewAzureSpeakingAudioStorage(config *config.Config) *AzureSpeakingAudioStorage {
 	return &AzureSpeakingAudioStorage{
-		connectionString: connectionString,
+		connectionString: config.AzureBlobStorageConnectionString,
 	}
 }
 
