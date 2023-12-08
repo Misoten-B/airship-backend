@@ -14,6 +14,11 @@ import (
 
 type ARAssetsUsecase interface {
 	Create(input ARAssetsCreateInput) (ARAssetsCreateOutput, error)
+	FetchByID(input ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error)
+	// FetchByIDPublic
+	// FetchAll
+	// Update
+	// Remove
 }
 
 type ARAssetsUsecaseImpl struct {
@@ -157,5 +162,40 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 
 	return ARAssetsCreateOutput{
 		ID: arAssets.ID().String(),
+	}, nil
+}
+
+type ARAssetsFetchByIDInput struct {
+	ID  string
+	UID string
+}
+
+type ARAssetsFetchByIDOutput struct {
+	ID                   string
+	SpeakingDescription  string
+	SpeakingAudioPath    string
+	ThreeDimentionalPath string
+	QrcodeIconImagePath  string
+}
+
+func (u *ARAssetsUsecaseImpl) FetchByID(_ ARAssetsFetchByIDInput) (ARAssetsFetchByIDOutput, error) {
+	var _ ARAssetsFetchByIDOutput
+
+	// バリデーション & オブジェクト生成
+
+	// リポジトリから取得
+
+	// 権限確認
+
+	// ルートパス取得
+
+	// URL生成
+
+	return ARAssetsFetchByIDOutput{
+		ID:                   "1",
+		SpeakingDescription:  "こんにちは",
+		SpeakingAudioPath:    "https://example.com",
+		ThreeDimentionalPath: "https://example.com",
+		QrcodeIconImagePath:  "https://example.com",
 	}, nil
 }

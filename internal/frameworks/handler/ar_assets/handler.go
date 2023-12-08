@@ -77,7 +77,6 @@ func CreateArAssets(c *gin.Context) {
 	}
 
 	output, err := usecaseImpl.Create(input)
-
 	if err != nil {
 		var appErr *customerror.ApplicationError
 
@@ -114,8 +113,6 @@ func ReadArAssetsByID(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v, uid: %v", config, uid)
-
 	// リクエスト取得
 	id := c.Param("ar_assets_id")
 	if id == "" {
@@ -124,14 +121,36 @@ func ReadArAssetsByID(c *gin.Context) {
 	}
 
 	// ユースケース実行
+	usecaseImpl, err := newUsecase(config)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	input := usecase.ARAssetsFetchByIDInput{
+		ID:  id,
+		UID: uid,
+	}
+
+	output, err := usecaseImpl.FetchByID(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
 	c.JSON(http.StatusOK, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		ID:                   output.ID,
+		SpeakingDescription:  output.SpeakingDescription,
+		SpeakingAudioPath:    output.SpeakingAudioPath,
+		ThreeDimentionalPath: output.ThreeDimentionalPath,
+		QrcodeIconImagePath:  output.QrcodeIconImagePath,
 	})
 }
 
@@ -299,13 +318,13 @@ func newUsecase(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
 			return nil, err
 		}
 		return usecaseImpl, nil
-	} else {
-		usecaseImpl, err := newUsecaseProd(config)
-		if err != nil {
-			return nil, err
-		}
-		return usecaseImpl, nil
 	}
+
+	usecaseImpl, err := newUsecaseProd(config)
+	if err != nil {
+		return nil, err
+	}
+	return usecaseImpl, nil
 }
 
 func newUsecaseProd(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
