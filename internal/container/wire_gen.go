@@ -11,6 +11,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
+	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	service3 "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	service2 "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -85,6 +86,25 @@ func InitializeFetchByIDPublicARAssetsUsecaseForProd(db *gorm.DB, config2 *confi
 	return interactor
 }
 
+func InitializeFetchByUserIDARAssetsUsecaseForDev() *fetchbyuserid.Interactor {
+	mockARAssetsRepository := service.NewMockARAssetsRepository()
+	mockQRCodeImageStorage := service.NewMockQRCodeImageStorage()
+	mockSpeakingAudioStorage := service2.NewMockSpeakingAudioStorage()
+	mockThreeDimentionalModelStorage := service3.NewMockThreeDimentionalModelStorage()
+	interactor := fetchbyuserid.NewInteractor(mockARAssetsRepository, mockQRCodeImageStorage, mockSpeakingAudioStorage, mockThreeDimentionalModelStorage)
+	return interactor
+}
+
+func InitializeFetchByUserIDARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Config) *fetchbyuserid.Interactor {
+	gormARAssetsRepository := arassets.NewGormARAssetsRepository(db)
+	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
+	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(azureBlobDriver)
+	azureSpeakingAudioStorage := voice.NewAzureSpeakingAudioStorage(azureBlobDriver)
+	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(azureBlobDriver)
+	interactor := fetchbyuserid.NewInteractor(gormARAssetsRepository, azureQRCodeImageStorage, azureSpeakingAudioStorage, azureThreeDimentionalModelStorage)
+	return interactor
+}
+
 // wire.go:
 
 // CreateARAssetsUsecaseSetForDev は開発環境用のプロバイダセットです。
@@ -126,6 +146,18 @@ var FetchByIDPublicARAssetsUsecaseSetForDev = wire.NewSet(fetchbyidpublic.NewInt
 )
 
 var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(fetchbyidpublic.NewInteractor, drivers.NewAzureBlobDriver, GormARAssetsRepositorySet,
+	AzureSpeakingAudioStorageSet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDARAssetsUsecaseSetForDev = wire.NewSet(fetchbyuserid.NewInteractor, MockARAssetsRepositorySet,
+	MockQRCodeImageStorageSet,
+	MockSpeakingAudioStorageSet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDARAssetsUsecaseSetForProd = wire.NewSet(fetchbyuserid.NewInteractor, drivers.NewAzureBlobDriver, GormARAssetsRepositorySet,
+	AzureQRCodeImageStorageSet,
 	AzureSpeakingAudioStorageSet,
 	AzureThreeDimentionalModelStorageSet,
 )

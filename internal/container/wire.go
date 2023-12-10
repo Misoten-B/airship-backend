@@ -8,6 +8,7 @@ import (
 	arcreateusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	arfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	arfetchbyidpubusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
+	arfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -75,6 +76,23 @@ var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(
 	arfetchbyidpubusecase.NewInteractor,
 	drivers.NewAzureBlobDriver,
 	GormARAssetsRepositorySet,
+	AzureSpeakingAudioStorageSet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDARAssetsUsecaseSetForDev = wire.NewSet(
+	arfetchbyuseridusecase.NewInteractor,
+	MockARAssetsRepositorySet,
+	MockQRCodeImageStorageSet,
+	MockSpeakingAudioStorageSet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDARAssetsUsecaseSetForProd = wire.NewSet(
+	arfetchbyuseridusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormARAssetsRepositorySet,
+	AzureQRCodeImageStorageSet,
 	AzureSpeakingAudioStorageSet,
 	AzureThreeDimentionalModelStorageSet,
 )
@@ -205,4 +223,18 @@ func InitializeFetchByIDPublicARAssetsUsecaseForProd(
 	wire.Build(FetchByIDPublicARAssetsUsecaseSetForProd)
 
 	return &arfetchbyidpubusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDARAssetsUsecaseForDev() *arfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDARAssetsUsecaseSetForDev)
+
+	return &arfetchbyuseridusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDARAssetsUsecaseForProd(
+	db *gorm.DB, config *config.Config,
+) *arfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDARAssetsUsecaseSetForProd)
+
+	return &arfetchbyuseridusecase.Interactor{}
 }

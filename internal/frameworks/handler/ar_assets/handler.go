@@ -9,6 +9,7 @@ import (
 	create "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
+	fetchbyuserid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
@@ -173,8 +174,6 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v", config)
-
 	// リクエスト取得
 	id := c.Param("ar_assets_id")
 	if id == "" {
@@ -240,20 +239,50 @@ func ReadAllArAssets(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v, uid: %v", config, uid)
-
 	// ユースケース実行
+	var usecaseImpl fetchbyuserid.Usecase
+
+	if config.DevMode {
+		usecaseImpl = container.InitializeFetchByUserIDARAssetsUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeFetchByUserIDARAssetsUsecaseForProd(db, config)
+	}
+
+	input := fetchbyuserid.Input{
+		UserID: uid,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
-	c.JSON(http.StatusOK, []dto.ArAssetsResponse{
-		{
-			ID:                   "1",
-			SpeakingDescription:  "こんにちは",
-			SpeakingAudioPath:    "https://example.com",
-			ThreeDimentionalPath: "https://example.com",
-			QrcodeIconImagePath:  "https://example.com",
-		},
-	})
+	responses := []dto.ArAssetsResponse{}
+	for _, item := range output.Items {
+		responses = append(responses, dto.ArAssetsResponse{
+			ID:                   item.ID,
+			SpeakingDescription:  item.SpeakingDescription,
+			SpeakingAudioPath:    item.SpeakingAudioPath,
+			ThreeDimentionalPath: item.ThreeDimentionalPath,
+			QrcodeIconImagePath:  item.QrcodeIconImagePath,
+		})
+	}
+
+	c.JSON(http.StatusOK, responses)
 }
 
 // @Tags ArAssets

@@ -1,4 +1,4 @@
-package readall
+package fetchbyuserid
 
 import (
 	"net/http"
