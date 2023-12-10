@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/config"
 	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
@@ -385,68 +384,4 @@ func DeleteArAssets(c *gin.Context) {
 
 	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
-}
-
-// TODO: 後々DIコンテナなどから
-func newUsecase(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
-	if config.DevMode {
-		usecaseImpl, err := newUsecaseDev()
-		if err != nil {
-			return nil, err
-		}
-		return usecaseImpl, nil
-	}
-
-	usecaseImpl, err := newUsecaseProd(config)
-	if err != nil {
-		return nil, err
-	}
-	return usecaseImpl, nil
-}
-
-func newUsecaseProd(config *config.Config) (*usecase.ARAssetsUsecaseImpl, error) {
-	db, err := database.ConnectDB()
-	if err != nil {
-		return nil, err
-	}
-
-	voiceRepo := voice.NewGormVoiceRepository(db)
-	tmodelRepo := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
-
-	usecase, err := usecase.NewARAssetsUsecase(
-		usecase.WithGormARAssetsRepository(db),
-		usecase.WithAzureQRCodeImageStorage(config),
-		usecase.WithExternalAPIVoiceModelAdapter(),
-		usecase.WithVoiceServiceImpl(voiceRepo),
-		usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return usecase, nil
-}
-
-func newUsecaseDev() (*usecase.ARAssetsUsecaseImpl, error) {
-	voiceRepo := voiceservice.NewMockVoiceRepository()
-	tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
-
-	db, err := database.ConnectDB()
-	if err != nil {
-		return nil, err
-	}
-
-	usecaseImpl, err := usecase.NewARAssetsUsecase(
-		// usecase.WithMockARAssetsRepository(),
-		usecase.WithGormARAssetsRepository(db),
-		usecase.WithMockQRCodeImageStorage(),
-		usecase.WithMockVoiceModelAdapter(),
-		usecase.WithVoiceServiceImpl(voiceRepo),
-		usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return usecaseImpl, nil
 }
