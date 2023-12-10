@@ -242,13 +242,7 @@ func ReadAllArAssets(c *gin.Context) {
 
 	log.Printf("config: %v, uid: %v", config, uid)
 
-	// リクエスト取得
-
 	// ユースケース実行
-	// userIDをもとに一覧取得
-	// 生成が完了していないものは除外する
-	// 取得結果が空の場合は空スライスを返す
-	// 各URLのパスを取得する
 
 	// レスポンス
 	c.JSON(http.StatusOK, []dto.ArAssetsResponse{
