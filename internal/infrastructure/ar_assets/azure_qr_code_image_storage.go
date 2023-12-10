@@ -17,7 +17,7 @@ type AzureQRCodeImageStorage struct {
 const (
 	// sasExpiryDuration は、SASの有効期限の猶予です。
 	sasExpiryDuration = 24 * time.Hour
-	containerName     = "images"
+	containerName     = "qrcode-images"
 )
 
 func NewAzureQRCodeImageStorage(config *config.Config) *AzureQRCodeImageStorage {
