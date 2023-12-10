@@ -2,9 +2,9 @@ package arassets
 
 import (
 	"fmt"
-	"mime/multipart"
 	"path/filepath"
 
+	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
@@ -95,16 +95,16 @@ func (s *SpeakingAsset) AudioPath() string {
 
 type QRCodeImage struct {
 	name string
-	file multipart.File
+	file *file.File
 }
 
-func NewQRCodeImage(file multipart.File, fileHeader *multipart.FileHeader) (QRCodeImage, error) {
+func NewQRCodeImage(file *file.File) (QRCodeImage, error) {
 	id, err := id.NewID()
 	if err != nil {
 		return QRCodeImage{}, err
 	}
 
-	name := fmt.Sprintf("%s%s", id.String(), filepath.Ext(fileHeader.Filename))
+	name := fmt.Sprintf("%s%s", id.String(), filepath.Ext(file.FileHeader().Filename))
 
 	return QRCodeImage{
 		name: name,
@@ -116,6 +116,6 @@ func (q *QRCodeImage) Name() string {
 	return q.name
 }
 
-func (q *QRCodeImage) File() multipart.File {
+func (q *QRCodeImage) File() *file.File {
 	return q.file
 }

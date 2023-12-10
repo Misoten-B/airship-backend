@@ -3,10 +3,13 @@ package service
 import (
 	"fmt"
 	"log"
+
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 )
 
 type SpeakingAudioStorage interface {
 	GetAudioURL(name string) (string, error)
+	GetContainerFullPath() (shared.ContainerFullPath, error)
 }
 
 type MockSpeakingAudioStorage struct{}
@@ -20,4 +23,8 @@ func (s *MockSpeakingAudioStorage) GetAudioURL(name string) (string, error) {
 
 	url := fmt.Sprintf("http://example.com/mock/%s", name)
 	return url, nil
+}
+
+func (s *MockSpeakingAudioStorage) GetContainerFullPath() (shared.ContainerFullPath, error) {
+	return &shared.MockContainerFullPath{}, nil
 }

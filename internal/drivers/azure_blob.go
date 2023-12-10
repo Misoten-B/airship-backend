@@ -26,7 +26,7 @@ func NewAzureBlobDriver(config *config.Config) *AzureBlobDriver {
 	}
 }
 
-func (d *AzureBlobDriver) SaveBlob(containerName string, file file.File) error {
+func (d *AzureBlobDriver) SaveBlob(containerName string, file *file.File) error {
 	ctx := context.Background()
 
 	serviceClient, err := d.newClient()

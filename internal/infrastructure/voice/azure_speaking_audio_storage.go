@@ -1,49 +1,38 @@
 package voice
 
 import (
-	"fmt"
-	"time"
-
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
-	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
-	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
 )
 
 type AzureSpeakingAudioStorage struct {
-	connectionString string
+	dirver *drivers.AzureBlobDriver
 }
 
 const (
-	// sasExpiryDuration は、SASの有効期限の猶予です。
-	sasExpiryDuration = 24 * time.Hour
-	containerName     = "speaking-audios"
+	containerName = "speaking-audios"
 )
 
-func NewAzureSpeakingAudioStorage(config *config.Config) *AzureSpeakingAudioStorage {
+func NewAzureSpeakingAudioStorage(driver *drivers.AzureBlobDriver) *AzureSpeakingAudioStorage {
 	return &AzureSpeakingAudioStorage{
-		connectionString: config.AzureBlobStorageConnectionString,
+		dirver: driver,
 	}
 }
 
 func (s *AzureSpeakingAudioStorage) GetAudioURL(name string) (string, error) {
-	serviceClient, err := azblob.NewClientFromConnectionString(s.connectionString, nil)
+	url, err := s.dirver.GetBlobURL(containerName, name)
 	if err != nil {
-		return "", fmt.Errorf("failed to create service client: %w", err)
-	}
-
-	blobClient := serviceClient.ServiceClient().
-		NewContainerClient(containerName).
-		NewBlobClient(name)
-
-	permissions := sas.BlobPermissions{
-		Read: true,
-	}
-	expiry := time.Now().Add(sasExpiryDuration)
-
-	url, err := blobClient.GetSASURL(permissions, expiry, nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to get SAS URL: %w", err)
+		return "", err
 	}
 
 	return url, nil
+}
+
+func (s *AzureSpeakingAudioStorage) GetContainerFullPath() (shared.ContainerFullPath, error) {
+	fullPath, err := s.dirver.GetContainerURL(containerName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &fullPath, nil
 }

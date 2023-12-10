@@ -9,6 +9,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
+	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
@@ -59,7 +60,8 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
 	uid := id.ReconstructID(input.UID)
 
-	qrCodeImage, err := arassets.NewQRCodeImage(input.File, input.FileHeader)
+	file := file.NewMyFile(input.File, input.FileHeader)
+	qrCodeImage, err := arassets.NewQRCodeImage(file)
 	if err != nil {
 		return output, customerror.NewApplicationErrorWithoutDetails(
 			err.Error(),
