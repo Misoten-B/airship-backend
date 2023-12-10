@@ -6,12 +6,21 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/business_card/dto"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	backgroundContainer            = "background-images"
+	qrcodeContainer                = "qrcode-images"
+	threeDimentionalModelContainer = "three-dimentiional-models"
+	audioContainer                 = "audios"
 )
 
 // @Tags BusinessCard
@@ -118,6 +127,29 @@ func ReadAllBusinessCard(c *gin.Context) {
 		return
 	}
 
+	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+
+	bcURL, err := ab.GetContainerURL(backgroundContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	qcURL, err := ab.GetContainerURL(qrcodeContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	tdmcURL, err := ab.GetContainerURL(threeDimentionalModelContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	acURL, err := ab.GetContainerURL(audioContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	responses := []dto.BusinessCardResponse{}
 	for _, businesscard := range businesscards {
 		bcc := model.BusinessCardPartsCoordinate{ID: businesscard.BusinessCardPartsCoordinateID}
@@ -131,12 +163,16 @@ func ReadAllBusinessCard(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+		bcb.ImagePath = bcURL.Path(bcb.ImagePath)
 
 		arassets := model.ARAsset{ID: businesscard.ARAssetID}
 		if err = db.First(&arassets).Error; err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+		arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
+		arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
+		arassets.QRCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
 
 		response := dto.ConvertBC(businesscard, bcc, bcb, arassets)
 
@@ -165,6 +201,29 @@ func ReadBusinessCardByID(c *gin.Context) {
 		return
 	}
 
+	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+
+	bcURL, err := ab.GetContainerURL(backgroundContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	qcURL, err := ab.GetContainerURL(qrcodeContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	tdmcURL, err := ab.GetContainerURL(threeDimentionalModelContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	acURL, err := ab.GetContainerURL(audioContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	businesscard := model.BusinessCard{}
 	if err = db.Where("id = ? AND user_id = ?", c.Param("business_card_id"), uid).First(&businesscard).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -182,12 +241,16 @@ func ReadBusinessCardByID(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	bcb.ImagePath = bcURL.Path(bcb.ImagePath)
 
 	arassets := model.ARAsset{ID: businesscard.ARAssetID}
 	if err = db.First(&arassets).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
+	arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
+	arassets.QRCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
 
 	response := dto.ConvertBC(businesscard, bcc, bcb, arassets)
 
