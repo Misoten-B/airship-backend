@@ -2,7 +2,7 @@ package drivers
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"net/url"
 	"time"
 
@@ -14,11 +14,6 @@ import (
 
 type AzureBlobDriver struct {
 	connectionString string
-}
-
-type AzureFullPath struct {
-	rootPath string
-	token    string
 }
 
 const (
@@ -70,12 +65,10 @@ func (d *AzureBlobDriver) GetBlobURL(containerName, blobName string) (string, er
 	return url, nil
 }
 
-func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureFullPath, error) {
-	afp := AzureFullPath{}
-
+func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureBlobContainerFullPath, error) {
 	serviceClient, err := d.newClient()
 	if err != nil {
-		return afp, err
+		return AzureBlobContainerFullPath{}, err
 	}
 
 	containerClient := serviceClient.ServiceClient().NewContainerClient(containerName)
@@ -87,23 +80,42 @@ func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureFullPath, 
 
 	azureUrl, err := containerClient.GetSASURL(permissions, expiry, nil)
 	if err != nil {
-		return afp, err
+		return AzureBlobContainerFullPath{}, err
 	}
 
-	parsedURL, err := url.Parse(azureUrl)
+	afp, err := newContainerFullPath(azureUrl)
 	if err != nil {
-		return afp, err
+		return AzureBlobContainerFullPath{}, err
 	}
 
-	afp.rootPath = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
-
-	afp.token = parsedURL.Query().Encode()
-
-	log.Print("afp: ", afp)
 	return afp, nil
 }
 
 func (d *AzureBlobDriver) newClient() (*azblob.Client, error) {
 	serviceClient, err := azblob.NewClientFromConnectionString(d.connectionString, nil)
 	return serviceClient, err
+}
+
+type AzureBlobContainerFullPath struct {
+	rootPath string
+	token    string
+}
+
+func newContainerFullPath(azureURL string) (AzureBlobContainerFullPath, error) {
+	parsedURL, err := url.Parse(azureURL)
+	if err != nil {
+		return AzureBlobContainerFullPath{}, err
+	}
+
+	rootPath := parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
+	token := parsedURL.Query().Encode()
+
+	return AzureBlobContainerFullPath{
+		rootPath: rootPath,
+		token:    token,
+	}, nil
+}
+
+func (a *AzureBlobContainerFullPath) Path(name string) string {
+	return fmt.Sprintf("%s/%s?%s", a.rootPath, name, a.token)
 }
