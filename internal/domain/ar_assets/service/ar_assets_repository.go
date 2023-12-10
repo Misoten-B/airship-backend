@@ -32,9 +32,9 @@ func (r *MockARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 		id.String(),
 		testdata.DEV_UID,
 		"test description",
-		"example.mp3",
-		"example.glb",
-		"example.png",
+		"mock-example.mp3",
+		"mock-example.glb",
+		"mock-example.png",
 		true,
 	), nil
 }
@@ -47,9 +47,9 @@ func (r *MockARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadMod
 			"1",
 			testdata.DEV_UID,
 			"test description",
-			"example.mp3",
-			"example.glb",
-			"example.png",
+			"mock-example.mp3",
+			"mock-example.glb",
+			"mock-example.png",
 			true,
 		),
 	}, nil
