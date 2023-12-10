@@ -7,14 +7,11 @@ import (
 	"net/http"
 
 	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
-	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
-	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
-	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
-	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 )
 
@@ -57,22 +54,8 @@ func CreateArAssets(c *gin.Context) {
 	var usecaseImpl usecase.ARAssetsUsecase
 
 	// ARAssetsUsecaseの生成
-	// TODO: 後々DIコンテナなどから
 	if config.DevMode {
-		voiceRepo := voiceservice.NewMockVoiceRepository()
-		tmodelRepo := threeservice.NewMockThreeDimentionalModelRepository()
-
-		usecaseImpl, err = usecase.NewARAssetsUsecase(
-			usecase.WithMockARAssetsRepository(),
-			usecase.WithMockQRCodeImageStorage(),
-			usecase.WithMockVoiceModelAdapter(),
-			usecase.WithVoiceServiceImpl(voiceRepo),
-			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
-		)
-		if err != nil {
-			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
-			return
-		}
+		usecaseImpl = container.InitializeCreateARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -80,20 +63,7 @@ func CreateArAssets(c *gin.Context) {
 			return
 		}
 
-		voiceRepo := voice.NewGormVoiceRepository(db)
-		tmodelRepo := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
-
-		usecaseImpl, err = usecase.NewARAssetsUsecase(
-			usecase.WithGormARAssetsRepository(db),
-			usecase.WithAzureQRCodeImageStorage(config),
-			usecase.WithExternalAPIVoiceModelAdapter(),
-			usecase.WithVoiceServiceImpl(voiceRepo),
-			usecase.WithThreeDimentionalModelServiceImpl(tmodelRepo),
-		)
-		if err != nil {
-			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
-			return
-		}
+		usecaseImpl = container.InitializeCreateARAssetsUsecaseForProd(db, config)
 	}
 
 	// ユースケース実行
