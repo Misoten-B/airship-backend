@@ -11,6 +11,7 @@ import (
 type ARAssetsRepository interface {
 	Save(arassets arassets.ARAssets) error
 	FetchByID(id id.ID) (arassets.ReadModel, error)
+	FetchByUserID(userID id.ID) ([]arassets.ReadModel, error)
 }
 
 type MockARAssetsRepository struct{}
@@ -36,4 +37,20 @@ func (r *MockARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 		"example.png",
 		true,
 	), nil
+}
+
+func (r *MockARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadModel, error) {
+	log.Printf("Mock ARAssets Repository - FetchByUserID: %s", userID)
+
+	return []arassets.ReadModel{
+		arassets.NewReadModel(
+			"1",
+			testdata.DEV_UID,
+			"test description",
+			"example.mp3",
+			"example.glb",
+			"example.png",
+			true,
+		),
+	}, nil
 }

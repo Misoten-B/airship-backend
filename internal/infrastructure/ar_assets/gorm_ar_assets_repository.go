@@ -84,6 +84,29 @@ func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 		return readModel, fmt.Errorf("failed to fetch ar asset by id: %w", err)
 	}
 
+	return convertToReadModel(arAssetModel), nil
+}
+
+func (r *GormARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadModel, error) {
+	var arAssetsModels []model.ARAsset
+	var readModels []arassets.ReadModel
+
+	if err := r.db.Model(&arAssetsModels).
+		Where("user_id = ?", userID).
+		Preload("SpeakingAsset").
+		Preload("ThreeDimentionalModel").
+		Find(&arAssetsModels).Error; err != nil {
+		return readModels, fmt.Errorf("failed to fetch ar asset by user id: %w", err)
+	}
+
+	for _, arAssetModel := range arAssetsModels {
+		readModels = append(readModels, convertToReadModel(arAssetModel))
+	}
+
+	return readModels, nil
+}
+
+func convertToReadModel(arAssetModel model.ARAsset) arassets.ReadModel {
 	isCreated := arAssetModel.Status == model.GormStatusCompleted
 	return arassets.NewReadModel(
 		arAssetModel.ID,
@@ -93,5 +116,5 @@ func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 		arAssetModel.ThreeDimentionalModel.ModelPath,
 		arAssetModel.QRCodeImagePath,
 		isCreated,
-	), nil
+	)
 }
