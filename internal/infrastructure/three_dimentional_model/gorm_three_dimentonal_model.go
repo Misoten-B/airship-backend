@@ -22,6 +22,7 @@ func NewGormThreeDimentionalModelRepository(db *gorm.DB) *GormThreeDimentionalMo
 func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
+	// FIXME: Gorm取得の最適化
 	if err := r.db.Preload("PersonalThreeDimentionalModels").
 		Preload("ThreeDimentionalModelTemplates").
 		First(&threeDimentionalModel, id).Error; err != nil {
