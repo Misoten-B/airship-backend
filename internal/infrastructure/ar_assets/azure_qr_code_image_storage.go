@@ -42,7 +42,7 @@ func (s *AzureQRCodeImageStorage) Save(qrCodeImage arassets.QRCodeImage) error {
 	return nil
 }
 
-func (s *AzureQRCodeImageStorage) GetImageURL(qrCodeImage arassets.QRCodeImage) (string, error) {
+func (s *AzureQRCodeImageStorage) GetImageURL(name string) (string, error) {
 	serviceClient, err := s.newClient()
 	if err != nil {
 		return "", err
@@ -50,7 +50,7 @@ func (s *AzureQRCodeImageStorage) GetImageURL(qrCodeImage arassets.QRCodeImage) 
 
 	blobClient := serviceClient.ServiceClient().
 		NewContainerClient(containerName).
-		NewBlobClient(qrCodeImage.Name())
+		NewBlobClient(name)
 
 	permissions := sas.BlobPermissions{
 		Read: true,

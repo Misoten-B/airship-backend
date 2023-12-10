@@ -9,7 +9,7 @@ import (
 
 type QRCodeImageStorage interface {
 	Save(qrCodeImage arassets.QRCodeImage) error
-	GetImageURL(qrCodeImage arassets.QRCodeImage) (string, error)
+	GetImageURL(name string) (string, error)
 }
 
 type MockQRCodeImageStorage struct{}
@@ -23,9 +23,9 @@ func (s *MockQRCodeImageStorage) Save(_ arassets.QRCodeImage) error {
 	return nil
 }
 
-func (s *MockQRCodeImageStorage) GetImageURL(qrCodeImage arassets.QRCodeImage) (string, error) {
+func (s *MockQRCodeImageStorage) GetImageURL(name string) (string, error) {
 	log.Println("Mock QRCode Image Storage - GetURL")
 
-	url := fmt.Sprintf("http://example.com/%s", qrCodeImage.Name())
+	url := fmt.Sprintf("http://example.com/mock/%s", name)
 	return url, nil
 }

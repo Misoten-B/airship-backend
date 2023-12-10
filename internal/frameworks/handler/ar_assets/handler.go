@@ -6,7 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	create "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
+	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
+	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
@@ -51,7 +53,7 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
-	var usecaseImpl usecase.ARAssetsUsecase
+	var usecaseImpl create.ARAssetsUsecase
 
 	// ARAssetsUsecaseの生成
 	if config.DevMode {
@@ -66,8 +68,7 @@ func CreateArAssets(c *gin.Context) {
 		usecaseImpl = container.InitializeCreateARAssetsUsecaseForProd(db, config)
 	}
 
-	// ユースケース実行
-	input := usecase.ARAssetsCreateInput{
+	input := create.ARAssetsCreateInput{
 		UID:                 uid,
 		SpeakingDescription: request.SpeakingDescription,
 		ThreeDimentionalID:  request.ThreeDimentionalID,
@@ -76,7 +77,6 @@ func CreateArAssets(c *gin.Context) {
 	}
 
 	output, err := usecaseImpl.Create(input)
-
 	if err != nil {
 		var appErr *customerror.ApplicationError
 
@@ -88,6 +88,7 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
+	// レスポンス
 	c.Header("Location", fmt.Sprintf("/%s", output.ID))
 	c.JSON(http.StatusCreated, nil)
 }
@@ -99,15 +100,64 @@ func CreateArAssets(c *gin.Context) {
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Success 200 {object} dto.ArAssetsResponse
 func ReadArAssetsByID(c *gin.Context) {
-	log.Print("Authorization: ", c.Request.Header.Get("Authorization"))
-	log.Print("ar_assets_id: ", c.Param("ar_assets_id"))
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// リクエスト取得
+	id := c.Param("ar_assets_id")
+	if id == "" {
+		reqErr := errors.New("ar_assets_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
+
+	// ユースケース実行
+	var usecaseImpl fetchbyid.Usecase
+	if config.DevMode {
+		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForProd(db, config)
+	}
+
+	input := fetchbyid.Input{
+		ID:     id,
+		UserID: uid,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// レスポンス
 	c.JSON(http.StatusOK, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		ID:                   output.ID,
+		SpeakingDescription:  output.SpeakingDescription,
+		SpeakingAudioPath:    output.SpeakingAudioPath,
+		ThreeDimentionalPath: output.ThreeDimentionalPath,
+		QrcodeIconImagePath:  output.QrcodeIconImagePath,
 	})
 }
 
@@ -116,14 +166,58 @@ func ReadArAssetsByID(c *gin.Context) {
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Success 200 {object} dto.ArAssetsResponse
 func ReadArAssetsByIDPublic(c *gin.Context) {
-	log.Print("ar_assets_id: ", c.Param("ar_assets_id"))
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
+	log.Printf("config: %v", config)
+
+	// リクエスト取得
+	id := c.Param("ar_assets_id")
+	if id == "" {
+		reqErr := errors.New("ar_assets_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
+
+	// ユースケース実行
+	var usecaseImpl fetchbyidpublic.Usecase
+	if config.DevMode {
+		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForProd(db, config)
+	}
+
+	input := fetchbyidpublic.Input{
+		ID: id,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// レスポンス
 	c.JSON(http.StatusOK, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
+		ID:                   output.ID,
+		SpeakingDescription:  output.SpeakingDescription,
+		SpeakingAudioPath:    output.SpeakingAudioPath,
+		ThreeDimentionalPath: output.ThreeDimentionalPath,
 	})
 }
 
@@ -133,8 +227,26 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.ArAssetsResponse
 func ReadAllArAssets(c *gin.Context) {
-	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("config: %v, uid: %v", config, uid)
+
+	// リクエスト取得
+
+	// ユースケース実行
+
+	// レスポンス
 	c.JSON(http.StatusOK, []dto.ArAssetsResponse{
 		{
 			ID:                   "1",
@@ -156,15 +268,38 @@ func ReadAllArAssets(c *gin.Context) {
 // @Param qrcodeIcon formData file false "Image file to be uploaded"
 // @Success 200 {object} dto.ArAssetsResponse
 func UpdateArAssets(c *gin.Context) {
-	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
+	/// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("config: %v, uid: %v", config, uid)
+
+	// リクエスト取得
+	id := c.Param("ar_assets_id")
+	if id == "" {
+		reqErr := errors.New("ar_assets_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
 
 	request := dto.CreateArAssetsRequest{}
-	if err := c.ShouldBind(&request); err != nil {
+	if err = c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	log.Printf("formData: %v", request)
 
+	// ユースケース実行
+
+	// レスポンス
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
 		ID:                   "1",
 		SpeakingDescription:  "こんにちは",
@@ -181,8 +316,30 @@ func UpdateArAssets(c *gin.Context) {
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Success 204 {object} nil
 func DeleteArAssets(c *gin.Context) {
-	log.Printf("Authorization: %s", c.Request.Header.Get("Authorization"))
-	log.Printf("ar_assets_id: %s", c.Param("ar_assets_id"))
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	log.Printf("config: %v, uid: %v", config, uid)
+
+	// リクエスト取得
+	id := c.Param("ar_assets_id")
+	if id == "" {
+		reqErr := errors.New("ar_assets_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
+
+	// ユースケース実行
+
+	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
 }

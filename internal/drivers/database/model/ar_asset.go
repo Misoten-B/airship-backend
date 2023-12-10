@@ -25,7 +25,6 @@ type PersonalThreeDimentionalModel struct {
 // SpeakingAssetは音声アセットテーブルのORMモデルです。
 type SpeakingAsset struct {
 	ID          string `gorm:"primaryKey"`
-	ARAssets    []ARAsset
 	UserID      string
 	Description string
 	AudioPath   string
@@ -33,12 +32,15 @@ type SpeakingAsset struct {
 
 // ARAssetはARアセットテーブルのORMモデルです。
 type ARAsset struct {
-	ID                      string `gorm:"primaryKey"`
-	AccessCount             int
-	QRCodeImagePath         string
-	BusinessCards           []BusinessCard
+	ID              string `gorm:"primaryKey"`
+	AccessCount     int
+	QRCodeImagePath string
+	Status          int
+
 	UserID                  string
+	User                    User
 	SpeakingAssetID         string
+	SpeakingAsset           SpeakingAsset
 	ThreeDimentionalModelID string
-	Status                  int
+	ThreeDimentionalModel   ThreeDimentionalModel
 }
