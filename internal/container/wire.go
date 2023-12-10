@@ -73,6 +73,7 @@ var FetchByIDPublicARAssetsUsecaseSetForDev = wire.NewSet(
 
 var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(
 	arfetchbyidpubusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
 	GormARAssetsRepositorySet,
 	AzureSpeakingAudioStorageSet,
 	AzureThreeDimentionalModelStorageSet,

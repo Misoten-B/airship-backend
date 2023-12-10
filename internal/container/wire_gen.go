@@ -63,7 +63,7 @@ func InitializeFetchByIDARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Conf
 	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
 	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(azureBlobDriver)
 	azureSpeakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config2)
-	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config2)
+	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(azureBlobDriver)
 	interactor := fetchbyid.NewInteractor(gormARAssetsRepository, azureQRCodeImageStorage, azureSpeakingAudioStorage, azureThreeDimentionalModelStorage)
 	return interactor
 }
@@ -79,7 +79,8 @@ func InitializeFetchByIDPublicARAssetsUsecaseForDev() *fetchbyidpublic.Interacto
 func InitializeFetchByIDPublicARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Config) *fetchbyidpublic.Interactor {
 	gormARAssetsRepository := arassets.NewGormARAssetsRepository(db)
 	azureSpeakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config2)
-	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config2)
+	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
+	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(azureBlobDriver)
 	interactor := fetchbyidpublic.NewInteractor(gormARAssetsRepository, azureSpeakingAudioStorage, azureThreeDimentionalModelStorage)
 	return interactor
 }
@@ -124,7 +125,7 @@ var FetchByIDPublicARAssetsUsecaseSetForDev = wire.NewSet(fetchbyidpublic.NewInt
 	MockThreeDimentionalModelStorageSet,
 )
 
-var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(fetchbyidpublic.NewInteractor, GormARAssetsRepositorySet,
+var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(fetchbyidpublic.NewInteractor, drivers.NewAzureBlobDriver, GormARAssetsRepositorySet,
 	AzureSpeakingAudioStorageSet,
 	AzureThreeDimentionalModelStorageSet,
 )

@@ -30,5 +30,9 @@ func (s *AzureQRCodeImageStorage) Save(qrCodeImage arassets.QRCodeImage) error {
 
 func (s *AzureQRCodeImageStorage) GetImageURL(name string) (string, error) {
 	url, err := s.dirver.GetBlobURL(containerName, name)
-	return url, err
+	if err != nil {
+		return "", err
+	}
+
+	return url, nil
 }
