@@ -45,6 +45,6 @@ psql -h 127.0.0.1 -p 5432 -U postgres -d airship
 **Swagger更新**
 
 ```bash
-swag init
+go generate
 ```
 

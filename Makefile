@@ -1,5 +1,5 @@
 local:
-	swag init
+	go generate
 	go run main.go
 
 lint:
