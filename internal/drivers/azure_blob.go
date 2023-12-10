@@ -2,6 +2,8 @@ package drivers
 
 import (
 	"context"
+	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
@@ -63,7 +65,57 @@ func (d *AzureBlobDriver) GetBlobURL(containerName, blobName string) (string, er
 	return url, nil
 }
 
+func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureBlobContainerFullPath, error) {
+	serviceClient, err := d.newClient()
+	if err != nil {
+		return AzureBlobContainerFullPath{}, err
+	}
+
+	containerClient := serviceClient.ServiceClient().NewContainerClient(containerName)
+
+	permissions := sas.ContainerPermissions{
+		Read: true,
+	}
+	expiry := time.Now().Add(sasExpiryDuration)
+
+	url, err := containerClient.GetSASURL(permissions, expiry, nil)
+	if err != nil {
+		return AzureBlobContainerFullPath{}, err
+	}
+
+	afp, err := newContainerFullPath(url)
+	if err != nil {
+		return AzureBlobContainerFullPath{}, err
+	}
+
+	return afp, nil
+}
+
 func (d *AzureBlobDriver) newClient() (*azblob.Client, error) {
 	serviceClient, err := azblob.NewClientFromConnectionString(d.connectionString, nil)
 	return serviceClient, err
+}
+
+type AzureBlobContainerFullPath struct {
+	rootPath string
+	token    string
+}
+
+func newContainerFullPath(azureURL string) (AzureBlobContainerFullPath, error) {
+	parsedURL, err := url.Parse(azureURL)
+	if err != nil {
+		return AzureBlobContainerFullPath{}, err
+	}
+
+	rootPath := parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
+	token := parsedURL.Query().Encode()
+
+	return AzureBlobContainerFullPath{
+		rootPath: rootPath,
+		token:    token,
+	}, nil
+}
+
+func (a *AzureBlobContainerFullPath) Path(name string) string {
+	return fmt.Sprintf("%s/%s?%s", a.rootPath, name, a.token)
 }

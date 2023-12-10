@@ -14,8 +14,17 @@
 
 **初回実行**
 
+db
 ```bash
 docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=airship -p 5432:5432 postgres:latest
+```
+
+go
+```bash
+# .env.sampleをコピペして.envに
+# .serviceAccountKey.jsonをルートに
+# ローカル環境にインストールされます
+make init
 ```
 
 **データベース初期化**
