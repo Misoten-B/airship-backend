@@ -2,6 +2,8 @@ package drivers
 
 import (
 	"context"
+	"log"
+	"net/url"
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
@@ -12,6 +14,11 @@ import (
 
 type AzureBlobDriver struct {
 	connectionString string
+}
+
+type AzureFullPath struct {
+	rootPath string
+	token    string
 }
 
 const (
@@ -61,6 +68,39 @@ func (d *AzureBlobDriver) GetBlobURL(containerName, blobName string) (string, er
 	}
 
 	return url, nil
+}
+
+func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureFullPath, error) {
+	afp := AzureFullPath{}
+
+	serviceClient, err := d.newClient()
+	if err != nil {
+		return afp, err
+	}
+
+	containerClient := serviceClient.ServiceClient().NewContainerClient(containerName)
+
+	permissions := sas.ContainerPermissions{
+		Read: true,
+	}
+	expiry := time.Now().Add(sasExpiryDuration)
+
+	azureUrl, err := containerClient.GetSASURL(permissions, expiry, nil)
+	if err != nil {
+		return afp, err
+	}
+
+	parsedURL, err := url.Parse(azureUrl)
+	if err != nil {
+		return afp, err
+	}
+
+	afp.rootPath = parsedURL.Scheme + "://" + parsedURL.Host + parsedURL.Path
+
+	afp.token = parsedURL.Query().Encode()
+
+	log.Print("afp: ", afp)
+	return afp, nil
 }
 
 func (d *AzureBlobDriver) newClient() (*azblob.Client, error) {
