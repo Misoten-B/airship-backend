@@ -61,7 +61,6 @@ func (d *AzureBlobDriver) GetBlobURL(containerName, blobName string) (string, er
 	}
 
 	return url, nil
-
 }
 
 func (d *AzureBlobDriver) newClient() (*azblob.Client, error) {
