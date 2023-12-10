@@ -11,6 +11,7 @@ import (
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
 	arinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	tdminfra "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	vinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
@@ -36,6 +37,7 @@ var CreateARAssetsUsecaseSetForDev = wire.NewSet(
 
 var CreateARAssetsUsecaseSetForProd = wire.NewSet(
 	arcreateusecase.NewARAssetsUsecaseImpl,
+	drivers.NewAzureBlobDriver,
 	GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	ExternalAPIVoiceModelAdapterSet,
@@ -55,6 +57,7 @@ var FetchByIDARAssetsUsecaseSetForDev = wire.NewSet(
 
 var FetchByIDARAssetsUsecaseSetForProd = wire.NewSet(
 	arfetchbyidusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
 	GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	AzureSpeakingAudioStorageSet,

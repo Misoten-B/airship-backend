@@ -14,6 +14,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	service3 "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	service2 "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
@@ -37,7 +38,8 @@ func InitializeCreateARAssetsUsecaseForDev() *usecase.ARAssetsUsecaseImpl {
 
 func InitializeCreateARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Config) *usecase.ARAssetsUsecaseImpl {
 	gormARAssetsRepository := arassets.NewGormARAssetsRepository(db)
-	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(config2)
+	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
+	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(azureBlobDriver)
 	externalAPIVoiceModelAdapter := voice.NewExternalAPIVoiceModelAdapter()
 	gormVoiceRepository := voice.NewGormVoiceRepository(db)
 	voiceServiceImpl := service2.NewVoiceServiceImpl(gormVoiceRepository)
@@ -58,7 +60,8 @@ func InitializeFetchByIDARAssetsUsecaseForDev() *fetchbyid.Interactor {
 
 func InitializeFetchByIDARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Config) *fetchbyid.Interactor {
 	gormARAssetsRepository := arassets.NewGormARAssetsRepository(db)
-	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(config2)
+	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
+	azureQRCodeImageStorage := arassets.NewAzureQRCodeImageStorage(azureBlobDriver)
 	azureSpeakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config2)
 	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config2)
 	interactor := fetchbyid.NewInteractor(gormARAssetsRepository, azureQRCodeImageStorage, azureSpeakingAudioStorage, azureThreeDimentionalModelStorage)
@@ -95,7 +98,7 @@ var CreateARAssetsUsecaseSetForDev = wire.NewSet(usecase.NewARAssetsUsecaseImpl,
 	MockThreeDimentionalModelRepositorySet,
 )
 
-var CreateARAssetsUsecaseSetForProd = wire.NewSet(usecase.NewARAssetsUsecaseImpl, GormARAssetsRepositorySet,
+var CreateARAssetsUsecaseSetForProd = wire.NewSet(usecase.NewARAssetsUsecaseImpl, drivers.NewAzureBlobDriver, GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	ExternalAPIVoiceModelAdapterSet,
 	VoiceServiceImplSet,
@@ -110,7 +113,7 @@ var FetchByIDARAssetsUsecaseSetForDev = wire.NewSet(fetchbyid.NewInteractor, Moc
 	MockThreeDimentionalModelStorageSet,
 )
 
-var FetchByIDARAssetsUsecaseSetForProd = wire.NewSet(fetchbyid.NewInteractor, GormARAssetsRepositorySet,
+var FetchByIDARAssetsUsecaseSetForProd = wire.NewSet(fetchbyid.NewInteractor, drivers.NewAzureBlobDriver, GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	AzureSpeakingAudioStorageSet,
 	AzureThreeDimentionalModelStorageSet,
