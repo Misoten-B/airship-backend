@@ -1,6 +1,7 @@
 package threedimentionalmodel
 
 import (
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
 )
 
@@ -25,4 +26,13 @@ func (s *AzureThreeDimentionalModelStorage) GetModelURL(modelName string) (strin
 	}
 
 	return url, nil
+}
+
+func (s *AzureThreeDimentionalModelStorage) GetContainerFullPath() (shared.ContainerFullPath, error) {
+	fullPath, err := s.dirver.GetContainerURL(containerName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &fullPath, nil
 }
