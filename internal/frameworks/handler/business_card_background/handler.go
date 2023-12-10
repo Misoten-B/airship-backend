@@ -57,7 +57,7 @@ func CreateBusinessCardBackground(c *gin.Context) {
 	ab := drivers.NewAzureBlobDriver(config.GetConfig())
 	castedFile := file.NewMyFile(formFile, fileHeader)
 	castedFile.FileHeader().Filename = fmt.Sprintf("%s.png", bcbID.String())
-	if err = ab.SaveBlob(containerName, *castedFile); err != nil {
+	if err = ab.SaveBlob(containerName, castedFile); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
