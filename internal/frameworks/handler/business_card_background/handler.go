@@ -28,8 +28,6 @@ const (
 // @Param dto.CreateBackgroundRequest formData dto.CreateBackgroundRequest true "BusinessCardBackground"
 // @Success 201 {object} dto.BackgroundResponse
 func CreateBusinessCardBackground(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
-
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
