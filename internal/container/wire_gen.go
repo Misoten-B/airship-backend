@@ -47,9 +47,47 @@ func InitializeCreateARAssetsUsecaseForProd(db *gorm.DB, config2 *config.Config)
 
 // wire.go:
 
-// CreateARAssetsUsecaseForDev は開発環境用のARAssetsUsecaseを生成します。
+// CreateARAssetsUsecaseSetForDev は開発環境用のプロバイダセットです。
 // 現状、このファイルに記述されていますが、将来的にはユースケースのファクトリ部分に移動することも
 // 検討しています。
-var CreateARAssetsUsecaseForDev = wire.NewSet(usecase.NewARAssetsUsecaseImpl, service.NewMockARAssetsRepository, wire.Bind(new(service.ARAssetsRepository), new(*service.MockARAssetsRepository)), service.NewMockQRCodeImageStorage, wire.Bind(new(service.QRCodeImageStorage), new(*service.MockQRCodeImageStorage)), service2.NewMockVoiceModelAdapter, wire.Bind(new(service2.VoiceModelAdapter), new(*service2.MockVoiceModelAdapter)), service2.NewVoiceServiceImpl, wire.Bind(new(service2.VoiceService), new(*service2.VoiceServiceImpl)), service2.NewMockVoiceRepository, wire.Bind(new(service2.VoiceRepository), new(*service2.MockVoiceRepository)), service3.NewThreeDimentionalModelServiceImpl, wire.Bind(new(service3.ThreeDimentionalModelService), new(*service3.ThreeDimentionalModelServiceImpl)), service3.NewMockThreeDimentionalModelRepository, wire.Bind(new(service3.ThreeDimentionalModelRepository), new(*service3.MockThreeDimentionalModelRepository)))
+var CreateARAssetsUsecaseSetForDev = wire.NewSet(usecase.NewARAssetsUsecaseImpl, MockARAssetsRepositorySet,
+	MockQRCodeImageStorageSet,
+	MockVoiceModelAdapterSet,
+	VoiceServiceImplSet,
+	MockVoiceRepositorySet,
+	ThreeDimentionalModelServiceImplSet,
+	MockThreeDimentionalModelRepositorySet,
+)
 
-var CreateARAssetsUsecaseForProd = wire.NewSet(usecase.NewARAssetsUsecaseImpl, arassets.NewGormARAssetsRepository, wire.Bind(new(service.ARAssetsRepository), new(*arassets.GormARAssetsRepository)), arassets.NewAzureQRCodeImageStorage, wire.Bind(new(service.QRCodeImageStorage), new(*arassets.AzureQRCodeImageStorage)), voice.NewExternalAPIVoiceModelAdapter, wire.Bind(new(service2.VoiceModelAdapter), new(*voice.ExternalAPIVoiceModelAdapter)), service2.NewVoiceServiceImpl, wire.Bind(new(service2.VoiceService), new(*service2.VoiceServiceImpl)), voice.NewGormVoiceRepository, wire.Bind(new(service2.VoiceRepository), new(*voice.GormVoiceRepository)), service3.NewThreeDimentionalModelServiceImpl, wire.Bind(new(service3.ThreeDimentionalModelService), new(*service3.ThreeDimentionalModelServiceImpl)), threedimentionalmodel.NewGormThreeDimentionalModelRepository, wire.Bind(new(service3.ThreeDimentionalModelRepository), new(*threedimentionalmodel.GormThreeDimentionalModelRepository)))
+var CreateARAssetsUsecaseSetForProd = wire.NewSet(usecase.NewARAssetsUsecaseImpl, GormARAssetsRepositorySet,
+	AzureQRCodeImageStorageSet,
+	ExternalAPIVoiceModelAdapterSet,
+	VoiceServiceImplSet,
+	GormVoiceRepositorySet,
+	ThreeDimentionalModelServiceImplSet,
+	GormThreeDimentionalModelRepositorySet,
+)
+
+var MockARAssetsRepositorySet = wire.NewSet(service.NewMockARAssetsRepository, wire.Bind(new(service.ARAssetsRepository), new(*service.MockARAssetsRepository)))
+
+var GormARAssetsRepositorySet = wire.NewSet(arassets.NewGormARAssetsRepository, wire.Bind(new(service.ARAssetsRepository), new(*arassets.GormARAssetsRepository)))
+
+var MockQRCodeImageStorageSet = wire.NewSet(service.NewMockQRCodeImageStorage, wire.Bind(new(service.QRCodeImageStorage), new(*service.MockQRCodeImageStorage)))
+
+var AzureQRCodeImageStorageSet = wire.NewSet(arassets.NewAzureQRCodeImageStorage, wire.Bind(new(service.QRCodeImageStorage), new(*arassets.AzureQRCodeImageStorage)))
+
+var MockVoiceModelAdapterSet = wire.NewSet(service2.NewMockVoiceModelAdapter, wire.Bind(new(service2.VoiceModelAdapter), new(*service2.MockVoiceModelAdapter)))
+
+var ExternalAPIVoiceModelAdapterSet = wire.NewSet(voice.NewExternalAPIVoiceModelAdapter, wire.Bind(new(service2.VoiceModelAdapter), new(*voice.ExternalAPIVoiceModelAdapter)))
+
+var VoiceServiceImplSet = wire.NewSet(service2.NewVoiceServiceImpl, wire.Bind(new(service2.VoiceService), new(*service2.VoiceServiceImpl)))
+
+var MockVoiceRepositorySet = wire.NewSet(service2.NewMockVoiceRepository, wire.Bind(new(service2.VoiceRepository), new(*service2.MockVoiceRepository)))
+
+var GormVoiceRepositorySet = wire.NewSet(voice.NewGormVoiceRepository, wire.Bind(new(service2.VoiceRepository), new(*voice.GormVoiceRepository)))
+
+var ThreeDimentionalModelServiceImplSet = wire.NewSet(service3.NewThreeDimentionalModelServiceImpl, wire.Bind(new(service3.ThreeDimentionalModelService), new(*service3.ThreeDimentionalModelServiceImpl)))
+
+var MockThreeDimentionalModelRepositorySet = wire.NewSet(service3.NewMockThreeDimentionalModelRepository, wire.Bind(new(service3.ThreeDimentionalModelRepository), new(*service3.MockThreeDimentionalModelRepository)))
+
+var GormThreeDimentionalModelRepositorySet = wire.NewSet(threedimentionalmodel.NewGormThreeDimentionalModelRepository, wire.Bind(new(service3.ThreeDimentionalModelRepository), new(*threedimentionalmodel.GormThreeDimentionalModelRepository)))
