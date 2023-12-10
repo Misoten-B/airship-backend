@@ -1,3 +1,6 @@
+//go:generate swag init
+//go:generate wire ./internal/container
+
 package main
 
 import (
