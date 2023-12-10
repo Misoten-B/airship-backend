@@ -8,7 +8,7 @@ package container
 
 import (
 	"github.com/Misoten-B/airship-backend/config"
-	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	service3 "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	service2 "github.com/Misoten-B/airship-backend/internal/domain/voice/service"

@@ -5,7 +5,7 @@ package container
 
 import (
 	"github.com/Misoten-B/airship-backend/config"
-	arusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	arcreateusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -16,11 +16,13 @@ import (
 	"gorm.io/gorm"
 )
 
+/** Usecase Provider Set **/
+
 // CreateARAssetsUsecaseSetForDev は開発環境用のプロバイダセットです。
 // 現状、このファイルに記述されていますが、将来的にはユースケースのファクトリ部分に移動することも
 // 検討しています。
 var CreateARAssetsUsecaseSetForDev = wire.NewSet(
-	arusecase.NewARAssetsUsecaseImpl,
+	arcreateusecase.NewARAssetsUsecaseImpl,
 	MockARAssetsRepositorySet,
 	MockQRCodeImageStorageSet,
 	MockVoiceModelAdapterSet,
@@ -31,7 +33,7 @@ var CreateARAssetsUsecaseSetForDev = wire.NewSet(
 )
 
 var CreateARAssetsUsecaseSetForProd = wire.NewSet(
-	arusecase.NewARAssetsUsecaseImpl,
+	arcreateusecase.NewARAssetsUsecaseImpl,
 	GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	ExternalAPIVoiceModelAdapterSet,
@@ -111,14 +113,14 @@ var GormThreeDimentionalModelRepositorySet = wire.NewSet(
 
 /** Injectors **/
 
-func InitializeCreateARAssetsUsecaseForDev() *arusecase.ARAssetsUsecaseImpl {
+func InitializeCreateARAssetsUsecaseForDev() *arcreateusecase.ARAssetsUsecaseImpl {
 	wire.Build(CreateARAssetsUsecaseSetForDev)
 
-	return &arusecase.ARAssetsUsecaseImpl{}
+	return &arcreateusecase.ARAssetsUsecaseImpl{}
 }
 
-func InitializeCreateARAssetsUsecaseForProd(db *gorm.DB, config *config.Config) *arusecase.ARAssetsUsecaseImpl {
+func InitializeCreateARAssetsUsecaseForProd(db *gorm.DB, config *config.Config) *arcreateusecase.ARAssetsUsecaseImpl {
 	wire.Build(CreateARAssetsUsecaseSetForProd)
 
-	return &arusecase.ARAssetsUsecaseImpl{}
+	return &arcreateusecase.ARAssetsUsecaseImpl{}
 }

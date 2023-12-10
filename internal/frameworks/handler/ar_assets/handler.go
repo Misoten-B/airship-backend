@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	usecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets"
+	create "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	"github.com/Misoten-B/airship-backend/internal/container"
@@ -59,7 +59,7 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
-	var usecaseImpl usecase.ARAssetsUsecase
+	var usecaseImpl create.ARAssetsUsecase
 
 	// ARAssetsUsecaseの生成
 	if config.DevMode {
@@ -74,7 +74,7 @@ func CreateArAssets(c *gin.Context) {
 		usecaseImpl = container.InitializeCreateARAssetsUsecaseForProd(db, config)
 	}
 
-	input := usecase.ARAssetsCreateInput{
+	input := create.ARAssetsCreateInput{
 		UID:                 uid,
 		SpeakingDescription: request.SpeakingDescription,
 		ThreeDimentionalID:  request.ThreeDimentionalID,
