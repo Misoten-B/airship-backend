@@ -78,12 +78,12 @@ func (d *AzureBlobDriver) GetContainerURL(containerName string) (AzureBlobContai
 	}
 	expiry := time.Now().Add(sasExpiryDuration)
 
-	azureUrl, err := containerClient.GetSASURL(permissions, expiry, nil)
+	url, err := containerClient.GetSASURL(permissions, expiry, nil)
 	if err != nil {
 		return AzureBlobContainerFullPath{}, err
 	}
 
-	afp, err := newContainerFullPath(azureUrl)
+	afp, err := newContainerFullPath(url)
 	if err != nil {
 		return AzureBlobContainerFullPath{}, err
 	}
