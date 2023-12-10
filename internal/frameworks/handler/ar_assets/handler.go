@@ -11,15 +11,9 @@ import (
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
-	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
-	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
-	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
-	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
-	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
-	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 )
 
@@ -129,17 +123,7 @@ func ReadArAssetsByID(c *gin.Context) {
 	// ユースケース実行
 	var usecaseImpl fetchbyid.Usecase
 	if config.DevMode {
-		arRepo := service.NewMockARAssetsRepository()
-		qrCodeImageStorage := service.NewMockQRCodeImageStorage()
-		speakingAudioStorage := voiceservice.NewMockSpeakingAudioStorage()
-		threeDimentionalModelStorage := threeservice.NewMockThreeDimentionalModelStorage()
-
-		usecaseImpl = fetchbyid.NewInteractor(
-			arRepo,
-			qrCodeImageStorage,
-			speakingAudioStorage,
-			threeDimentionalModelStorage,
-		)
+		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -147,17 +131,7 @@ func ReadArAssetsByID(c *gin.Context) {
 			return
 		}
 
-		arRepo := arassets.NewGormARAssetsRepository(db)
-		qrCodeImageStorage := arassets.NewAzureQRCodeImageStorage(config)
-		speakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config)
-		threeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config)
-
-		usecaseImpl = fetchbyid.NewInteractor(
-			arRepo,
-			qrCodeImageStorage,
-			speakingAudioStorage,
-			threeDimentionalModelStorage,
-		)
+		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForProd(db, config)
 	}
 
 	input := fetchbyid.Input{
@@ -211,15 +185,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 	// ユースケース実行
 	var usecaseImpl fetchbyidpublic.Usecase
 	if config.DevMode {
-		arRepo := service.NewMockARAssetsRepository()
-		speakingAudioStorage := voiceservice.NewMockSpeakingAudioStorage()
-		threeDimentionalModelStorage := threeservice.NewMockThreeDimentionalModelStorage()
-
-		usecaseImpl = fetchbyidpublic.NewInteractor(
-			arRepo,
-			speakingAudioStorage,
-			threeDimentionalModelStorage,
-		)
+		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := database.ConnectDB()
 		if dbErr != nil {
@@ -227,15 +193,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 			return
 		}
 
-		arRepo := arassets.NewGormARAssetsRepository(db)
-		speakingAudioStorage := voice.NewAzureSpeakingAudioStorage(config)
-		threeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(config)
-
-		usecaseImpl = fetchbyidpublic.NewInteractor(
-			arRepo,
-			speakingAudioStorage,
-			threeDimentionalModelStorage,
-		)
+		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForProd(db, config)
 	}
 
 	input := fetchbyidpublic.Input{

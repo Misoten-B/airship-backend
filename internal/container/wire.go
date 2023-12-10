@@ -6,6 +6,8 @@ package container
 import (
 	"github.com/Misoten-B/airship-backend/config"
 	arcreateusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
+	arfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
+	arfetchbyidpubusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -41,6 +43,36 @@ var CreateARAssetsUsecaseSetForProd = wire.NewSet(
 	GormVoiceRepositorySet,
 	ThreeDimentionalModelServiceImplSet,
 	GormThreeDimentionalModelRepositorySet,
+)
+
+var FetchByIDARAssetsUsecaseSetForDev = wire.NewSet(
+	arfetchbyidusecase.NewInteractor,
+	MockARAssetsRepositorySet,
+	MockQRCodeImageStorageSet,
+	MockSpeakingAudioStorageSet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDARAssetsUsecaseSetForProd = wire.NewSet(
+	arfetchbyidusecase.NewInteractor,
+	GormARAssetsRepositorySet,
+	AzureQRCodeImageStorageSet,
+	AzureSpeakingAudioStorageSet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDPublicARAssetsUsecaseSetForDev = wire.NewSet(
+	arfetchbyidpubusecase.NewInteractor,
+	MockARAssetsRepositorySet,
+	MockSpeakingAudioStorageSet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDPublicARAssetsUsecaseSetForProd = wire.NewSet(
+	arfetchbyidpubusecase.NewInteractor,
+	GormARAssetsRepositorySet,
+	AzureSpeakingAudioStorageSet,
+	AzureThreeDimentionalModelStorageSet,
 )
 
 /* Interface Binding */
@@ -94,6 +126,16 @@ var GormVoiceRepositorySet = wire.NewSet(
 	wire.Bind(new(vdomain.VoiceRepository), new(*vinfra.GormVoiceRepository)),
 )
 
+var MockSpeakingAudioStorageSet = wire.NewSet(
+	vdomain.NewMockSpeakingAudioStorage,
+	wire.Bind(new(vdomain.SpeakingAudioStorage), new(*vdomain.MockSpeakingAudioStorage)),
+)
+
+var AzureSpeakingAudioStorageSet = wire.NewSet(
+	vinfra.NewAzureSpeakingAudioStorage,
+	wire.Bind(new(vdomain.SpeakingAudioStorage), new(*vinfra.AzureSpeakingAudioStorage)),
+)
+
 /** ThreeDimentionalModel **/
 
 var ThreeDimentionalModelServiceImplSet = wire.NewSet(
@@ -111,6 +153,16 @@ var GormThreeDimentionalModelRepositorySet = wire.NewSet(
 	wire.Bind(new(tdmdomain.ThreeDimentionalModelRepository), new(*tdminfra.GormThreeDimentionalModelRepository)),
 )
 
+var MockThreeDimentionalModelStorageSet = wire.NewSet(
+	tdmdomain.NewMockThreeDimentionalModelStorage,
+	wire.Bind(new(tdmdomain.ThreeDimentionalModelStorage), new(*tdmdomain.MockThreeDimentionalModelStorage)),
+)
+
+var AzureThreeDimentionalModelStorageSet = wire.NewSet(
+	tdminfra.NewAzureThreeDimentionalModelStorage,
+	wire.Bind(new(tdmdomain.ThreeDimentionalModelStorage), new(*tdminfra.AzureThreeDimentionalModelStorage)),
+)
+
 /** Injectors **/
 
 func InitializeCreateARAssetsUsecaseForDev() *arcreateusecase.ARAssetsUsecaseImpl {
@@ -123,4 +175,30 @@ func InitializeCreateARAssetsUsecaseForProd(db *gorm.DB, config *config.Config) 
 	wire.Build(CreateARAssetsUsecaseSetForProd)
 
 	return &arcreateusecase.ARAssetsUsecaseImpl{}
+}
+
+func InitializeFetchByIDARAssetsUsecaseForDev() *arfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDARAssetsUsecaseSetForDev)
+
+	return &arfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByIDARAssetsUsecaseForProd(db *gorm.DB, config *config.Config) *arfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDARAssetsUsecaseSetForProd)
+
+	return &arfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByIDPublicARAssetsUsecaseForDev() *arfetchbyidpubusecase.Interactor {
+	wire.Build(FetchByIDPublicARAssetsUsecaseSetForDev)
+
+	return &arfetchbyidpubusecase.Interactor{}
+}
+
+func InitializeFetchByIDPublicARAssetsUsecaseForProd(
+	db *gorm.DB, config *config.Config,
+) *arfetchbyidpubusecase.Interactor {
+	wire.Build(FetchByIDPublicARAssetsUsecaseSetForProd)
+
+	return &arfetchbyidpubusecase.Interactor{}
 }
