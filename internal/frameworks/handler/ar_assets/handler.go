@@ -380,7 +380,7 @@ func DeleteArAssets(c *gin.Context) {
 // @Success 200 {object} nil
 func PostStatusDone(c *gin.Context) {
 	// コンテキストから取得
-	_, err := frameworks.GetConfig(c)
+	config, err := frameworks.GetConfig(c)
 	if err != nil {
 		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 		return
@@ -396,8 +396,7 @@ func PostStatusDone(c *gin.Context) {
 	// ユースケース実行
 	var usecaseImpl statusdone.Usecase
 
-	// if config.DevMode {
-	if false {
+	if config.DevMode {
 		usecaseImpl = statusdone.NewInteractor(
 			service.NewMockARAssetsRepository(),
 		)
