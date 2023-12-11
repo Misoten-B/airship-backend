@@ -10,6 +10,7 @@ import (
 	arfetchbyidpubusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	arfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	createtdmusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
+	tdmfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -110,6 +111,19 @@ var CreateThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
 
 var CreateThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
 	createtdmusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormThreeDimentionalModelRepositorySet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
+	tdmfetchbyidusecase.NewInteractor,
+	MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
+	tdmfetchbyidusecase.NewInteractor,
 	drivers.NewAzureBlobDriver,
 	GormThreeDimentionalModelRepositorySet,
 	AzureThreeDimentionalModelStorageSet,
@@ -271,4 +285,18 @@ func InitializeCreateThreeDimentionalModelUsecaseForProd(
 	wire.Build(CreateThreeDimentionalModelUsecaseSetForProd)
 
 	return &createtdmusecase.Interactor{}
+}
+
+func InitializeFetchByIDThreeDimentionalModelUsecaseForDev() *tdmfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDThreeDimentionalModelUsecaseSetForDev)
+
+	return &tdmfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByIDThreeDimentionalModelUsecaseForProd(
+	db *gorm.DB, config *config.Config,
+) *tdmfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDThreeDimentionalModelUsecaseSetForProd)
+
+	return &tdmfetchbyidusecase.Interactor{}
 }

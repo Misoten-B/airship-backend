@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
+	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
@@ -137,11 +138,7 @@ func ReadThreeDimentionalByID(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v", config)
-	log.Printf("uid: %s", uid)
-
 	// リクエスト取得
-	log.Printf("three_dimentional_id: %s", c.Param("three_dimentional_id"))
 	id := c.Param("three_dimentional_id")
 	if id == "" {
 		reqErr := errors.New("three_dimentional_id is empty")
@@ -150,15 +147,41 @@ func ReadThreeDimentionalByID(c *gin.Context) {
 	}
 
 	// ユースケース実行
-	//   バリデーション&オブジェクト生成
-	//   IDをもとに3Dモデルを取得
-	//   権限確認（ユーザー定義の場合はそれが自分のものか）
-	//   URL生成
+	var usecaseImpl fetchbyid.Usecase
+	if config.DevMode {
+		usecaseImpl = container.InitializeFetchByIDThreeDimentionalModelUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeFetchByIDThreeDimentionalModelUsecaseForProd(db, config)
+	}
+
+	input := fetchbyid.Input{
+		ID:     id,
+		UserID: uid,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, appErr, appErr.StatusCode())
+			return
+		}
+
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
 	c.JSON(http.StatusOK, dto.ThreeDimentionalResponse{
-		ID:   "1",
-		Path: "https://example.com/3dmodel.tflite",
+		ID:   output.ID,
+		Path: output.Path,
 	})
 }
 

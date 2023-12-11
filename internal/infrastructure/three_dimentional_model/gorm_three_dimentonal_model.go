@@ -2,7 +2,6 @@ package threedimentionalmodel
 
 import (
 	"errors"
-	"log"
 
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
@@ -29,9 +28,6 @@ func (r *GormThreeDimentionalModelRepository) Save(
 	userID := threeDimentionalModel.UserID().String()
 
 	// モデル生成
-	log.Printf("threeDimentionalModel: %+v", threeDimentionalModel)
-	log.Printf("threeDimentionalModel: %+v", threeDimentionalModel.FileName())
-
 	tdmModel := model.ThreeDimentionalModel{
 		ID:        id,
 		ModelPath: threeDimentionalModel.FileName(),
@@ -89,4 +85,40 @@ func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimention
 
 	uid := idlib.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
 	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
+}
+
+func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threedimentionalmodel.ReadModel, error) {
+	var threeDimentionalModel model.ThreeDimentionalModel
+
+	// TODO: 重複部分の修正または統合
+	// FIXME: Gorm取得の最適化
+	if err := r.db.Preload("PersonalThreeDimentionalModels").
+		Preload("ThreeDimentionalModelTemplates").
+		First(&threeDimentionalModel, id).Error; err != nil {
+		return threedimentionalmodel.ReadModel{}, err
+	}
+
+	templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
+	personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
+
+	if templateLen == 0 && personalLen == 0 {
+		return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
+	}
+
+	if templateLen != 0 {
+		return threedimentionalmodel.NewTemplateReadModel(
+			id.String(),
+			threeDimentionalModel.ModelPath,
+		), nil
+	}
+
+	if personalLen != 0 {
+		uid := idlib.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
+		return threedimentionalmodel.NewReadModel(
+			id.String(),
+			uid.String(),
+			threeDimentionalModel.ModelPath,
+		), nil
+	}
+	return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
 }
