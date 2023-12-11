@@ -46,8 +46,7 @@ func CreateThreeDimentional(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl create.Usecase
-	// if config.DevMode {
-	if false {
+	if config.DevMode {
 		usecaseImpl = container.InitializeCreateThreeDimentionalModelUsecaseForDev()
 	} else {
 		db, dbErr := database.ConnectDB()
