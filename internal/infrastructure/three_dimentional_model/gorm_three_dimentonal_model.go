@@ -122,3 +122,45 @@ func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threediment
 	}
 	return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
 }
+
+func (r *GormThreeDimentionalModelRepository) FindByUserID(
+	userID idlib.ID,
+) ([]threedimentionalmodel.ReadModel, error) {
+	var threeDimentionalModels []model.ThreeDimentionalModel
+
+	// FIXME: Gorm取得の最適化
+	// すべてのThreeDimentionalModelTemplatesとuser_idが一致するPersonalThreeDimentionalModelsを取得
+	if err := r.db.Preload("PersonalThreeDimentionalModels", "user_id = ?", userID).
+		Preload("ThreeDimentionalModelTemplates").
+		Find(&threeDimentionalModels).Error; err != nil {
+		return nil, err
+	}
+
+	var readModels []threedimentionalmodel.ReadModel
+
+	for _, threeDimentionalModel := range threeDimentionalModels {
+		templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
+		personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
+
+		if templateLen == 0 && personalLen == 0 {
+			return nil, errors.New("three dimentional model not found")
+		}
+
+		if templateLen != 0 {
+			readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
+				threeDimentionalModel.ID,
+				threeDimentionalModel.ModelPath,
+			))
+		}
+
+		if personalLen != 0 {
+			readModels = append(readModels, threedimentionalmodel.NewReadModel(
+				threeDimentionalModel.ID,
+				threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID,
+				threeDimentionalModel.ModelPath,
+			))
+		}
+	}
+
+	return readModels, nil
+}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
+	fetchbyuserid "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
@@ -101,21 +102,47 @@ func ReadAllThreeDimentional(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v", config)
-	log.Printf("uid: %s", uid)
-
 	// ユースケース実行
-	//   バリデーション&オブジェクト生成
-	//   userIDをもとに3Dモデルのテンプレートとユーザー定義モデルを取得
-	//   コンテナのURL生成
+	var usecaseImpl fetchbyuserid.Usecase
+	if config.DevMode {
+		usecaseImpl = container.InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeFetchByUserIDThreeDimentionalModelUsecaseForProd(db, config)
+	}
+
+	input := fetchbyuserid.Input{
+		UserID: uid,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, appErr, appErr.StatusCode())
+			return
+		}
+
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
-	c.JSON(http.StatusOK, []dto.ThreeDimentionalResponse{
-		{
-			ID:   "1",
-			Path: "https://example.com/3dmodel.tflite",
-		},
-	})
+	responses := []dto.ThreeDimentionalResponse{}
+	for _, item := range output.Items {
+		responses = append(responses, dto.ThreeDimentionalResponse{
+			ID:   item.ID,
+			Path: item.Path,
+		})
+	}
+
+	c.JSON(http.StatusOK, responses)
 }
 
 // @Tags ThreeDimentionalModel

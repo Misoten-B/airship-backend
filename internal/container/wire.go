@@ -11,6 +11,7 @@ import (
 	arfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	createtdmusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
 	tdmfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
+	tdmfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_userid"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -124,6 +125,19 @@ var FetchByIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
 
 var FetchByIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
 	tdmfetchbyidusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormThreeDimentionalModelRepositorySet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
+	tdmfetchbyuseridusecase.NewInteractor,
+	MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
+	tdmfetchbyuseridusecase.NewInteractor,
 	drivers.NewAzureBlobDriver,
 	GormThreeDimentionalModelRepositorySet,
 	AzureThreeDimentionalModelStorageSet,
@@ -299,4 +313,19 @@ func InitializeFetchByIDThreeDimentionalModelUsecaseForProd(
 	wire.Build(FetchByIDThreeDimentionalModelUsecaseSetForProd)
 
 	return &tdmfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev() *tdmfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDThreeDimentionalModelUsecaseSetForDev)
+
+	return &tdmfetchbyuseridusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForProd(
+	db *gorm.DB,
+	config *config.Config,
+) *tdmfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDThreeDimentionalModelUsecaseSetForProd)
+
+	return &tdmfetchbyuseridusecase.Interactor{}
 }

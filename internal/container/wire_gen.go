@@ -14,6 +14,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
 	fetchbyid2 "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
+	fetchbyuserid2 "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	service3 "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	service2 "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
@@ -137,6 +138,21 @@ func InitializeFetchByIDThreeDimentionalModelUsecaseForProd(db *gorm.DB, config2
 	return interactor
 }
 
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev() *fetchbyuserid2.Interactor {
+	mockThreeDimentionalModelRepository := service3.NewMockThreeDimentionalModelRepository()
+	mockThreeDimentionalModelStorage := service3.NewMockThreeDimentionalModelStorage()
+	interactor := fetchbyuserid2.NewInteractor(mockThreeDimentionalModelRepository, mockThreeDimentionalModelStorage)
+	return interactor
+}
+
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForProd(db *gorm.DB, config2 *config.Config) *fetchbyuserid2.Interactor {
+	gormThreeDimentionalModelRepository := threedimentionalmodel.NewGormThreeDimentionalModelRepository(db)
+	azureBlobDriver := drivers.NewAzureBlobDriver(config2)
+	azureThreeDimentionalModelStorage := threedimentionalmodel.NewAzureThreeDimentionalModelStorage(azureBlobDriver)
+	interactor := fetchbyuserid2.NewInteractor(gormThreeDimentionalModelRepository, azureThreeDimentionalModelStorage)
+	return interactor
+}
+
 // wire.go:
 
 // CreateARAssetsUsecaseSetForDev は開発環境用のプロバイダセットです。
@@ -207,6 +223,14 @@ var FetchByIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(fetchbyid2.NewI
 )
 
 var FetchByIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(fetchbyid2.NewInteractor, drivers.NewAzureBlobDriver, GormThreeDimentionalModelRepositorySet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(fetchbyuserid2.NewInteractor, MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(fetchbyuserid2.NewInteractor, drivers.NewAzureBlobDriver, GormThreeDimentionalModelRepositorySet,
 	AzureThreeDimentionalModelStorageSet,
 )
 
