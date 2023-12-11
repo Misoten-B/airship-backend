@@ -1,5 +1,7 @@
 package dto
 
+import "github.com/Misoten-B/airship-backend/internal/drivers/database/model"
+
 type BusinessCardResponse struct {
 	ID string
 	// background
@@ -43,4 +45,48 @@ type BusinessCardPartsCoordinate struct {
 	AddressY          int    `json:"address_y"`
 	QrcodeX           int    `json:"qrcode_x"`
 	QrcodeY           int    `json:"qrcode_y"`
+}
+
+func ConvertBC(businesscard model.BusinessCard,
+	bcc model.BusinessCardPartsCoordinate,
+	bcb model.BusinessCardBackground,
+	arassets model.ARAsset) BusinessCardResponse {
+	return BusinessCardResponse{
+		ID:                          businesscard.ID,
+		BusinessCardBackgroundColor: bcb.ColorCode,
+		BusinessCardBackgroundImage: bcb.ImagePath,
+		BusinessCardName:            businesscard.BusinessCardName,
+		ThreeDimentionalModel:       arassets.ThreeDimentionalModel.ModelPath,
+		SpeakingDescription:         arassets.SpeakingAsset.Description,
+		SpeakingAudioPath:           arassets.SpeakingAsset.AudioPath,
+		BusinessCardPartsCoordinate: BusinessCardPartsCoordinate{
+			ID:                bcc.ID,
+			DisplayNameX:      bcc.DisplayNameX,
+			DisplayNameY:      bcc.DisplayNameY,
+			CompanyNameX:      bcc.CompanyNameX,
+			CompanyNameY:      bcc.CompanyNameY,
+			DepartmentX:       bcc.DepartmentX,
+			DepartmentY:       bcc.DepartmentY,
+			OfficialPositionX: bcc.OfficialPositionX,
+			OfficialPositionY: bcc.OfficialPositionY,
+			PhoneNumberX:      bcc.PhoneNumberX,
+			PhoneNumberY:      bcc.PhoneNumberY,
+			EmailX:            bcc.EmailX,
+			EmailY:            bcc.EmailY,
+			PostalCodeX:       bcc.PostalCodeX,
+			PostalCodeY:       bcc.PostalCodeY,
+			AddressX:          bcc.AddressX,
+			AddressY:          bcc.AddressY,
+			QrcodeX:           bcc.QRCodeX,
+			QrcodeY:           bcc.QRCodeY,
+		},
+		DisplayName:      businesscard.DisplayName,
+		CompanyName:      businesscard.CompanyName,
+		Department:       businesscard.Department,
+		OfficialPosition: businesscard.OfficialPosition,
+		PhoneNumber:      businesscard.PhoneNumber,
+		Email:            businesscard.Email,
+		PostalCode:       businesscard.PostalCode,
+		Address:          businesscard.Address,
+	}
 }
