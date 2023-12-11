@@ -9,12 +9,18 @@ import (
 
 type ThreeDimentionalModelRepository interface {
 	Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error)
+	Save(threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel) error
 }
 
 type MockThreeDimentionalModelRepository struct{}
 
 func NewMockThreeDimentionalModelRepository() *MockThreeDimentionalModelRepository {
 	return &MockThreeDimentionalModelRepository{}
+}
+
+func (r *MockThreeDimentionalModelRepository) Save(_ threedimentionalmodel.ThreeDimentionalModel) error {
+	log.Println("Mock ThreeDimentionalModel Repository - Save")
+	return nil
 }
 
 func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {

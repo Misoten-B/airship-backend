@@ -6,6 +6,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
+	"github.com/Misoten-B/airship-backend/internal/container"
+	"github.com/Misoten-B/airship-backend/internal/customerror"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/three_dimentional/dto"
 	"github.com/gin-gonic/gin"
@@ -33,25 +37,48 @@ func CreateThreeDimentional(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v", config)
-	log.Printf("uid: %s", uid)
-
 	// リクエスト取得
 	file, fileHeader, err := c.Request.FormFile("ThreeDimentionalModel")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("file: %v", file)
-	log.Printf("fileHeader: %v", fileHeader)
 
 	// ユースケース実行
-	//	バリデーション&オブジェクト生成
-	//  3Dモデルの保存
-	//  データベースへの保存
+	var usecaseImpl create.Usecase
+	// if config.DevMode {
+	if false {
+		usecaseImpl = container.InitializeCreateThreeDimentionalModelUsecaseForDev()
+	} else {
+		db, dbErr := database.ConnectDB()
+		if dbErr != nil {
+			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+			return
+		}
+
+		usecaseImpl = container.InitializeCreateThreeDimentionalModelUsecaseForProd(db, config)
+	}
+
+	input := create.Input{
+		UserID:     uid,
+		File:       file,
+		FileHeader: fileHeader,
+	}
+
+	output, err := usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, appErr, appErr.StatusCode())
+			return
+		}
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
-	c.Header("Location", fmt.Sprintf("/%s", "1"))
+	c.Header("Location", fmt.Sprintf("/%s", output.ID))
 	c.JSON(http.StatusCreated, nil)
 }
 

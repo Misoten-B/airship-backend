@@ -2,6 +2,7 @@ package threedimentionalmodel
 
 import (
 	"errors"
+	"log"
 
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
@@ -17,6 +18,52 @@ func NewGormThreeDimentionalModelRepository(db *gorm.DB) *GormThreeDimentionalMo
 	return &GormThreeDimentionalModelRepository{
 		db: db,
 	}
+}
+
+// Save はThreeDimentionalModelの永続化を行ないます。
+// GormARAssetsRepositoryと同様のトランザクションの問題があります。
+func (r *GormThreeDimentionalModelRepository) Save(
+	threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel,
+) error {
+	id := threeDimentionalModel.ID().String()
+	userID := threeDimentionalModel.UserID().String()
+
+	// モデル生成
+	log.Printf("threeDimentionalModel: %+v", threeDimentionalModel)
+	log.Printf("threeDimentionalModel: %+v", threeDimentionalModel.FileName())
+
+	tdmModel := model.ThreeDimentionalModel{
+		ID:        id,
+		ModelPath: threeDimentionalModel.FileName(),
+	}
+	ptdmModel := model.PersonalThreeDimentionalModel{
+		ID:     tdmModel.ID,
+		UserID: userID,
+	}
+
+	// トランザクション
+	tx := r.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Create(&tdmModel).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Create(&ptdmModel).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
 
 func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
