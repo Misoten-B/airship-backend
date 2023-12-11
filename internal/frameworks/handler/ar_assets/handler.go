@@ -122,6 +122,7 @@ func ReadArAssetsByID(c *gin.Context) {
 	if id == "" {
 		reqErr := errors.New("ar_assets_id is empty")
 		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+		return
 	}
 
 	// ユースケース実行
@@ -182,6 +183,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 	if id == "" {
 		reqErr := errors.New("ar_assets_id is empty")
 		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+		return
 	}
 
 	// ユースケース実行
@@ -318,6 +320,7 @@ func UpdateArAssets(c *gin.Context) {
 	if id == "" {
 		reqErr := errors.New("ar_assets_id is empty")
 		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+		return
 	}
 
 	request := dto.CreateArAssetsRequest{}
@@ -391,6 +394,7 @@ func PostStatusDone(c *gin.Context) {
 	if id == "" {
 		reqErr := errors.New("ar_assets_id is empty")
 		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+		return
 	}
 
 	// ユースケース実行

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // @Tags User
@@ -189,8 +191,59 @@ func PostVoiceModelStatusDone(c *gin.Context) {
 	// コンテキストから取得
 
 	// リクエスト取得
+	userID := c.Param("user_id")
+	if userID == "" {
+		frameworks.ErrorHandling(
+			c,
+			errors.New("user_id is empty"),
+			http.StatusBadRequest,
+		)
+		return
+	}
 
 	// ユースケース実行
+
+	// データベース接続
+	db, err := database.ConnectDB()
+	if err != nil {
+		frameworks.ErrorHandling(
+			c,
+			err,
+			http.StatusInternalServerError,
+		)
+		return
+	}
+
+	// ユーザーの取得
+	user := model.User{}
+	err = db.First(&user, "id = ?", userID).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			frameworks.ErrorHandling(
+				c,
+				err,
+				http.StatusNotFound,
+			)
+			return
+		}
+
+		frameworks.ErrorHandling(
+			c,
+			err,
+			http.StatusInternalServerError,
+		)
+	}
+
+	// ユーザーの状態を更新
+	err = db.Model(&user).Update("status", model.GormStatusCompleted).Error
+	if err != nil {
+		frameworks.ErrorHandling(
+			c,
+			err,
+			http.StatusInternalServerError,
+		)
+		return
+	}
 
 	// レスポンス
 	c.JSON(http.StatusOK, nil)
