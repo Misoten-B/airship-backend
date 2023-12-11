@@ -185,7 +185,7 @@ func DeleteUser(c *gin.Context) {
 // @Router /v1/users/{user_id}/voice_model/status/done [POST]
 // @Param user_id path string true "User ID"
 // @Success 200 {object} nil
-func VoiceModelStatusDone(c *gin.Context) {
+func PostVoiceModelStatusDone(c *gin.Context) {
 	// コンテキストから取得
 
 	// リクエスト取得
@@ -200,7 +200,7 @@ func VoiceModelStatusDone(c *gin.Context) {
 // @Router /v1/users/{user_id}/voice_model/status/failed [POST]
 // @Param user_id path string true "User ID"
 // @Success 200 {object} nil
-func VoiceModelStatusFailed(c *gin.Context) {
+func PostVoiceModelStatusFailed(c *gin.Context) {
 	// コンテキストから取得
 
 	// リクエスト取得
