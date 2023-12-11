@@ -370,3 +370,33 @@ func DeleteArAssets(c *gin.Context) {
 	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
 }
+
+// @Tags ArAssets
+// @Router /v1/users/ar_assets/{ar_assets_id}/status/done [POST]
+// @Param ar_assets_id path string true "ArAssets ID"
+// @Success 200 {object} nil
+func StatusDone(c *gin.Context) {
+	// コンテキストから取得
+
+	// リクエスト取得
+
+	// ユースケース実行
+
+	// レスポンス
+	c.JSON(http.StatusOK, nil)
+}
+
+// @Tags ArAssets
+// @Router /v1/users/ar_assets/{ar_assets_id}/status/failed [POST]
+// @Param ar_assets_id path string true "ArAssets ID"
+// @Success 200 {object} nil
+func StatusFailed(c *gin.Context) {
+	// コンテキストから取得
+
+	// リクエスト取得
+
+	// ユースケース実行
+
+	// レスポンス
+	c.JSON(http.StatusOK, nil)
+}

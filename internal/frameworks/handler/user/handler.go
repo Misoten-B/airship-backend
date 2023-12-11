@@ -180,3 +180,33 @@ func DeleteUser(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, nil)
 }
+
+// @Tags User
+// @Router /v1/users/{user_id}/voice_model/status/done [POST]
+// @Param user_id path string true "User ID"
+// @Success 200 {object} nil
+func VoiceModelStatusDone(c *gin.Context) {
+	// コンテキストから取得
+
+	// リクエスト取得
+
+	// ユースケース実行
+
+	// レスポンス
+	c.JSON(http.StatusOK, nil)
+}
+
+// @Tags User
+// @Router /v1/users/{user_id}/voice_model/status/failed [POST]
+// @Param user_id path string true "User ID"
+// @Success 200 {object} nil
+func VoiceModelStatusFailed(c *gin.Context) {
+	// コンテキストから取得
+
+	// リクエスト取得
+
+	// ユースケース実行
+
+	// レスポンス
+	c.JSON(http.StatusOK, nil)
+}

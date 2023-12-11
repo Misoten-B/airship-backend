@@ -292,6 +292,32 @@ paths:
       - ApiKeyAuth: []
       tags:
       - User
+  /v1/users/{user_id}/voice_model/status/done:
+    post:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      tags:
+      - User
+  /v1/users/{user_id}/voice_model/status/failed:
+    post:
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      tags:
+      - User
   /v1/users/ar_assets:
     get:
       parameters:
@@ -417,6 +443,32 @@ paths:
             $ref: '#/definitions/dto.ArAssetsResponse'
       security:
       - ApiKeyAuth: []
+      tags:
+      - ArAssets
+  /v1/users/ar_assets/{ar_assets_id}/status/done:
+    post:
+      parameters:
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+      tags:
+      - ArAssets
+  /v1/users/ar_assets/{ar_assets_id}/status/failed:
+    post:
+      parameters:
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
       tags:
       - ArAssets
   /v1/users/business_card_backgrounds:
