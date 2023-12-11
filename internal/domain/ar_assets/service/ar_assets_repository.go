@@ -4,6 +4,7 @@ import (
 	"log"
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
@@ -12,6 +13,7 @@ type ARAssetsRepository interface {
 	Save(arassets arassets.ARAssets) error
 	FetchByID(id id.ID) (arassets.ReadModel, error)
 	FetchByUserID(userID id.ID) ([]arassets.ReadModel, error)
+	PatchStatus(id id.ID, status shared.Status) error
 }
 
 type MockARAssetsRepository struct{}
@@ -53,4 +55,10 @@ func (r *MockARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadMod
 			true,
 		),
 	}, nil
+}
+
+func (r *MockARAssetsRepository) PatchStatus(id id.ID, status shared.Status) error {
+	log.Printf("Mock ARAssets Repository - PatchStatus: id: %s, status: %d", id, status.Status())
+
+	return nil
 }
