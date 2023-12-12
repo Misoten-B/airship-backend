@@ -824,8 +824,11 @@ const docTemplate = `{
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
+                        "headers": {
+                            "Location": {
+                                "type": "string",
+                                "description": "/{three_dimentional_id}"
+                            }
                         }
                     }
                 }
