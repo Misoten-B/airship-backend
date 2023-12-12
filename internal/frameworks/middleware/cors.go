@@ -10,7 +10,7 @@ import (
 func CORSMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		originList := []string{"http://localhost:3000", "https://airship.azurewebsites.net/"}
+		originList := []string{"http://localhost:3000/", "https://airship.azurewebsites.net/"}
 		origin := c.Request.Header.Get("Origin")
 		isOriginAllowed := slices.Contains(originList, origin)
 
