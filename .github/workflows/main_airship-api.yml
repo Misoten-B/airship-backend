@@ -6,7 +6,7 @@ name: Build and deploy container app to Azure Web App - airship-api
 on:
   push:
     branches:
-      - deployment
+      - main
   workflow_dispatch:
 
 jobs:
@@ -30,6 +30,18 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
+        build-args: |
+          SA_TYPE=${{}}
+          SA_PROJECT_ID=${{ secrets.SA_TYPE }}
+          SA_PRIVATE_KEY_ID=${{ secrets.SA_PRIVATE_KEY_ID }}
+          SA_PRIVATE_KEY=${{ secrets.SA_PRIVATE_KEY }}
+          SA_CLIENT_EMAIL=${{ secrets.SA_CLIENT_EMAIL }}
+          SA_CLIENT_ID=${{ secrets.SA_CLIENT_ID }}
+          SA_AUTH_URI=${{ secrets.SA_AUTH_URI }}
+          SA_TOKEN_URI=${{ secrets.SA_TOKEN_URI }}
+          SA_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.SA_AUTH_PROVIDER_X509_CERT_URL }}
+          SA_CLIENT_X509_CERT_URL=${{ secrets.SA_CLIENT_X509_CERT_URL }}
+          SA_UNIVERSE_DOMAIN=${{ secrets.SA_UNIVERSE_DOMAIN }}
         tags: airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_c1e0ad26d1ac4a45bae0efa4f5fc2c9c }}/airship/airship-backend:${{ github.sha }}
         file: ./Dockerfile
 
