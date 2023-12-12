@@ -31,8 +31,8 @@ jobs:
       with:
         push: true
         build-args: |
-          SA_TYPE=${{}}
-          SA_PROJECT_ID=${{ secrets.SA_TYPE }}
+          SA_TYPE=${{ secrets.SA_TYPE}}
+          SA_PROJECT_ID=${{ secrets.SA_PROJECT_ID }}
           SA_PRIVATE_KEY_ID=${{ secrets.SA_PRIVATE_KEY_ID }}
           SA_PRIVATE_KEY=${{ secrets.SA_PRIVATE_KEY }}
           SA_CLIENT_EMAIL=${{ secrets.SA_CLIENT_EMAIL }}
