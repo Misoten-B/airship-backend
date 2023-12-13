@@ -31,6 +31,15 @@ func (s *AzureThreeDimentionalModelStorage) Save(
 	return nil
 }
 
+func (s *AzureThreeDimentionalModelStorage) Delete(filePath shared.FilePath) error {
+	err := s.dirver.DeleteBlob(containerName, filePath.Value())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *AzureThreeDimentionalModelStorage) GetModelURL(modelName string) (string, error) {
 	url, err := s.dirver.GetBlobURL(containerName, modelName)
 	if err != nil {
