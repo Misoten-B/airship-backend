@@ -89,6 +89,32 @@ func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimention
 	return threedimentionalmodel.ReconstructThreeDimensionalModel(id, uid, path), nil
 }
 
+// GormARAssetsRepositoryと同様のトランザクションの問題があります。
+func (r *GormThreeDimentionalModelRepository) Remove(id idlib.ID) error {
+	tx := r.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Delete(&model.PersonalThreeDimentionalModel{}, "id = ?", id.String()).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Delete(&model.ThreeDimentionalModel{}, "id = ?", id.String()).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
 func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threedimentionalmodel.ReadModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 

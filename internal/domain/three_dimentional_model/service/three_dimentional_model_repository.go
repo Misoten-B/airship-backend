@@ -11,10 +11,12 @@ import (
 )
 
 type ThreeDimentionalModelRepository interface {
+	Save(threeDimentionalModel threedimentionalmodel.ThreeDimensionalModel) error
+	// Find はドメインを取得するコマンド用のメソッドです
 	Find(id id.ID) (*threedimentionalmodel.ThreeDimensionalModel, error)
+	Remove(id id.ID) error
 	FindByID(id id.ID) (threedimentionalmodel.ReadModel, error)
 	FindByUserID(userID id.ID) ([]threedimentionalmodel.ReadModel, error)
-	Save(threeDimentionalModel threedimentionalmodel.ThreeDimensionalModel) error
 }
 
 type MockThreeDimentionalModelRepository struct{}
@@ -33,6 +35,11 @@ func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalm
 
 	path := shared.NewFilePath(fmt.Sprintf("mock-3d-model-%s.glb", id))
 	return threedimentionalmodel.ReconstructThreeDimensionalModelTemplate(id, path), nil
+}
+
+func (r *MockThreeDimentionalModelRepository) Remove(id id.ID) error {
+	log.Printf("Mock ThreeDimentionalModel Repository - Remove: %s", id)
+	return nil
 }
 
 func (r *MockThreeDimentionalModelRepository) FindByID(id id.ID) (threedimentionalmodel.ReadModel, error) {
