@@ -1,3 +1,4 @@
+//nolint:funlen
 package handler
 
 import (
@@ -127,7 +128,12 @@ func ReadAllBusinessCard(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 
 	bcURL, err := ab.GetContainerURL(backgroundContainer)
 	if err != nil {
@@ -201,7 +207,12 @@ func ReadBusinessCardByID(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 
 	bcURL, err := ab.GetContainerURL(backgroundContainer)
 	if err != nil {

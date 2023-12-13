@@ -10,7 +10,11 @@ import (
 )
 
 func ConnectDB() (*gorm.DB, error) {
-	cfg := config.GetConfig()
+	cfg, err := config.GetConfig()
+	if err != nil {
+		log.Println("Failed to get config")
+		return nil, err
+	}
 
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",

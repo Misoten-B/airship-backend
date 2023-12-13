@@ -24,7 +24,10 @@ import (
 // @in                         header
 // @name                       Authorization
 func main() {
-	settings := setup()
+	settings, err := setup()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	r := gin.Default()
 
@@ -44,10 +47,13 @@ type AppSettings struct {
 	Config *config.Config
 }
 
-func setup() AppSettings {
-	config := config.GetConfig()
+func setup() (AppSettings, error) {
+	config, err := config.GetConfig()
+	if err != nil {
+		return AppSettings{}, err
+	}
 
 	return AppSettings{
 		Config: config,
-	}
+	}, nil
 }

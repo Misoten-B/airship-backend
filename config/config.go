@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -19,7 +20,7 @@ type Config struct {
 	AzureBlobStorageConnectionString string
 }
 
-func GetConfig() *Config {
+func GetConfig() (*Config, error) {
 	// .envファイルを読み込む
 	// `export`された環境変数が優先される
 	err := godotenv.Load()
@@ -27,17 +28,52 @@ func GetConfig() *Config {
 		log.Println("the .env file is not found, so use the default value")
 	}
 
-	var config Config
+	dbHost, ok := os.LookupEnv("POSTGRES_HOST")
+	if !ok {
+		return nil, errors.New("POSTGRES_HOST is not found")
+	}
+	dbPort, ok := os.LookupEnv("POSTGRES_PORT")
+	if !ok {
+		return nil, errors.New("POSTGRES_PORT is not found")
+	}
+	dbDbname, ok := os.LookupEnv("POSTGRES_DB")
+	if !ok {
+		return nil, errors.New("POSTGRES_DB is not found")
+	}
+	dbUser, ok := os.LookupEnv("POSTGRES_USER")
+	if !ok {
+		return nil, errors.New("POSTGRES_USER is not found")
+	}
+	dbPassword, ok := os.LookupEnv("POSTGRES_PASSWORD")
+	if !ok {
+		return nil, errors.New("POSTGRES_PASSWORD is not found")
+	}
 
-	config.Database.Host = os.Getenv("POSTGRES_HOST")
-	config.Database.Port = os.Getenv("POSTGRES_PORT")
-	config.Database.Dbname = os.Getenv("POSTGRES_DB")
-	config.Database.User = os.Getenv("POSTGRES_USER")
-	config.Database.Password = os.Getenv("POSTGRES_PASSWORD")
+	devMode, ok := os.LookupEnv("DEV_MODE")
+	if !ok {
+		devMode = "false"
+	}
 
-	config.DevMode = os.Getenv("DEV_MODE") == "true"
+	azBlobStorageConnectionString, ok := os.LookupEnv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
+	if !ok {
+		return nil, errors.New("AZURE_BLOB_STORAGE_CONNECTION_STRING is not found")
+	}
 
-	config.AzureBlobStorageConnectionString = os.Getenv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
-
-	return &config
+	return &Config{
+		DevMode:                          devMode == "true",
+		AzureBlobStorageConnectionString: azBlobStorageConnectionString,
+		Database: struct {
+			Host     string
+			Port     string
+			Dbname   string
+			User     string
+			Password string
+		}{
+			Host:     dbHost,
+			Port:     dbPort,
+			Dbname:   dbDbname,
+			User:     dbUser,
+			Password: dbPassword,
+		},
+	}, nil
 }
