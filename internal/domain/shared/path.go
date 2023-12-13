@@ -13,3 +13,17 @@ func NewMockContainerFullPath() *MockContainerFullPath {
 func (m *MockContainerFullPath) Path(name string) string {
 	return "http://example.com/mock/" + name
 }
+
+type FilePath struct {
+	path string
+}
+
+func NewFilePath(path string) FilePath {
+	return FilePath{
+		path: path,
+	}
+}
+
+func (f FilePath) Path() string {
+	return f.path
+}
