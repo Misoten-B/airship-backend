@@ -9,15 +9,17 @@ import (
 )
 
 type Config struct {
-	Database struct {
-		Host     string
-		Port     string
-		Dbname   string
-		User     string
-		Password string
-	}
+	Database                         databaseConfig
 	DevMode                          bool
 	AzureBlobStorageConnectionString string
+}
+
+type databaseConfig struct {
+	Host     string
+	Port     string
+	Dbname   string
+	User     string
+	Password string
 }
 
 func GetConfig() (*Config, error) {
@@ -25,7 +27,7 @@ func GetConfig() (*Config, error) {
 	// `export`された環境変数が優先される
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("the .env file is not found, so use the default value")
+		log.Println("using default values for configuration")
 	}
 
 	dbHost, err := getEnv("POSTGRES_HOST")
@@ -49,29 +51,25 @@ func GetConfig() (*Config, error) {
 		return nil, err
 	}
 
-	devMode := getEnvWithDefaultValue("DEV_MODE", "false")
+	devModeStr := getEnvWithDefaultValue("DEV_MODE", "false")
+	devMode := devModeStr == "true"
 
 	azBlobStorageConnectionString, err := getEnv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
 	if err != nil {
 		return nil, err
 	}
 
+	dbConfig := databaseConfig{
+		Host:     dbHost,
+		Port:     dbPort,
+		Dbname:   dbDbname,
+		User:     dbUser,
+		Password: dbPassword,
+	}
 	return &Config{
-		DevMode:                          devMode == "true",
+		DevMode:                          devMode,
 		AzureBlobStorageConnectionString: azBlobStorageConnectionString,
-		Database: struct {
-			Host     string
-			Port     string
-			Dbname   string
-			User     string
-			Password string
-		}{
-			Host:     dbHost,
-			Port:     dbPort,
-			Dbname:   dbDbname,
-			User:     dbUser,
-			Password: dbPassword,
-		},
+		Database:                         dbConfig,
 	}, nil
 }
 
