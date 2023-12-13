@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -19,9 +20,11 @@ type Config struct {
 }
 
 func GetConfig() *Config {
+	// .envファイルを読み込む
+	// `export`された環境変数が優先される
 	err := godotenv.Load()
 	if err != nil {
-		panic(err)
+		log.Println("the .env file is not found, so use the default value")
 	}
 
 	var config Config
