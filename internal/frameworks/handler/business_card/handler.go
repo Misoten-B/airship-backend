@@ -1,3 +1,5 @@
+// FIXME: このファイルの関数の長さが長いので、分割する
+//
 //nolint:funlen
 package handler
 
