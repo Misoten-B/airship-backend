@@ -1,7 +1,7 @@
 package config
 
 import (
-	"errors"
+	"fmt"
 	"log"
 	"os"
 
@@ -28,35 +28,32 @@ func GetConfig() (*Config, error) {
 		log.Println("the .env file is not found, so use the default value")
 	}
 
-	dbHost, ok := os.LookupEnv("POSTGRES_HOST")
-	if !ok {
-		return nil, errors.New("POSTGRES_HOST is not found")
+	dbHost, err := getEnv("POSTGRES_HOST")
+	if err != nil {
+		return nil, err
 	}
-	dbPort, ok := os.LookupEnv("POSTGRES_PORT")
-	if !ok {
-		return nil, errors.New("POSTGRES_PORT is not found")
+	dbPort, err := getEnv("POSTGRES_PORT")
+	if err != nil {
+		return nil, err
 	}
-	dbDbname, ok := os.LookupEnv("POSTGRES_DB")
-	if !ok {
-		return nil, errors.New("POSTGRES_DB is not found")
+	dbDbname, err := getEnv("POSTGRES_DB")
+	if err != nil {
+		return nil, err
 	}
-	dbUser, ok := os.LookupEnv("POSTGRES_USER")
-	if !ok {
-		return nil, errors.New("POSTGRES_USER is not found")
+	dbUser, err := getEnv("POSTGRES_USER")
+	if err != nil {
+		return nil, err
 	}
-	dbPassword, ok := os.LookupEnv("POSTGRES_PASSWORD")
-	if !ok {
-		return nil, errors.New("POSTGRES_PASSWORD is not found")
-	}
-
-	devMode, ok := os.LookupEnv("DEV_MODE")
-	if !ok {
-		devMode = "false"
+	dbPassword, err := getEnv("POSTGRES_PASSWORD")
+	if err != nil {
+		return nil, err
 	}
 
-	azBlobStorageConnectionString, ok := os.LookupEnv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
-	if !ok {
-		return nil, errors.New("AZURE_BLOB_STORAGE_CONNECTION_STRING is not found")
+	devMode := getEnvWithDefaultValue("DEV_MODE", "false")
+
+	azBlobStorageConnectionString, err := getEnv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
+	if err != nil {
+		return nil, err
 	}
 
 	return &Config{
@@ -76,4 +73,20 @@ func GetConfig() (*Config, error) {
 			Password: dbPassword,
 		},
 	}, nil
+}
+
+func getEnvWithDefaultValue(key string, defaultValue string) string {
+	value, ok := os.LookupEnv(key)
+	if !ok {
+		return defaultValue
+	}
+	return value
+}
+
+func getEnv(key string) (string, error) {
+	value := getEnvWithDefaultValue(key, "")
+	if value == "" {
+		return "", fmt.Errorf("required environment variable %s is not set", key)
+	}
+	return value, nil
 }
