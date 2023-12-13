@@ -47,11 +47,19 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 
 	//	バリデーション&オブジェクト生成
 	userID := id.ReconstructID(input.UserID)
-	modelFile := file.NewMyFile(input.File, input.FileHeader)
 
-	threeDimentionalModel, err := tdmdomain.NewThreeDimentionalModel(
+	file := file.NewMyFile(input.File, input.FileHeader)
+	modelFile, err := tdmdomain.NewThreeDimensionalModelFile(file)
+	if err != nil {
+		return output, customerror.NewApplicationErrorWithoutDetails(
+			err.Error(),
+			http.StatusBadRequest,
+		)
+	}
+
+	threeDimentionalModel, err := tdmdomain.NewThreeDimensionalModel(
 		userID,
-		modelFile,
+		modelFile.Path(),
 	)
 	if err != nil {
 		return output, customerror.NewApplicationErrorWithoutDetails(
@@ -61,7 +69,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 	}
 
 	//  3Dモデルの保存
-	err = i.threeDimentionalModelStorage.Save(threeDimentionalModel)
+	err = i.threeDimentionalModelStorage.Save(modelFile)
 	if err != nil {
 		msg := "failed to save 3d model file"
 		return output, customerror.NewApplicationError(

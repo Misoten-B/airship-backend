@@ -9,7 +9,7 @@ import (
 )
 
 type ThreeDimentionalModelStorage interface {
-	Save(threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel) error
+	Save(threeDimentionalModel threedimentionalmodel.ThreeDimensionalModelFile) error
 	GetModelURL(modelName string) (string, error)
 	GetContainerFullPath() (shared.ContainerFullPath, error)
 }
@@ -20,7 +20,7 @@ func NewMockThreeDimentionalModelStorage() *MockThreeDimentionalModelStorage {
 	return &MockThreeDimentionalModelStorage{}
 }
 
-func (s *MockThreeDimentionalModelStorage) Save(_ threedimentionalmodel.ThreeDimentionalModel) error {
+func (s *MockThreeDimentionalModelStorage) Save(_ threedimentionalmodel.ThreeDimensionalModelFile) error {
 	log.Println("Mock 3D Model Storage - Save")
 
 	return nil

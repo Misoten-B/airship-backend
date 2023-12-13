@@ -3,6 +3,7 @@ package threedimentionalmodel
 import (
 	"errors"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	idlib "github.com/Misoten-B/airship-backend/internal/id"
@@ -22,7 +23,7 @@ func NewGormThreeDimentionalModelRepository(db *gorm.DB) *GormThreeDimentionalMo
 // Save はThreeDimentionalModelの永続化を行ないます。
 // GormARAssetsRepositoryと同様のトランザクションの問題があります。
 func (r *GormThreeDimentionalModelRepository) Save(
-	threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel,
+	threeDimentionalModel threedimentionalmodel.ThreeDimensionalModel,
 ) error {
 	id := threeDimentionalModel.ID().String()
 	userID := threeDimentionalModel.UserID().String()
@@ -30,7 +31,7 @@ func (r *GormThreeDimentionalModelRepository) Save(
 	// モデル生成
 	tdmModel := model.ThreeDimentionalModel{
 		ID:        id,
-		ModelPath: threeDimentionalModel.FileName(),
+		ModelPath: threeDimentionalModel.Path().Value(),
 	}
 	ptdmModel := model.PersonalThreeDimentionalModel{
 		ID:     tdmModel.ID,
@@ -62,7 +63,7 @@ func (r *GormThreeDimentionalModelRepository) Save(
 	return tx.Commit().Error
 }
 
-func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
+func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimentionalmodel.ThreeDimensionalModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
 	// FIXME: Gorm取得の最適化
@@ -79,12 +80,13 @@ func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimention
 		return nil, errors.New("three dimentional model not found")
 	}
 
+	path := shared.NewFilePath(threeDimentionalModel.ModelPath)
 	if templateLen != 0 {
-		return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
+		return threedimentionalmodel.ReconstructThreeDimensionalModelTemplate(id, path), nil
 	}
 
 	uid := idlib.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
-	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
+	return threedimentionalmodel.ReconstructThreeDimensionalModel(id, uid, path), nil
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threedimentionalmodel.ReadModel, error) {

@@ -1,18 +1,20 @@
 package service
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
 type ThreeDimentionalModelRepository interface {
-	Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error)
+	Find(id id.ID) (*threedimentionalmodel.ThreeDimensionalModel, error)
 	FindByID(id id.ID) (threedimentionalmodel.ReadModel, error)
 	FindByUserID(userID id.ID) ([]threedimentionalmodel.ReadModel, error)
-	Save(threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel) error
+	Save(threeDimentionalModel threedimentionalmodel.ThreeDimensionalModel) error
 }
 
 type MockThreeDimentionalModelRepository struct{}
@@ -21,14 +23,16 @@ func NewMockThreeDimentionalModelRepository() *MockThreeDimentionalModelReposito
 	return &MockThreeDimentionalModelRepository{}
 }
 
-func (r *MockThreeDimentionalModelRepository) Save(_ threedimentionalmodel.ThreeDimentionalModel) error {
+func (r *MockThreeDimentionalModelRepository) Save(_ threedimentionalmodel.ThreeDimensionalModel) error {
 	log.Println("Mock ThreeDimentionalModel Repository - Save")
 	return nil
 }
 
-func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
+func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimensionalModel, error) {
 	log.Printf("Mock ThreeDimentionalModel Repository - Find: %s", id)
-	return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
+
+	path := shared.NewFilePath(fmt.Sprintf("mock-3d-model-%s.glb", id))
+	return threedimentionalmodel.ReconstructThreeDimensionalModelTemplate(id, path), nil
 }
 
 func (r *MockThreeDimentionalModelRepository) FindByID(id id.ID) (threedimentionalmodel.ReadModel, error) {

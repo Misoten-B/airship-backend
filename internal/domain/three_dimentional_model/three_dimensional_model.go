@@ -2,7 +2,6 @@ package threedimentionalmodel
 
 import (
 	"fmt"
-	"mime/multipart"
 	"path/filepath"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
@@ -86,6 +85,8 @@ func NewThreeDimensionalModelFile(
 
 	// ファイル名は<uniqueID>.<拡張子>となるようにしています。
 	fileName := fmt.Sprintf("%s%s", uniqueID.String(), filepath.Ext(file.FileHeader().Filename))
+	file.FileHeader().Filename = fileName
+
 	path := shared.NewFilePath(fileName)
 
 	return ThreeDimensionalModelFile{
@@ -105,8 +106,8 @@ func ReconstructThreeDimensionalModelFile(
 	}
 }
 
-func (t *ThreeDimensionalModelFile) File() multipart.File {
-	return t.file.File()
+func (t *ThreeDimensionalModelFile) File() *file.File {
+	return t.file
 }
 
 func (t *ThreeDimensionalModelFile) Path() shared.FilePath {

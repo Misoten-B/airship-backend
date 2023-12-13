@@ -24,6 +24,6 @@ func NewFilePath(path string) FilePath {
 	}
 }
 
-func (f FilePath) Path() string {
+func (f FilePath) Value() string {
 	return f.path
 }
