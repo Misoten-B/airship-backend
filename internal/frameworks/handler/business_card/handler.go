@@ -1,3 +1,6 @@
+// FIXME: このファイルの関数の長さが長いので、分割する
+//
+//nolint:funlen
 package handler
 
 import (
@@ -6,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
@@ -127,7 +130,12 @@ func ReadAllBusinessCard(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 
 	bcURL, err := ab.GetContainerURL(backgroundContainer)
 	if err != nil {
@@ -201,7 +209,12 @@ func ReadBusinessCardByID(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 
 	bcURL, err := ab.GetContainerURL(backgroundContainer)
 	if err != nil {

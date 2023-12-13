@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/file"
@@ -54,7 +54,12 @@ func CreateBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 	castedFile := file.NewMyFile(formFile, fileHeader)
 	castedFile.FileHeader().Filename = fmt.Sprintf("%s.png", bcbID.String())
 	if err = ab.SaveBlob(containerName, castedFile); err != nil {
@@ -139,7 +144,12 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	ab := drivers.NewAzureBlobDriver(config.GetConfig())
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
 	containerURL, err := ab.GetContainerURL(containerName)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

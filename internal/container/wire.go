@@ -4,7 +4,6 @@
 package container
 
 import (
-	"github.com/Misoten-B/airship-backend/config"
 	arcreateusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	arfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	arfetchbyidpubusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
@@ -16,6 +15,7 @@ import (
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	arinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	tdminfra "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	vinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
