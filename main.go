@@ -24,7 +24,7 @@ import (
 // @in                         header
 // @name                       Authorization
 func main() {
-	settings, err := setup()
+	appConfig, err := setup()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +32,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(func(ctx *gin.Context) {
-		ctx.Set(frameworks.ContextKeyConfig, settings.Config)
+		ctx.Set(frameworks.ContextKeyConfig, appConfig.Config)
 		ctx.Next()
 	})
 
@@ -43,17 +43,17 @@ func main() {
 	log.Fatal(r.Run())
 }
 
-type AppSettings struct {
+type AppConfig struct {
 	Config *config.Config
 }
 
-func setup() (AppSettings, error) {
+func setup() (AppConfig, error) {
 	config, err := config.GetConfig()
 	if err != nil {
-		return AppSettings{}, err
+		return AppConfig{}, err
 	}
 
-	return AppSettings{
+	return AppConfig{
 		Config: config,
 	}, nil
 }
