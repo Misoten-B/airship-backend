@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

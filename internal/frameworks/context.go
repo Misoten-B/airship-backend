@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 )
 
 const (

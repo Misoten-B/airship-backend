@@ -8,7 +8,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/sas"
-	"github.com/Misoten-B/airship-backend/config"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/file"
 )
 

@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/file"

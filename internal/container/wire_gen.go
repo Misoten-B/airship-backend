@@ -7,7 +7,6 @@
 package container
 
 import (
-	"github.com/Misoten-B/airship-backend/config"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	"github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
@@ -19,6 +18,7 @@ import (
 	service3 "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	service2 "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
