@@ -24,10 +24,12 @@ import (
 // @in                         header
 // @name                       Authorization
 func main() {
+	settings := setup()
+
 	r := gin.Default()
 
 	r.Use(func(ctx *gin.Context) {
-		ctx.Set(frameworks.ContextKeyConfig, config.GetConfig())
+		ctx.Set(frameworks.ContextKeyConfig, settings.Config)
 		ctx.Next()
 	})
 
@@ -36,4 +38,16 @@ func main() {
 	v1.Register(r)
 
 	log.Fatal(r.Run())
+}
+
+type AppSettings struct {
+	Config *config.Config
+}
+
+func setup() AppSettings {
+	config := config.GetConfig()
+
+	return AppSettings{
+		Config: config,
+	}
 }
