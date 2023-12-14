@@ -1,16 +1,19 @@
 package middleware
 
 import (
+	"net/http"
+
+	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/gin-gonic/gin"
 )
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// originList := []string{"http://localhost:3000/", "https://airship.azurewebsites.net/"}
-		// origin := c.Request.Header.Get("Origin")
-		// isOriginAllowed := slices.Contains(originList, origin)
-
-		// log.Printf("origin: %s, isOriginAllowed: %t", origin, isOriginAllowed)
+		origin, err := frameworks.GetConfig(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
@@ -26,5 +29,6 @@ func CORSMiddleware() gin.HandlerFunc {
 		}
 
 		c.Next()
+
 	}
 }
