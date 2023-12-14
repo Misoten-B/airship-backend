@@ -16,7 +16,7 @@
 
 db
 ```bash
-docker run --name postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=airship -p 5432:5432 postgres:latest
+docker run --detach --name mysql -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=airship -e MYSQL_USER=user -e MYSQL_PASSWORD=password -p 3306:3306 mysql:latest
 ```
 
 go
@@ -48,7 +48,7 @@ docker compose -f compose.yml -f compose.lint.yml up
 **データベース接続**
 
 ```bash
-psql -h 127.0.0.1 -p 5432 -U postgres -d airship
+mysql -uuser -p
 ```
 
 **Swagger更新**
