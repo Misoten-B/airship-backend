@@ -11,7 +11,6 @@ import (
 	fetchbyuserid "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_userid"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
-	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/three_dimentional/dto"
 	"github.com/gin-gonic/gin"
@@ -51,7 +50,7 @@ func CreateThreeDimentional(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeCreateThreeDimentionalModelUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 			return
@@ -107,7 +106,7 @@ func ReadAllThreeDimentional(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 			return
@@ -178,7 +177,7 @@ func ReadThreeDimentionalByID(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeFetchByIDThreeDimentionalModelUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
 			return

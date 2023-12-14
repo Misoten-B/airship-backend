@@ -5,11 +5,13 @@ import (
 	"fmt"
 
 	"github.com/Misoten-B/airship-backend/internal/drivers/config"
+	"gorm.io/gorm"
 )
 
 const (
 	ContextKeyConfig = "config"
 	ContextKeyUID    = "uid"
+	ContextKeyDB     = "db"
 )
 
 func GetConfig(ctx context.Context) (*config.Config, error) {
@@ -26,4 +28,12 @@ func GetUID(ctx context.Context) (string, error) {
 		return "", fmt.Errorf("uid is not set")
 	}
 	return uid, nil
+}
+
+func GetDB(ctx context.Context) (*gorm.DB, error) {
+	db, ok := ctx.Value(ContextKeyDB).(*gorm.DB)
+	if !ok {
+		return nil, fmt.Errorf("db is not set")
+	}
+	return db, nil
 }

@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
@@ -42,7 +41,7 @@ func CreateUser(c *gin.Context) {
 		IsToured:          false,
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -73,7 +72,7 @@ func ReadUserByID(c *gin.Context) {
 		return
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -127,7 +126,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -167,7 +166,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -204,7 +203,7 @@ func PostVoiceModelStatusDone(c *gin.Context) {
 	// ユースケース実行
 
 	// データベース接続
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		frameworks.ErrorHandling(
 			c,

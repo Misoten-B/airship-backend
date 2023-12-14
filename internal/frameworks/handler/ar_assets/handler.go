@@ -14,7 +14,6 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
-	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
 	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
@@ -63,7 +62,7 @@ func CreateArAssets(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeCreateARAssetsUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
@@ -130,7 +129,7 @@ func ReadArAssetsByID(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
@@ -191,7 +190,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
@@ -250,7 +249,7 @@ func ReadAllArAssets(c *gin.Context) {
 	if config.DevMode {
 		usecaseImpl = container.InitializeFetchByUserIDARAssetsUsecaseForDev()
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
@@ -405,7 +404,7 @@ func PostStatusDone(c *gin.Context) {
 			service.NewMockARAssetsRepository(),
 		)
 	} else {
-		db, dbErr := database.ConnectDB()
+		db, dbErr := frameworks.GetDB(c)
 		if dbErr != nil {
 			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
 			return
