@@ -11,6 +11,7 @@ import (
 type Config struct {
 	Database                         databaseConfig
 	DevMode                          bool
+	CORSOrigin                       string
 	AzureBlobStorageConnectionString string
 }
 
@@ -54,6 +55,11 @@ func GetConfig() (*Config, error) {
 	devModeStr := getEnvWithDefaultValue("DEV_MODE", "false")
 	devMode := devModeStr == "true"
 
+	corsOriginStr, err := getEnv("CORS_ORIGIN")
+	if err != nil {
+		return nil, err
+	}
+
 	azBlobStorageConnectionString, err := getEnv("AZURE_BLOB_STORAGE_CONNECTION_STRING")
 	if err != nil {
 		return nil, err
@@ -68,6 +74,7 @@ func GetConfig() (*Config, error) {
 	}
 	return &Config{
 		DevMode:                          devMode,
+		CORSOrigin:                       corsOriginStr,
 		AzureBlobStorageConnectionString: azBlobStorageConnectionString,
 		Database:                         dbConfig,
 	}, nil

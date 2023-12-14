@@ -11,6 +11,7 @@ import (
 	_ "github.com/Misoten-B/airship-backend/docs"
 	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
+	"github.com/Misoten-B/airship-backend/internal/frameworks/middleware"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/router"
 	v1 "github.com/Misoten-B/airship-backend/internal/frameworks/router/v1"
 )
@@ -35,6 +36,8 @@ func main() {
 		ctx.Set(frameworks.ContextKeyConfig, appConfig.Config)
 		ctx.Next()
 	})
+
+	r.Use(middleware.CORSMiddleware())
 
 	router.HealthCheckRegister(r)
 	router.OpenapiRegister(r)
