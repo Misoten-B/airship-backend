@@ -62,7 +62,7 @@ func CreateUser(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /v1/users/{user_id} [GET]
+// @Router /v1/users/myprofile [GET]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} dto.UserResponse

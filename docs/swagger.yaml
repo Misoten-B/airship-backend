@@ -249,22 +249,6 @@ paths:
       - ApiKeyAuth: []
       tags:
       - User
-    get:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.UserResponse'
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - User
     put:
       consumes:
       - multipart/form-data
@@ -745,6 +729,23 @@ paths:
       - ApiKeyAuth: []
       tags:
       - BusinessCard
+  /v1/users/myprofile:
+    get:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
   /v1/users/three_dimentionals:
     get:
       parameters:
