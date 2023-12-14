@@ -3,6 +3,7 @@ package middleware
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"firebase.google.com/go/v4/auth"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
@@ -26,6 +27,14 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 		}
 
 		idToken := c.GetHeader("Authorization")
+
+		if !strings.HasPrefix(idToken, "Bearer ") {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error": "Unauthorized"})
+			return
+		}
+
+		idToken = strings.TrimPrefix(idToken, "Bearer ")
+
 		token, err := client.VerifyIDToken(c.Request.Context(), idToken)
 		if err != nil {
 			log.Printf("error verifying ID token: %v\n", err)
