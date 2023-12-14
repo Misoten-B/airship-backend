@@ -19,28 +19,27 @@ type ThreeDimentionalModelTemplate struct {
 // ThreeDimentionalModelの排他的サブタイプです。
 type PersonalThreeDimentionalModel struct {
 	ID     string `gorm:"primaryKey"`
-	UserID string
+	UserID string `gorm:"size:255"`
 }
 
 // SpeakingAssetは音声アセットテーブルのORMモデルです。
 type SpeakingAsset struct {
 	ID          string `gorm:"primaryKey"`
-	UserID      string
+	UserID      string `gorm:"size:255"`
 	Description string
 	AudioPath   string
 }
 
 // ARAssetはARアセットテーブルのORMモデルです。
 type ARAsset struct {
-	ID              string `gorm:"primaryKey"`
-	AccessCount     int
-	QRCodeImagePath string
-	Status          int
-
-	UserID                  string
+	ID                      string `gorm:"primaryKey"`
+	AccessCount             int
+	QRCodeImagePath         string
+	Status                  int
+	UserID                  string `gorm:"size:255"`
 	User                    User
-	SpeakingAssetID         string
+	SpeakingAssetID         string `gorm:"size:255"`
 	SpeakingAsset           SpeakingAsset
-	ThreeDimentionalModelID string
+	ThreeDimentionalModelID string `gorm:"size:255"`
 	ThreeDimentionalModel   ThreeDimentionalModel
 }

@@ -5,10 +5,10 @@ import "time"
 // BusinessCardは名刺テーブルのORMモデルです。
 type BusinessCard struct {
 	ID                            string `gorm:"primaryKey"`
-	UserID                        string
-	ARAssetID                     string
-	BusinessCardPartsCoordinateID string
-	BusinessCardBackgroundID      string
+	UserID                        string `gorm:"size:255"`
+	ARAssetID                     string `gorm:"size:255"`
+	BusinessCardPartsCoordinateID string `gorm:"size:255"`
+	BusinessCardBackgroundID      string `gorm:"size:255"`
 	BusinessCardName              string
 	DisplayName                   string
 	CompanyName                   string
@@ -65,5 +65,5 @@ type BusinessCardBackgroundTemplate struct {
 // BusinessCardBackgroundの排他的サブタイプです。
 type PersonalBusinessCardBackground struct {
 	ID     string `gorm:"primaryKey"`
-	UserID string
+	UserID string `gorm:"size:255"`
 }

@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/Misoten-B/airship-backend/internal/drivers/config"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -16,20 +16,42 @@ func ConnectDB() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Tokyo",
-		cfg.Database.Host,
-		cfg.Database.User,
-		cfg.Database.Password,
-		cfg.Database.Dbname,
-		cfg.Database.Port,
+	dialector := GetMySQLDialector(
+		MySQLDSNParams{
+			Host:     cfg.Database.Host,
+			Port:     cfg.Database.Port,
+			User:     cfg.Database.User,
+			Password: cfg.Database.Password,
+			Dbname:   cfg.Database.DBName,
+		},
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(dialector, &gorm.Config{})
 	if err != nil {
 		log.Println("Failed to connect to database")
 		return nil, err
 	}
 
 	return db, nil
+}
+
+type MySQLDSNParams struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Dbname   string
+}
+
+func GetMySQLDialector(params MySQLDSNParams) gorm.Dialector {
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		params.User,
+		params.Password,
+		params.Host,
+		params.Port,
+		params.Dbname,
+	)
+
+	return mysql.Open(dsn)
 }
