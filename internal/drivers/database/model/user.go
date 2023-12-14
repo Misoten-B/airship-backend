@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // UserはユーザーテーブルのORMモデルです。
 type User struct {
@@ -12,7 +16,7 @@ type User struct {
 	SpeakingAssets                  []SpeakingAsset
 	RecordedModelPath               string
 	CreatedAt                       time.Time
-	DeletedAt                       time.Time
+	DeletedAt                       gorm.DeletedAt
 	IsToured                        bool
 	// Status は音声モデルの生成状態を表します
 	Status int
