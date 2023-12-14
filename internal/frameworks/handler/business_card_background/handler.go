@@ -7,7 +7,6 @@ import (
 
 	"github.com/Misoten-B/airship-backend/internal/drivers"
 	"github.com/Misoten-B/airship-backend/internal/drivers/config"
-	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
@@ -78,7 +77,7 @@ func CreateBusinessCardBackground(c *gin.Context) {
 		ID:     bcb.ID,
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -116,7 +115,7 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	db, err := database.ConnectDB()
+	db, err := frameworks.GetDB(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
