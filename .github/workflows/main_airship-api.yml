@@ -30,7 +30,19 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f6eaa3568e9c43da8a70f75ea3113594 }}/airship/airship-backend:${{ github.sha }}
+        build-args: |
+          SA_TYPE=${{ secrets.SA_TYPE}}
+          SA_PROJECT_ID=${{ secrets.SA_PROJECT_ID }}
+          SA_PRIVATE_KEY_ID=${{ secrets.SA_PRIVATE_KEY_ID }}
+          SA_PRIVATE_KEY=${{ secrets.SA_PRIVATE_KEY }}
+          SA_CLIENT_EMAIL=${{ secrets.SA_CLIENT_EMAIL }}
+          SA_CLIENT_ID=${{ secrets.SA_CLIENT_ID }}
+          SA_AUTH_URI=${{ secrets.SA_AUTH_URI }}
+          SA_TOKEN_URI=${{ secrets.SA_TOKEN_URI }}
+          SA_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.SA_AUTH_PROVIDER_X509_CERT_URL }}
+          SA_CLIENT_X509_CERT_URL=${{ secrets.SA_CLIENT_X509_CERT_URL }}
+          SA_UNIVERSE_DOMAIN=${{ secrets.SA_UNIVERSE_DOMAIN }}
+        
         file: ./Dockerfile
 
   deploy:
