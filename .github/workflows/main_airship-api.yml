@@ -23,26 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://airship.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_f6eaa3568e9c43da8a70f75ea3113594 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_1a6f5f0d28434c10b66b7355c5845fb2 }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_04ae77543a804a36adaee48b2d8be0ec }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_405f6d3c59e845268f3dc75b6258db23 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        build-args: |
-          SA_TYPE=${{ secrets.SA_TYPE}}
-          SA_PROJECT_ID=${{ secrets.SA_PROJECT_ID }}
-          SA_PRIVATE_KEY_ID=${{ secrets.SA_PRIVATE_KEY_ID }}
-          SA_PRIVATE_KEY=${{ secrets.SA_PRIVATE_KEY }}
-          SA_CLIENT_EMAIL=${{ secrets.SA_CLIENT_EMAIL }}
-          SA_CLIENT_ID=${{ secrets.SA_CLIENT_ID }}
-          SA_AUTH_URI=${{ secrets.SA_AUTH_URI }}
-          SA_TOKEN_URI=${{ secrets.SA_TOKEN_URI }}
-          SA_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.SA_AUTH_PROVIDER_X509_CERT_URL }}
-          SA_CLIENT_X509_CERT_URL=${{ secrets.SA_CLIENT_X509_CERT_URL }}
-          SA_UNIVERSE_DOMAIN=${{ secrets.SA_UNIVERSE_DOMAIN }}
-        tags: airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f6eaa3568e9c43da8a70f75ea3113594 }}/airship-backend:${{ github.sha }}
+        tags: airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_04ae77543a804a36adaee48b2d8be0ec }}/airship/airship-backend:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -59,5 +47,5 @@ jobs:
       with:
         app-name: 'airship-api'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_aa36bc4b09434e5482c874987b994cd7 }}
-        images: 'airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f6eaa3568e9c43da8a70f75ea3113594 }}/airship/airship-backend:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ae60ff996215421397c8f2c4326a9cc1 }}
+        images: 'airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_04ae77543a804a36adaee48b2d8be0ec }}/airship/airship-backend:${{ github.sha }}'
