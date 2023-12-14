@@ -42,7 +42,7 @@ jobs:
           SA_AUTH_PROVIDER_X509_CERT_URL=${{ secrets.SA_AUTH_PROVIDER_X509_CERT_URL }}
           SA_CLIENT_X509_CERT_URL=${{ secrets.SA_CLIENT_X509_CERT_URL }}
           SA_UNIVERSE_DOMAIN=${{ secrets.SA_UNIVERSE_DOMAIN }}
-        
+        tags: airship.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_f6eaa3568e9c43da8a70f75ea3113594 }}/airship/airship-backend:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
