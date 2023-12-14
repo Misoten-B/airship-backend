@@ -1,6 +1,9 @@
 package threedimentionalmodel
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/id"
 )
@@ -8,16 +11,19 @@ import (
 type ThreeDimentionalModel struct {
 	id     id.ID
 	userID id.ID
-	file   file.File
+	file   *file.File
 }
 
-func NewThreeDimentionalModel(userID id.ID, file file.File) (*ThreeDimentionalModel, error) {
+func NewThreeDimentionalModel(userID id.ID, file *file.File) (ThreeDimentionalModel, error) {
 	id, err := id.NewID()
 	if err != nil {
-		return nil, err
+		return ThreeDimentionalModel{}, err
 	}
 
-	return &ThreeDimentionalModel{
+	// AzureDriverの仕様上、一旦ここでファイル名を変更しています。
+	file.FileHeader().Filename = fmt.Sprintf("%s%s", id.String(), filepath.Ext(file.FileHeader().Filename))
+
+	return ThreeDimentionalModel{
 		id:     id,
 		userID: userID,
 		file:   file,
@@ -49,6 +55,10 @@ func (t *ThreeDimentionalModel) UserID() id.ID {
 	return t.userID
 }
 
-func (t *ThreeDimentionalModel) File() file.File {
+func (t *ThreeDimentionalModel) File() *file.File {
 	return t.file
+}
+
+func (t *ThreeDimentionalModel) FileName() string {
+	return t.file.FileHeader().Filename
 }

@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/Misoten-B/airship-backend/config"
 	_ "github.com/Misoten-B/airship-backend/docs"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/middleware"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/router"
@@ -25,10 +25,15 @@ import (
 // @in                         header
 // @name                       Authorization
 func main() {
+	appConfig, err := setup()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	r := gin.Default()
 
 	r.Use(func(ctx *gin.Context) {
-		ctx.Set(frameworks.ContextKeyConfig, config.GetConfig())
+		ctx.Set(frameworks.ContextKeyConfig, appConfig.Config)
 		ctx.Next()
 	})
 
@@ -39,4 +44,19 @@ func main() {
 	v1.Register(r)
 
 	log.Fatal(r.Run())
+}
+
+type AppConfig struct {
+	Config *config.Config
+}
+
+func setup() (AppConfig, error) {
+	config, err := config.GetConfig()
+	if err != nil {
+		return AppConfig{}, err
+	}
+
+	return AppConfig{
+		Config: config,
+	}, nil
 }

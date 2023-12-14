@@ -2,6 +2,7 @@ package threedimentionalmodel
 
 import (
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
+	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
 )
 
@@ -17,6 +18,17 @@ func NewAzureThreeDimentionalModelStorage(driver *drivers.AzureBlobDriver) *Azur
 	return &AzureThreeDimentionalModelStorage{
 		dirver: driver,
 	}
+}
+
+func (s *AzureThreeDimentionalModelStorage) Save(
+	threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel,
+) error {
+	err := s.dirver.SaveBlob(containerName, threeDimentionalModel.File())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *AzureThreeDimentionalModelStorage) GetModelURL(modelName string) (string, error) {

@@ -4,15 +4,18 @@
 package container
 
 import (
-	"github.com/Misoten-B/airship-backend/config"
 	arcreateusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
 	arfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	arfetchbyidpubusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	arfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
+	createtdmusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/create"
+	tdmfetchbyidusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_id"
+	tdmfetchbyuseridusecase "github.com/Misoten-B/airship-backend/internal/application/usecase/three_dimentional_model/fetch_by_userid"
 	ardomain "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vdomain "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	arinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	tdminfra "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
 	vinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
@@ -21,6 +24,8 @@ import (
 )
 
 /** Usecase Provider Set **/
+
+/** ARAssets **/
 
 // CreateARAssetsUsecaseSetForDev は開発環境用のプロバイダセットです。
 // 現状、このファイルに記述されていますが、将来的にはユースケースのファクトリ部分に移動することも
@@ -94,6 +99,47 @@ var FetchByUserIDARAssetsUsecaseSetForProd = wire.NewSet(
 	GormARAssetsRepositorySet,
 	AzureQRCodeImageStorageSet,
 	AzureSpeakingAudioStorageSet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+/** Three Dimentional Model **/
+
+var CreateThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
+	createtdmusecase.NewInteractor,
+	MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var CreateThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
+	createtdmusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormThreeDimentionalModelRepositorySet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
+	tdmfetchbyidusecase.NewInteractor,
+	MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
+	tdmfetchbyidusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormThreeDimentionalModelRepositorySet,
+	AzureThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForDev = wire.NewSet(
+	tdmfetchbyuseridusecase.NewInteractor,
+	MockThreeDimentionalModelRepositorySet,
+	MockThreeDimentionalModelStorageSet,
+)
+
+var FetchByUserIDThreeDimentionalModelUsecaseSetForProd = wire.NewSet(
+	tdmfetchbyuseridusecase.NewInteractor,
+	drivers.NewAzureBlobDriver,
+	GormThreeDimentionalModelRepositorySet,
 	AzureThreeDimentionalModelStorageSet,
 )
 
@@ -237,4 +283,49 @@ func InitializeFetchByUserIDARAssetsUsecaseForProd(
 	wire.Build(FetchByUserIDARAssetsUsecaseSetForProd)
 
 	return &arfetchbyuseridusecase.Interactor{}
+}
+
+/** Three Dimentional Model **/
+
+func InitializeCreateThreeDimentionalModelUsecaseForDev() *createtdmusecase.Interactor {
+	wire.Build(CreateThreeDimentionalModelUsecaseSetForDev)
+
+	return &createtdmusecase.Interactor{}
+}
+
+func InitializeCreateThreeDimentionalModelUsecaseForProd(
+	db *gorm.DB, config *config.Config,
+) *createtdmusecase.Interactor {
+	wire.Build(CreateThreeDimentionalModelUsecaseSetForProd)
+
+	return &createtdmusecase.Interactor{}
+}
+
+func InitializeFetchByIDThreeDimentionalModelUsecaseForDev() *tdmfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDThreeDimentionalModelUsecaseSetForDev)
+
+	return &tdmfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByIDThreeDimentionalModelUsecaseForProd(
+	db *gorm.DB, config *config.Config,
+) *tdmfetchbyidusecase.Interactor {
+	wire.Build(FetchByIDThreeDimentionalModelUsecaseSetForProd)
+
+	return &tdmfetchbyidusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev() *tdmfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDThreeDimentionalModelUsecaseSetForDev)
+
+	return &tdmfetchbyuseridusecase.Interactor{}
+}
+
+func InitializeFetchByUserIDThreeDimentionalModelUsecaseForProd(
+	db *gorm.DB,
+	config *config.Config,
+) *tdmfetchbyuseridusecase.Interactor {
+	wire.Build(FetchByUserIDThreeDimentionalModelUsecaseSetForProd)
+
+	return &tdmfetchbyuseridusecase.Interactor{}
 }

@@ -25,6 +25,8 @@ func Register(r *gin.RouterGroup) {
 		users.GET("/:user_id", userHandler.ReadUserByID)
 		users.PUT("/:user_id", userHandler.UpdateUser)
 		users.DELETE("/:user_id", userHandler.DeleteUser)
+		users.POST("/:user_id/voice_model/status/done", userHandler.PostVoiceModelStatusDone)
+		users.POST("/:user_id/voice_model/status/failed", userHandler.PostVoiceModelStatusFailed)
 		businessCardBackgroundRegister(users)
 		businessCardRegister(users)
 		threeDimentionalRegister(users)
@@ -40,6 +42,8 @@ func arAssetsRegister(r *gin.RouterGroup) {
 		ar.GET("/:ar_assets_id", arHandler.ReadArAssetsByID)
 		ar.PUT("/:ar_assets_id", arHandler.UpdateArAssets)
 		ar.DELETE("/:ar_assets_id", arHandler.DeleteArAssets)
+		ar.POST("/:ar_assets_id/status/done", arHandler.PostStatusDone)
+		ar.POST("/:ar_assets_id/status/failed", arHandler.PostStatusFailed)
 	}
 }
 

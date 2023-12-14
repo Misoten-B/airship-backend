@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
+	"github.com/Misoten-B/airship-backend/internal/drivers/database/mapper"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
@@ -117,4 +119,16 @@ func convertToReadModel(arAssetModel model.ARAsset) arassets.ReadModel {
 		arAssetModel.QRCodeImagePath,
 		isCreated,
 	)
+}
+
+func (r *GormARAssetsRepository) PatchStatus(id id.ID, status shared.Status) error {
+	var arAssetModel model.ARAsset
+
+	if err := r.db.Model(&arAssetModel).
+		Where("id = ?", id).
+		Update("status", mapper.ToGormStatus(status)).Error; err != nil {
+		return fmt.Errorf("failed to patch status: %w", err)
+	}
+
+	return nil
 }
