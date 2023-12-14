@@ -60,7 +60,6 @@ func setup() (AppConfig, error) {
 		return AppConfig{}, err
 	}
 
-	// TODO: configを渡すようにする
 	db, err := database.ConnectDB()
 	if err != nil {
 		return AppConfig{}, err
