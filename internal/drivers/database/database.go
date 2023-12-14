@@ -22,7 +22,7 @@ func ConnectDB() (*gorm.DB, error) {
 			Port:     cfg.Database.Port,
 			User:     cfg.Database.User,
 			Password: cfg.Database.Password,
-			Dbname:   cfg.Database.Dbname,
+			Dbname:   cfg.Database.DBName,
 		},
 	)
 

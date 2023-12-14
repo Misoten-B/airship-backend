@@ -18,7 +18,7 @@ type Config struct {
 type databaseConfig struct {
 	Host     string
 	Port     string
-	Dbname   string
+	DBName   string
 	User     string
 	Password string
 }
@@ -31,23 +31,23 @@ func GetConfig() (*Config, error) {
 		log.Println("using default values for configuration")
 	}
 
-	dbHost, err := getEnv("POSTGRES_HOST")
+	dbHost, err := getEnv("DB_HOST")
 	if err != nil {
 		return nil, err
 	}
-	dbPort, err := getEnv("POSTGRES_PORT")
+	dbPort, err := getEnv("DB_PORT")
 	if err != nil {
 		return nil, err
 	}
-	dbDbname, err := getEnv("POSTGRES_DB")
+	dbName, err := getEnv("DB_NAME")
 	if err != nil {
 		return nil, err
 	}
-	dbUser, err := getEnv("POSTGRES_USER")
+	dbUser, err := getEnv("DB_USER")
 	if err != nil {
 		return nil, err
 	}
-	dbPassword, err := getEnv("POSTGRES_PASSWORD")
+	dbPassword, err := getEnv("DB_PASSWORD")
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func GetConfig() (*Config, error) {
 	dbConfig := databaseConfig{
 		Host:     dbHost,
 		Port:     dbPort,
-		Dbname:   dbDbname,
+		DBName:   dbName,
 		User:     dbUser,
 		Password: dbPassword,
 	}
