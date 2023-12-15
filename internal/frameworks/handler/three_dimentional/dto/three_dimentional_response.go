@@ -1,6 +1,6 @@
 package dto
 
 type ThreeDimentionalResponse struct {
-	ID   string
-	Path string
+	ID   string `json:"id"`
+	Path string `json:"path"`
 }
