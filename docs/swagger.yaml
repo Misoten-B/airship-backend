@@ -225,6 +225,20 @@ paths:
       tags:
       - BusinessCardPartsCoordinate
   /v1/users:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - User
     post:
       parameters:
       - description: Bearer [Firebase JWT Token]
@@ -243,21 +257,6 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/dto.UserResponse'
-      security:
-      - ApiKeyAuth: []
-      tags:
-      - User
-  /v1/users/{user_id}:
-    delete:
-      parameters:
-      - description: Bearer [Firebase JWT Token]
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      responses:
-        "204":
-          description: No Content
       security:
       - ApiKeyAuth: []
       tags:

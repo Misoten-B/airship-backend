@@ -102,7 +102,7 @@ func ReadUserByID(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /v1/users/{user_id} [PUT]
+// @Router /v1/users [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
@@ -174,7 +174,7 @@ func UpdateUser(c *gin.Context) {
 }
 
 // @Tags User
-// @Router /v1/users/{user_id} [DELETE]
+// @Router /v1/users [DELETE]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 204 {object} nil

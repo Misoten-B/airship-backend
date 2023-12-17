@@ -62,6 +62,49 @@ const docTemplate = `{
             }
         },
         "/v1/users": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Audio file to be uploaded",
+                        "name": "recorded_voice",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "example": false,
+                        "x-nullable": true,
+                        "name": "isToured",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -95,6 +138,30 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/dto.UserResponse"
                         }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -964,75 +1031,6 @@ const docTemplate = `{
                         "description": "ThreeDimentional ID",
                         "name": "three_dimentional_id",
                         "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
-        },
-        "/v1/users/{user_id}": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer [Firebase JWT Token]",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "Audio file to be uploaded",
-                        "name": "recorded_voice",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "boolean",
-                        "example": false,
-                        "x-nullable": true,
-                        "name": "isToured",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.UserResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "tags": [
-                    "User"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Bearer [Firebase JWT Token]",
-                        "name": "Authorization",
-                        "in": "header",
                         "required": true
                     }
                 ],
