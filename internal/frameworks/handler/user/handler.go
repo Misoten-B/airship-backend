@@ -5,12 +5,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"path/filepath"
 
+	"github.com/Misoten-B/airship-backend/internal/drivers"
+	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
+	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+)
+
+const (
+	containerName = "train-sounds"
 )
 
 // @Tags User
@@ -118,11 +126,25 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	// TODO: AI側に送信
-	file, fileHeader, err := c.Request.FormFile("recorded_voice")
-	log.Printf("file: %v", file)
+	formFile, fileHeader, err := c.Request.FormFile("recorded_voice")
+	log.Printf("file: %v", formFile)
 	log.Printf("fileHeader: %v", fileHeader)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
+	castedFile := file.NewMyFile(formFile, fileHeader)
+	castedFile.FileHeader().Filename = fmt.Sprintf("%s%s", uid, filepath.Ext(castedFile.FileHeader().Filename))
+	log.Printf("castedFile: %s", castedFile.FileHeader().Filename)
+	if err = ab.SaveBlob(containerName, castedFile); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
