@@ -19,7 +19,7 @@ type BusinessCardResponse struct {
 	Department                  string                      `json:"department" example:"Department"`
 	OfficialPosition            string                      `json:"official_position" example:"Official Position"`
 	PhoneNumber                 string                      `json:"phone_number" example:"080-1234-5678"`
-	Email                       string                      `json:"email" example:"`
+	Email                       string                      `json:"email" example:"sample@example.com"`
 	PostalCode                  string                      `json:"postal_code" example:"123-4567"`
 	Address                     string                      `json:"address" example:"Tokyo"`
 	AccessCount                 int                         `json:"access_count" example:"0"`
