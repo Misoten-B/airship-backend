@@ -4,25 +4,25 @@ definitions:
       id:
         example: id
         type: string
-      qrcode_image_path:
+      qrcodeImagePath:
         example: url
         type: string
-      speaking_audio_path:
+      speakingAudioPath:
         example: url
         type: string
-      speaking_description:
+      speakingDescription:
         example: description
         type: string
-      three_dimentional_path:
+      threeDimentionalPath:
         example: url
         type: string
     type: object
   dto.BackgroundResponse:
     properties:
-      business_card_background_color:
+      businessCardBackgroundColor:
         example: '#ffffff'
         type: string
-      business_card_background_image:
+      businessCardBackgroundImage:
         example: url
         type: string
       id:
@@ -30,144 +30,145 @@ definitions:
     type: object
   dto.BusinessCardPartsCoordinate:
     properties:
-      address_x:
+      addressX:
         type: integer
-      address_y:
+      addressY:
         type: integer
-      company_name_x:
+      companyNameX:
         type: integer
-      company_name_y:
+      companyNameY:
         type: integer
-      department_x:
+      departmentX:
         type: integer
-      department_y:
+      departmentY:
         type: integer
-      display_name_x:
+      displayNameX:
         type: integer
-      display_name_y:
+      displayNameY:
         type: integer
-      email_x:
+      emailX:
         type: integer
-      email_y:
+      emailY:
         type: integer
       id:
         type: string
-      official_position_x:
+      officialPositionX:
         type: integer
-      official_position_y:
+      officialPositionY:
         type: integer
-      phone_number_x:
+      phoneNumberX:
         type: integer
-      phone_number_y:
+      phoneNumberY:
         type: integer
-      postal_code_x:
+      postalCodeX:
         type: integer
-      postal_code_y:
+      postalCodeY:
         type: integer
-      qrcode_x:
+      qrcodeX:
         type: integer
-      qrcode_y:
+      qrcodeY:
         type: integer
     type: object
   dto.BusinessCardPartsCoordinateResponse:
     properties:
-      address_x:
+      addressX:
         type: integer
-      address_y:
+      addressY:
         type: integer
-      company_name_x:
+      companyNameX:
         type: integer
-      company_name_y:
+      companyNameY:
         type: integer
-      department_x:
+      departmentX:
         type: integer
-      department_y:
+      departmentY:
         type: integer
-      display_name_x:
+      displayNameX:
         type: integer
-      display_name_y:
+      displayNameY:
         type: integer
-      email_x:
+      emailX:
         type: integer
-      email_y:
+      emailY:
         type: integer
       id:
         type: string
-      official_position_x:
+      officialPositionX:
         type: integer
-      official_position_y:
+      officialPositionY:
         type: integer
-      phone_number_x:
+      phoneNumberX:
         type: integer
-      phone_number_y:
+      phoneNumberY:
         type: integer
-      postal_code_x:
+      postalCodeX:
         type: integer
-      postal_code_y:
+      postalCodeY:
         type: integer
-      qrcode_x:
+      qrcodeX:
         type: integer
-      qrcode_y:
+      qrcodeY:
         type: integer
     type: object
   dto.BusinessCardResponse:
     properties:
-      access_count:
+      accessCount:
         example: 0
         type: integer
       address:
         example: Tokyo
         type: string
-      audio_path:
-        example: https://example.com/audio.mp3
-        type: string
-      business_card_name:
-        example: Business Card Name
-        type: string
-      business_card_parts_coordinate:
-        allOf:
-        - $ref: '#/definitions/dto.BusinessCardPartsCoordinate'
-        description: business card
-      color_code:
+      businessCardBackgroundColor:
         description: background
         example: '#ffffff'
         type: string
-      company_name:
+      businessCardBackgroundImage:
+        example: https://example.com/image.png
+        type: string
+      businessCardName:
+        example: Business Card Name
+        type: string
+      businessCardPartsCoordinate:
+        allOf:
+        - $ref: '#/definitions/dto.BusinessCardPartsCoordinate'
+        description: business card
+      companyName:
         example: Company Name
         type: string
       department:
         example: Department
         type: string
-      description:
-        example: This is a description
-        type: string
-      display_name:
+      displayName:
         example: Display Name
         type: string
       email:
+        example: sample@example.com
         type: string
       id:
         type: string
-      image_path:
-        example: https://example.com/image.png
-        type: string
-      model_path:
-        description: ar assets
-        example: https://example.com/model.glb
-        type: string
-      official_position:
+      officialPosition:
         example: Official Position
         type: string
-      phone_number:
+      phoneNumber:
         example: 080-1234-5678
         type: string
-      postal_code:
+      postalCode:
         example: 123-4567
+        type: string
+      speakingAudioPath:
+        example: https://example.com/audio.mp3
+        type: string
+      speakingDescription:
+        example: This is a description
+        type: string
+      threeDimentionalModel:
+        description: ar assets
+        example: https://example.com/model.glb
         type: string
     type: object
   dto.CreateUserRequest:
     properties:
-      is_toured:
+      isToured:
         example: false
         type: boolean
         x-nullable: true
@@ -183,9 +184,9 @@ definitions:
     properties:
       id:
         type: string
-      is_toured:
+      isToured:
         type: boolean
-      recorded_model_path:
+      recordedModelPath:
         type: string
     type: object
 host: localhost:8080
@@ -276,7 +277,7 @@ paths:
         type: file
       - example: false
         in: formData
-        name: is_toured
+        name: isToured
         type: boolean
         x-nullable: true
       responses:
@@ -348,11 +349,11 @@ paths:
         type: file
       - example: description
         in: formData
-        name: speaking_description
+        name: speakingDescription
         type: string
       - example: url
         in: formData
-        name: three_dimentional_ID
+        name: threeDimentionalID
         type: string
       responses:
         "201":
@@ -417,11 +418,11 @@ paths:
         type: string
       - example: description
         in: formData
-        name: speaking_description
+        name: speakingDescription
         type: string
       - example: url
         in: formData
-        name: three_dimentional_ID
+        name: threeDimentionalID
         type: string
       - description: ArAssets ID
         in: path
@@ -500,7 +501,7 @@ paths:
         type: file
       - example: '#ffffff'
         in: formData
-        name: business_card_background_color
+        name: businessCardBackgroundColor
         type: string
       responses:
         "201":
@@ -545,29 +546,29 @@ paths:
       - description: ar assets
         example: ar_assets_id
         in: formData
-        name: ar_assets_id
+        name: arAssetsId
         type: string
         x-nullable: true
       - description: background
         example: id
         in: formData
-        name: business_card_background_id
+        name: businessCardBackgroundId
         type: string
         x-nullable: true
       - example: 会社
         in: formData
-        name: business_card_name
+        name: businessCardName
         type: string
         x-nullable: true
       - description: business card
         example: id
         in: formData
-        name: business_card_parts_coordinate
+        name: businessCardPartsCoordinateId
         type: string
         x-nullable: true
       - example: 会社名
         in: formData
-        name: company_name
+        name: companyName
         type: string
         x-nullable: true
       - example: 部署
@@ -577,7 +578,7 @@ paths:
         x-nullable: true
       - example: 名前
         in: formData
-        name: display_name
+        name: displayName
         type: string
         x-nullable: true
       - example: sample@example.com
@@ -587,17 +588,17 @@ paths:
         x-nullable: true
       - example: 役職
         in: formData
-        name: official_position
+        name: officialPosition
         type: string
         x-nullable: true
       - example: 090-1234-5678
         in: formData
-        name: phone_number
+        name: phoneNumber
         type: string
         x-nullable: true
       - example: 123-4567
         in: formData
-        name: postal_code
+        name: postalCode
         type: string
         x-nullable: true
       responses:
@@ -677,29 +678,29 @@ paths:
       - description: ar assets
         example: ar_assets_id
         in: formData
-        name: ar_assets_id
+        name: arAssetsId
         type: string
         x-nullable: true
       - description: background
         example: id
         in: formData
-        name: business_card_background_id
+        name: businessCardBackgroundId
         type: string
         x-nullable: true
       - example: 会社
         in: formData
-        name: business_card_name
+        name: businessCardName
         type: string
         x-nullable: true
       - description: business card
         example: id
         in: formData
-        name: business_card_parts_coordinate
+        name: businessCardPartsCoordinateId
         type: string
         x-nullable: true
       - example: 会社名
         in: formData
-        name: company_name
+        name: companyName
         type: string
         x-nullable: true
       - example: 部署
@@ -709,7 +710,7 @@ paths:
         x-nullable: true
       - example: 名前
         in: formData
-        name: display_name
+        name: displayName
         type: string
         x-nullable: true
       - example: sample@example.com
@@ -719,17 +720,17 @@ paths:
         x-nullable: true
       - example: 役職
         in: formData
-        name: official_position
+        name: officialPosition
         type: string
         x-nullable: true
       - example: 090-1234-5678
         in: formData
-        name: phone_number
+        name: phoneNumber
         type: string
         x-nullable: true
       - example: 123-4567
         in: formData
-        name: postal_code
+        name: postalCode
         type: string
         x-nullable: true
       responses:

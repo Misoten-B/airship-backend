@@ -159,13 +159,13 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "description",
-                        "name": "speaking_description",
+                        "name": "speakingDescription",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "url",
-                        "name": "three_dimentional_ID",
+                        "name": "threeDimentionalID",
                         "in": "formData"
                     }
                 ],
@@ -240,13 +240,13 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "description",
-                        "name": "speaking_description",
+                        "name": "speakingDescription",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "url",
-                        "name": "three_dimentional_ID",
+                        "name": "threeDimentionalID",
                         "in": "formData"
                     },
                     {
@@ -404,7 +404,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "#ffffff",
-                        "name": "business_card_background_color",
+                        "name": "businessCardBackgroundColor",
                         "in": "formData"
                     }
                 ],
@@ -478,7 +478,7 @@ const docTemplate = `{
                         "example": "ar_assets_id",
                         "x-nullable": true,
                         "description": "ar assets",
-                        "name": "ar_assets_id",
+                        "name": "arAssetsId",
                         "in": "formData"
                     },
                     {
@@ -486,14 +486,14 @@ const docTemplate = `{
                         "example": "id",
                         "x-nullable": true,
                         "description": "background",
-                        "name": "business_card_background_id",
+                        "name": "businessCardBackgroundId",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "会社",
                         "x-nullable": true,
-                        "name": "business_card_name",
+                        "name": "businessCardName",
                         "in": "formData"
                     },
                     {
@@ -501,14 +501,14 @@ const docTemplate = `{
                         "example": "id",
                         "x-nullable": true,
                         "description": "business card",
-                        "name": "business_card_parts_coordinate",
+                        "name": "businessCardPartsCoordinateId",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "会社名",
                         "x-nullable": true,
-                        "name": "company_name",
+                        "name": "companyName",
                         "in": "formData"
                     },
                     {
@@ -522,7 +522,7 @@ const docTemplate = `{
                         "type": "string",
                         "example": "名前",
                         "x-nullable": true,
-                        "name": "display_name",
+                        "name": "displayName",
                         "in": "formData"
                     },
                     {
@@ -536,21 +536,21 @@ const docTemplate = `{
                         "type": "string",
                         "example": "役職",
                         "x-nullable": true,
-                        "name": "official_position",
+                        "name": "officialPosition",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "090-1234-5678",
                         "x-nullable": true,
-                        "name": "phone_number",
+                        "name": "phoneNumber",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "123-4567",
                         "x-nullable": true,
-                        "name": "postal_code",
+                        "name": "postalCode",
                         "in": "formData"
                     }
                 ],
@@ -645,7 +645,7 @@ const docTemplate = `{
                         "example": "ar_assets_id",
                         "x-nullable": true,
                         "description": "ar assets",
-                        "name": "ar_assets_id",
+                        "name": "arAssetsId",
                         "in": "formData"
                     },
                     {
@@ -653,14 +653,14 @@ const docTemplate = `{
                         "example": "id",
                         "x-nullable": true,
                         "description": "background",
-                        "name": "business_card_background_id",
+                        "name": "businessCardBackgroundId",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "会社",
                         "x-nullable": true,
-                        "name": "business_card_name",
+                        "name": "businessCardName",
                         "in": "formData"
                     },
                     {
@@ -668,14 +668,14 @@ const docTemplate = `{
                         "example": "id",
                         "x-nullable": true,
                         "description": "business card",
-                        "name": "business_card_parts_coordinate",
+                        "name": "businessCardPartsCoordinateId",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "会社名",
                         "x-nullable": true,
-                        "name": "company_name",
+                        "name": "companyName",
                         "in": "formData"
                     },
                     {
@@ -689,7 +689,7 @@ const docTemplate = `{
                         "type": "string",
                         "example": "名前",
                         "x-nullable": true,
-                        "name": "display_name",
+                        "name": "displayName",
                         "in": "formData"
                     },
                     {
@@ -703,21 +703,21 @@ const docTemplate = `{
                         "type": "string",
                         "example": "役職",
                         "x-nullable": true,
-                        "name": "official_position",
+                        "name": "officialPosition",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "090-1234-5678",
                         "x-nullable": true,
-                        "name": "phone_number",
+                        "name": "phoneNumber",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "123-4567",
                         "x-nullable": true,
-                        "name": "postal_code",
+                        "name": "postalCode",
                         "in": "formData"
                     }
                 ],
@@ -1005,7 +1005,7 @@ const docTemplate = `{
                         "type": "boolean",
                         "example": false,
                         "x-nullable": true,
-                        "name": "is_toured",
+                        "name": "isToured",
                         "in": "formData"
                     }
                 ],
@@ -1094,19 +1094,19 @@ const docTemplate = `{
                     "type": "string",
                     "example": "id"
                 },
-                "qrcode_image_path": {
+                "qrcodeImagePath": {
                     "type": "string",
                     "example": "url"
                 },
-                "speaking_audio_path": {
+                "speakingAudioPath": {
                     "type": "string",
                     "example": "url"
                 },
-                "speaking_description": {
+                "speakingDescription": {
                     "type": "string",
                     "example": "description"
                 },
-                "three_dimentional_path": {
+                "threeDimentionalPath": {
                     "type": "string",
                     "example": "url"
                 }
@@ -1115,11 +1115,11 @@ const docTemplate = `{
         "dto.BackgroundResponse": {
             "type": "object",
             "properties": {
-                "business_card_background_color": {
+                "businessCardBackgroundColor": {
                     "type": "string",
                     "example": "#ffffff"
                 },
-                "business_card_background_image": {
+                "businessCardBackgroundImage": {
                     "type": "string",
                     "example": "url"
                 },
@@ -1131,61 +1131,61 @@ const docTemplate = `{
         "dto.BusinessCardPartsCoordinate": {
             "type": "object",
             "properties": {
-                "address_x": {
+                "addressX": {
                     "type": "integer"
                 },
-                "address_y": {
+                "addressY": {
                     "type": "integer"
                 },
-                "company_name_x": {
+                "companyNameX": {
                     "type": "integer"
                 },
-                "company_name_y": {
+                "companyNameY": {
                     "type": "integer"
                 },
-                "department_x": {
+                "departmentX": {
                     "type": "integer"
                 },
-                "department_y": {
+                "departmentY": {
                     "type": "integer"
                 },
-                "display_name_x": {
+                "displayNameX": {
                     "type": "integer"
                 },
-                "display_name_y": {
+                "displayNameY": {
                     "type": "integer"
                 },
-                "email_x": {
+                "emailX": {
                     "type": "integer"
                 },
-                "email_y": {
+                "emailY": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "string"
                 },
-                "official_position_x": {
+                "officialPositionX": {
                     "type": "integer"
                 },
-                "official_position_y": {
+                "officialPositionY": {
                     "type": "integer"
                 },
-                "phone_number_x": {
+                "phoneNumberX": {
                     "type": "integer"
                 },
-                "phone_number_y": {
+                "phoneNumberY": {
                     "type": "integer"
                 },
-                "postal_code_x": {
+                "postalCodeX": {
                     "type": "integer"
                 },
-                "postal_code_y": {
+                "postalCodeY": {
                     "type": "integer"
                 },
-                "qrcode_x": {
+                "qrcodeX": {
                     "type": "integer"
                 },
-                "qrcode_y": {
+                "qrcodeY": {
                     "type": "integer"
                 }
             }
@@ -1193,61 +1193,61 @@ const docTemplate = `{
         "dto.BusinessCardPartsCoordinateResponse": {
             "type": "object",
             "properties": {
-                "address_x": {
+                "addressX": {
                     "type": "integer"
                 },
-                "address_y": {
+                "addressY": {
                     "type": "integer"
                 },
-                "company_name_x": {
+                "companyNameX": {
                     "type": "integer"
                 },
-                "company_name_y": {
+                "companyNameY": {
                     "type": "integer"
                 },
-                "department_x": {
+                "departmentX": {
                     "type": "integer"
                 },
-                "department_y": {
+                "departmentY": {
                     "type": "integer"
                 },
-                "display_name_x": {
+                "displayNameX": {
                     "type": "integer"
                 },
-                "display_name_y": {
+                "displayNameY": {
                     "type": "integer"
                 },
-                "email_x": {
+                "emailX": {
                     "type": "integer"
                 },
-                "email_y": {
+                "emailY": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "string"
                 },
-                "official_position_x": {
+                "officialPositionX": {
                     "type": "integer"
                 },
-                "official_position_y": {
+                "officialPositionY": {
                     "type": "integer"
                 },
-                "phone_number_x": {
+                "phoneNumberX": {
                     "type": "integer"
                 },
-                "phone_number_y": {
+                "phoneNumberY": {
                     "type": "integer"
                 },
-                "postal_code_x": {
+                "postalCodeX": {
                     "type": "integer"
                 },
-                "postal_code_y": {
+                "postalCodeY": {
                     "type": "integer"
                 },
-                "qrcode_x": {
+                "qrcodeX": {
                     "type": "integer"
                 },
-                "qrcode_y": {
+                "qrcodeY": {
                     "type": "integer"
                 }
             }
@@ -1255,7 +1255,7 @@ const docTemplate = `{
         "dto.BusinessCardResponse": {
             "type": "object",
             "properties": {
-                "access_count": {
+                "accessCount": {
                     "type": "integer",
                     "example": 0
                 },
@@ -1263,15 +1263,20 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Tokyo"
                 },
-                "audio_path": {
+                "businessCardBackgroundColor": {
+                    "description": "background",
                     "type": "string",
-                    "example": "https://example.com/audio.mp3"
+                    "example": "#ffffff"
                 },
-                "business_card_name": {
+                "businessCardBackgroundImage": {
+                    "type": "string",
+                    "example": "https://example.com/image.png"
+                },
+                "businessCardName": {
                     "type": "string",
                     "example": "Business Card Name"
                 },
-                "business_card_parts_coordinate": {
+                "businessCardPartsCoordinate": {
                     "description": "business card",
                     "allOf": [
                         {
@@ -1279,12 +1284,7 @@ const docTemplate = `{
                         }
                     ]
                 },
-                "color_code": {
-                    "description": "background",
-                    "type": "string",
-                    "example": "#ffffff"
-                },
-                "company_name": {
+                "companyName": {
                     "type": "string",
                     "example": "Company Name"
                 },
@@ -1292,47 +1292,48 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Department"
                 },
-                "description": {
-                    "type": "string",
-                    "example": "This is a description"
-                },
-                "display_name": {
+                "displayName": {
                     "type": "string",
                     "example": "Display Name"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "sample@example.com"
                 },
                 "id": {
                     "type": "string"
                 },
-                "image_path": {
-                    "type": "string",
-                    "example": "https://example.com/image.png"
-                },
-                "model_path": {
-                    "description": "ar assets",
-                    "type": "string",
-                    "example": "https://example.com/model.glb"
-                },
-                "official_position": {
+                "officialPosition": {
                     "type": "string",
                     "example": "Official Position"
                 },
-                "phone_number": {
+                "phoneNumber": {
                     "type": "string",
                     "example": "080-1234-5678"
                 },
-                "postal_code": {
+                "postalCode": {
                     "type": "string",
                     "example": "123-4567"
+                },
+                "speakingAudioPath": {
+                    "type": "string",
+                    "example": "https://example.com/audio.mp3"
+                },
+                "speakingDescription": {
+                    "type": "string",
+                    "example": "This is a description"
+                },
+                "threeDimentionalModel": {
+                    "description": "ar assets",
+                    "type": "string",
+                    "example": "https://example.com/model.glb"
                 }
             }
         },
         "dto.CreateUserRequest": {
             "type": "object",
             "properties": {
-                "is_toured": {
+                "isToured": {
                     "type": "boolean",
                     "x-nullable": true,
                     "example": false
@@ -1356,10 +1357,10 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "is_toured": {
+                "isToured": {
                     "type": "boolean"
                 },
-                "recorded_model_path": {
+                "recordedModelPath": {
                     "type": "string"
                 }
             }

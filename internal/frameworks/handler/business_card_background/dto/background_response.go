@@ -2,6 +2,6 @@ package dto
 
 type BackgroundResponse struct {
 	ID                          string `json:"id"`
-	BusinessCardBackgroundColor string `json:"business_card_background_color" example:"#ffffff"`
-	BusinessCardBackgroundImage string `json:"business_card_background_image" example:"url"`
+	BusinessCardBackgroundColor string `json:"businessCardBackgroundColor" example:"#ffffff"`
+	BusinessCardBackgroundImage string `json:"businessCardBackgroundImage" example:"url"`
 }
