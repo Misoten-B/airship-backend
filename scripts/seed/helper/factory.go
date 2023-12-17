@@ -1,3 +1,4 @@
+//nolint:gomnd // factoryだから許して
 package helper
 
 import (
