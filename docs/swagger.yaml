@@ -112,45 +112,57 @@ definitions:
     type: object
   dto.BusinessCardResponse:
     properties:
-      accessCount:
+      access_count:
+        example: 0
         type: integer
       address:
+        example: Tokyo
         type: string
-      businessCardBackgroundColor:
-        description: background
-        example: '#ffffff'
+      audio_path:
+        example: https://example.com/audio.mp3
         type: string
-      businessCardBackgroundImage:
-        example: url
+      business_card_name:
+        example: Business Card Name
         type: string
-      businessCardName:
-        type: string
-      businessCardPartsCoordinate:
+      business_card_parts_coordinate:
         allOf:
         - $ref: '#/definitions/dto.BusinessCardPartsCoordinate'
         description: business card
-      companyName:
+      color_code:
+        description: background
+        example: '#ffffff'
+        type: string
+      company_name:
+        example: Company Name
         type: string
       department:
+        example: Department
         type: string
-      displayName:
+      description:
+        example: This is a description
+        type: string
+      display_name:
+        example: Display Name
         type: string
       email:
         type: string
       id:
         type: string
-      officialPosition:
+      image_path:
+        example: https://example.com/image.png
         type: string
-      phoneNumber:
-        type: string
-      postalCode:
-        type: string
-      speakingAudioPath:
-        type: string
-      speakingDescription:
-        type: string
-      threeDimentionalModel:
+      model_path:
         description: ar assets
+        example: https://example.com/model.glb
+        type: string
+      official_position:
+        example: Official Position
+        type: string
+      phone_number:
+        example: 080-1234-5678
+        type: string
+      postal_code:
+        example: 123-4567
         type: string
     type: object
   dto.CreateUserRequest:

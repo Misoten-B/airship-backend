@@ -1247,25 +1247,23 @@
         "dto.BusinessCardResponse": {
             "type": "object",
             "properties": {
-                "accessCount": {
-                    "type": "integer"
+                "access_count": {
+                    "type": "integer",
+                    "example": 0
                 },
                 "address": {
-                    "type": "string"
-                },
-                "businessCardBackgroundColor": {
-                    "description": "background",
                     "type": "string",
-                    "example": "#ffffff"
+                    "example": "Tokyo"
                 },
-                "businessCardBackgroundImage": {
+                "audio_path": {
                     "type": "string",
-                    "example": "url"
+                    "example": "https://example.com/audio.mp3"
                 },
-                "businessCardName": {
-                    "type": "string"
+                "business_card_name": {
+                    "type": "string",
+                    "example": "Business Card Name"
                 },
-                "businessCardPartsCoordinate": {
+                "business_card_parts_coordinate": {
                     "description": "business card",
                     "allOf": [
                         {
@@ -1273,14 +1271,26 @@
                         }
                     ]
                 },
-                "companyName": {
-                    "type": "string"
+                "color_code": {
+                    "description": "background",
+                    "type": "string",
+                    "example": "#ffffff"
+                },
+                "company_name": {
+                    "type": "string",
+                    "example": "Company Name"
                 },
                 "department": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Department"
                 },
-                "displayName": {
-                    "type": "string"
+                "description": {
+                    "type": "string",
+                    "example": "This is a description"
+                },
+                "display_name": {
+                    "type": "string",
+                    "example": "Display Name"
                 },
                 "email": {
                     "type": "string"
@@ -1288,24 +1298,26 @@
                 "id": {
                     "type": "string"
                 },
-                "officialPosition": {
-                    "type": "string"
+                "image_path": {
+                    "type": "string",
+                    "example": "https://example.com/image.png"
                 },
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "postalCode": {
-                    "type": "string"
-                },
-                "speakingAudioPath": {
-                    "type": "string"
-                },
-                "speakingDescription": {
-                    "type": "string"
-                },
-                "threeDimentionalModel": {
+                "model_path": {
                     "description": "ar assets",
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://example.com/model.glb"
+                },
+                "official_position": {
+                    "type": "string",
+                    "example": "Official Position"
+                },
+                "phone_number": {
+                    "type": "string",
+                    "example": "080-1234-5678"
+                },
+                "postal_code": {
+                    "type": "string",
+                    "example": "123-4567"
                 }
             }
         },

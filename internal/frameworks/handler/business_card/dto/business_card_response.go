@@ -3,26 +3,26 @@ package dto
 import "github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 
 type BusinessCardResponse struct {
-	ID string
+	ID string `json:"id"`
 	// background
-	BusinessCardBackgroundColor string `example:"#ffffff"`
-	BusinessCardBackgroundImage string `example:"url"`
+	BusinessCardBackgroundColor string `json:"color_code" example:"#ffffff"`
+	BusinessCardBackgroundImage string `json:"image_path" example:"https://example.com/image.png"`
 	// ar assets
-	ThreeDimentionalModel string
-	SpeakingDescription   string
-	SpeakingAudioPath     string
+	ThreeDimentionalModel string `json:"model_path" example:"https://example.com/model.glb"`
+	SpeakingDescription   string `json:"description" example:"This is a description"`
+	SpeakingAudioPath     string `json:"audio_path" example:"https://example.com/audio.mp3"`
 	// business card
-	BusinessCardPartsCoordinate BusinessCardPartsCoordinate
-	BusinessCardName            string
-	DisplayName                 string
-	CompanyName                 string
-	Department                  string
-	OfficialPosition            string
-	PhoneNumber                 string
-	Email                       string
-	PostalCode                  string
-	Address                     string
-	AccessCount                 int
+	BusinessCardPartsCoordinate BusinessCardPartsCoordinate `json:"business_card_parts_coordinate"`
+	BusinessCardName            string                      `json:"business_card_name" example:"Business Card Name"`
+	DisplayName                 string                      `json:"display_name" example:"Display Name"`
+	CompanyName                 string                      `json:"company_name" example:"Company Name"`
+	Department                  string                      `json:"department" example:"Department"`
+	OfficialPosition            string                      `json:"official_position" example:"Official Position"`
+	PhoneNumber                 string                      `json:"phone_number" example:"080-1234-5678"`
+	Email                       string                      `json:"email" example:"sample@example.com"`
+	PostalCode                  string                      `json:"postal_code" example:"123-4567"`
+	Address                     string                      `json:"address" example:"Tokyo"`
+	AccessCount                 int                         `json:"access_count" example:"0"`
 }
 
 type BusinessCardPartsCoordinate struct {
