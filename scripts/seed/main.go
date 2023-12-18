@@ -24,7 +24,6 @@ func main() {
 		// 本番環境
 		seedPRD(db)
 	}
-
 }
 
 func seed(db *gorm.DB) {
