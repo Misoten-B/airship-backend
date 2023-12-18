@@ -6,28 +6,16 @@ import (
 )
 
 type AppModelPRD struct {
-	User                              *model.User
 	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
-	PersonalThreeDimentionalModel     *model.PersonalThreeDimentionalModel
 	ThreeDimentionalModels            []*model.ThreeDimentionalModel
-	SpeakingAsset                     *model.SpeakingAsset
-	ARAsset                           *model.ARAsset
 	BusinessCardBackgroundTemplate    []*model.BusinessCardBackgroundTemplate
-	PersonalBusinessCardBackground    *model.PersonalBusinessCardBackground
 	BusinessCardBackgrounds           []*model.BusinessCardBackground
 	BusinessCardPartsCoordinate       *model.BusinessCardPartsCoordinate
-	BusinessCard                      *model.BusinessCard
 }
 
 func NewAppModelPRD() *AppModelPRD {
-	user := newUserPRD()
-
 	threeDimentionalModels := newThreeDimentionalModelsPRD()
 	threeDimentionalModelTemplate := newThreeDimentionalModelTemplatePRD(threeDimentionalModels[0].ID)
-	personalThreeDimentionalModel := newPersonalThreeDimentionalModelPRD()
-
-	speakingAsset := newSpeakingAssetPRD()
-	arAsset := newARAssetPRD()
 
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
@@ -51,39 +39,22 @@ func NewAppModelPRD() *AppModelPRD {
 		{ID: businessCardBackgrounds[1].ID},
 		{ID: businessCardBackgrounds[2].ID},
 	}
-	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{}
 
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinatePRD()
 
-	businessCard := newBusinessCardPRD()
-
 	return &AppModelPRD{
-		User:                              user,
 		TempThreeDimentionalModelTemplate: threeDimentionalModelTemplate,
-		PersonalThreeDimentionalModel:     personalThreeDimentionalModel,
 		ThreeDimentionalModels:            threeDimentionalModels,
-		SpeakingAsset:                     speakingAsset,
-		ARAsset:                           arAsset,
 		BusinessCardBackgroundTemplate:    businessCardBackgroundTemplate,
-		PersonalBusinessCardBackground:    personalBusinessCardBackground,
 		BusinessCardBackgrounds:           businessCardBackgrounds,
 		BusinessCardPartsCoordinate:       businessCardPartsCoordinate,
-		BusinessCard:                      businessCard,
 	}
-}
-
-func newUserPRD() *model.User {
-	return &model.User{}
 }
 
 func newThreeDimentionalModelTemplatePRD(id string) *model.ThreeDimentionalModelTemplate {
 	return &model.ThreeDimentionalModelTemplate{
 		ID: id,
 	}
-}
-
-func newPersonalThreeDimentionalModelPRD() *model.PersonalThreeDimentionalModel {
-	return &model.PersonalThreeDimentionalModel{}
 }
 
 func newThreeDimentionalModelsPRD() []*model.ThreeDimentionalModel {
@@ -98,21 +69,13 @@ func newThreeDimentionalModelsPRD() []*model.ThreeDimentionalModel {
 		},
 		{
 			ID:        newID(),
-			ModelPath: "dog.glb",
+			ModelPath: "pinguin.glb",
 		},
 		{
 			ID:        newID(),
-			ModelPath: "dog.glb",
+			ModelPath: "tiger.glb",
 		},
 	}
-}
-
-func newSpeakingAssetPRD() *model.SpeakingAsset {
-	return &model.SpeakingAsset{}
-}
-
-func newARAssetPRD() *model.ARAsset {
-	return &model.ARAsset{}
 }
 
 func newBusinessCardPartsCoordinatePRD() *model.BusinessCardPartsCoordinate {
@@ -137,8 +100,4 @@ func newBusinessCardPartsCoordinatePRD() *model.BusinessCardPartsCoordinate {
 		QRCodeX:           760,
 		QRCodeY:           209,
 	}
-}
-
-func newBusinessCardPRD() *model.BusinessCard {
-	return &model.BusinessCard{}
 }
