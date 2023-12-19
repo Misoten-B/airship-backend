@@ -21,9 +21,18 @@ func NewAzureThreeDimentionalModelStorage(driver *drivers.AzureBlobDriver) *Azur
 }
 
 func (s *AzureThreeDimentionalModelStorage) Save(
-	threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel,
+	threeDimentionalModel threedimentionalmodel.ThreeDimensionalModelFile,
 ) error {
 	err := s.dirver.SaveBlob(containerName, threeDimentionalModel.File())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *AzureThreeDimentionalModelStorage) Delete(filePath shared.FilePath) error {
+	err := s.dirver.DeleteBlob(containerName, filePath.Value())
 	if err != nil {
 		return err
 	}

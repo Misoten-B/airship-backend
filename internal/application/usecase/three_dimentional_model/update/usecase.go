@@ -1,9 +1,10 @@
-package create
+package update
 
 import (
 	"mime/multipart"
 	"net/http"
 
+	tdmappservice "github.com/Misoten-B/airship-backend/internal/application/applicationservice/threedimensionalmodel"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
@@ -12,20 +13,17 @@ import (
 )
 
 type Usecase interface {
-	Execute(input Input) (Output, error)
+	Execute(input Input) error
 }
 
 type Input struct {
+	ID         string
 	UserID     string
 	File       multipart.File
 	FileHeader *multipart.FileHeader
 }
 
-type Output struct {
-	ID string
-}
-
-// Interactor はARアセット作成ユースケースの実装です。
+// Interactor はARアセット更新ユースケースの実装です。
 type Interactor struct {
 	threeDimentionalModelStorage    tdmservice.ThreeDimentionalModelStorage
 	threeDimentionalModelRepository tdmservice.ThreeDimentionalModelRepository
@@ -41,56 +39,48 @@ func NewInteractor(
 	}
 }
 
-// Execute はARアセット作成ユースケースを実行します。
-func (i *Interactor) Execute(input Input) (Output, error) {
-	var output Output
-
-	//	バリデーション&オブジェクト生成
+// Execute はARアセット更新ユースケースを実行します。
+func (i *Interactor) Execute(input Input) error {
+	// バリデーション & オブジェクト生成
+	tdmID := id.ReconstructID(input.ID)
 	userID := id.ReconstructID(input.UserID)
 
 	file := file.NewMyFile(input.File, input.FileHeader)
-	modelFile, err := tdmdomain.NewThreeDimensionalModelFile(file)
+
+	// 3Dモデルの取得
+	threeDimensionalModel, err := i.threeDimentionalModelRepository.Find(tdmID)
 	if err != nil {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			err.Error(),
-			http.StatusBadRequest,
+		msg := "failed to find 3D model"
+		return customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
 		)
 	}
 
-	threeDimentionalModel, err := tdmdomain.NewThreeDimensionalModel(
-		userID,
-		modelFile.Path(),
-	)
-	if err != nil {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			err.Error(),
-			http.StatusBadRequest,
+	// 権限確認
+	if !tdmappservice.HasUpdatePermission(*threeDimensionalModel, userID) {
+		msg := "you don't have permission to update this 3D model"
+		return customerror.NewApplicationErrorWithoutDetails(
+			msg,
+			http.StatusForbidden,
 		)
 	}
 
-	//  3Dモデルの保存
+	// 3Dモデルファイルの復元
+	filePath := threeDimensionalModel.Path()
+	modelFile := tdmdomain.ReconstructThreeDimensionalModelFile(file, filePath)
+
+	// 3Dモデルの更新
 	err = i.threeDimentionalModelStorage.Save(modelFile)
 	if err != nil {
-		msg := "failed to save 3d model file"
-		return output, customerror.NewApplicationError(
+		msg := "failed to save 3D model file"
+		return customerror.NewApplicationError(
 			err,
 			msg,
 			http.StatusInternalServerError,
 		)
 	}
 
-	//  永続化
-	err = i.threeDimentionalModelRepository.Save(threeDimentionalModel)
-	if err != nil {
-		msg := "failed to save 3d model"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
-
-	return Output{
-		ID: threeDimentionalModel.ID().String(),
-	}, nil
+	return nil
 }

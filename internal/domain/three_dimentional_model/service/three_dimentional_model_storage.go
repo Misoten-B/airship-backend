@@ -9,7 +9,8 @@ import (
 )
 
 type ThreeDimentionalModelStorage interface {
-	Save(threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel) error
+	Save(threeDimentionalModel threedimentionalmodel.ThreeDimensionalModelFile) error
+	Delete(filePath shared.FilePath) error
 	GetModelURL(modelName string) (string, error)
 	GetContainerFullPath() (shared.ContainerFullPath, error)
 }
@@ -20,8 +21,14 @@ func NewMockThreeDimentionalModelStorage() *MockThreeDimentionalModelStorage {
 	return &MockThreeDimentionalModelStorage{}
 }
 
-func (s *MockThreeDimentionalModelStorage) Save(_ threedimentionalmodel.ThreeDimentionalModel) error {
+func (s *MockThreeDimentionalModelStorage) Save(_ threedimentionalmodel.ThreeDimensionalModelFile) error {
 	log.Println("Mock 3D Model Storage - Save")
+
+	return nil
+}
+
+func (s *MockThreeDimentionalModelStorage) Delete(path shared.FilePath) error {
+	log.Printf("Mock 3D Model Storage - Delete: %s", path.Value())
 
 	return nil
 }

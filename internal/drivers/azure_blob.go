@@ -42,6 +42,20 @@ func (d *AzureBlobDriver) SaveBlob(containerName string, file *file.File) error 
 	return nil
 }
 
+func (d *AzureBlobDriver) DeleteBlob(containerName, blobName string) error {
+	serviceClient, err := d.newClient()
+	if err != nil {
+		return err
+	}
+
+	_, err = serviceClient.DeleteBlob(context.Background(), containerName, blobName, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (d *AzureBlobDriver) GetBlobURL(containerName, blobName string) (string, error) {
 	serviceClient, err := d.newClient()
 	if err != nil {
