@@ -1360,6 +1360,9 @@ const docTemplate = `{
                 },
                 "recordedModelPath": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         }
