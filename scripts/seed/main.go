@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
+
 	"github.com/Misoten-B/airship-backend/internal/drivers/database"
 	"github.com/Misoten-B/airship-backend/scripts/seed/helper"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -13,6 +16,17 @@ func main() {
 		panic(err)
 	}
 
+	value, ok := os.LookupEnv("DEV_MODE")
+	if ok && value == "true" {
+		// 開発環境
+		seed(db)
+	} else {
+		// 本番環境
+		seedPRD(db)
+	}
+}
+
+func seed(db *gorm.DB) {
 	appModel := helper.NewAppModel()
 
 	// User
@@ -47,4 +61,23 @@ func main() {
 
 	// BusinessCard
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCard)
+}
+
+func seedPRD(db *gorm.DB) {
+	appModel := helper.NewAppModelPRD()
+
+	// ThreeDimentionalModel
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.ThreeDimentionalModels)
+
+	// ThreeDimentionalModelTemplate
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.TempThreeDimentionalModelTemplate)
+
+	// BusinessCardBackground
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgrounds)
+
+	// BusinessCardBackgroundTemplate
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgroundTemplate)
+
+	// BusinessCardPartsCoordinate
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardPartsCoordinate)
 }
