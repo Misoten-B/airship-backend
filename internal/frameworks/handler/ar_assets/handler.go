@@ -46,12 +46,14 @@ func CreateArAssets(c *gin.Context) {
 	// リクエスト取得
 	request := dto.CreateArAssetsRequest{}
 	if err = c.ShouldBind(&request); err != nil {
+		log.Printf("error: %v", err)
 		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
 		return
 	}
 
 	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
 	if err != nil {
+		log.Printf("error!!!: %v", err)
 		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
 		return
 	}
