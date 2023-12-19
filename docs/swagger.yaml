@@ -188,6 +188,8 @@ definitions:
         type: boolean
       recordedModelPath:
         type: string
+      status:
+        type: integer
     type: object
 host: localhost:8080
 info:

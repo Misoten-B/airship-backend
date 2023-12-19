@@ -1352,6 +1352,9 @@
                 },
                 "recordedModelPath": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         }

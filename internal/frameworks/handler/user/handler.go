@@ -47,6 +47,7 @@ func CreateUser(c *gin.Context) {
 		ID:                uid,
 		RecordedModelPath: "",
 		IsToured:          false,
+		Status:            model.GormStatusNone,
 	}
 
 	db, err := frameworks.GetDB(c)
@@ -65,6 +66,7 @@ func CreateUser(c *gin.Context) {
 		ID:                user.ID,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
+		Status:            user.Status,
 	})
 }
 
@@ -98,6 +100,7 @@ func ReadUserByID(c *gin.Context) {
 		ID:                user.ID,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
+		Status:            user.Status,
 	})
 }
 
@@ -158,6 +161,7 @@ func UpdateUser(c *gin.Context) {
 		ID:                uid,
 		RecordedModelPath: "",
 		IsToured:          request.IsToured,
+		Status:            model.GormStatusInProgress,
 	}
 
 	err = db.Model(&user).Updates(user).Error
@@ -170,6 +174,7 @@ func UpdateUser(c *gin.Context) {
 		ID:                user.ID,
 		RecordedModelPath: user.RecordedModelPath,
 		IsToured:          user.IsToured,
+		Status:            user.Status,
 	})
 }
 
