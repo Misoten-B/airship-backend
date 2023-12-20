@@ -22,9 +22,9 @@ func Register(r *gin.RouterGroup) {
 	users.Use(middleware.Guard(client))
 	{
 		users.POST("", userHandler.CreateUser)
-		users.GET("/:user_id", userHandler.ReadUserByID)
-		users.PUT("/:user_id", userHandler.UpdateUser)
-		users.DELETE("/:user_id", userHandler.DeleteUser)
+		users.GET("/myprofile", userHandler.ReadUserByID)
+		users.PUT("", userHandler.UpdateUser)
+		users.DELETE("", userHandler.DeleteUser)
 		users.POST("/:user_id/voice_model/status/done", userHandler.PostVoiceModelStatusDone)
 		users.POST("/:user_id/voice_model/status/failed", userHandler.PostVoiceModelStatusFailed)
 		businessCardBackgroundRegister(users)
