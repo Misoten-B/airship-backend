@@ -60,13 +60,18 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
 	uid := id.ReconstructID(input.UID)
 
-	file := file.NewMyFile(input.File, input.FileHeader)
-	qrCodeImage, err := arassets.NewQRCodeImage(file)
-	if err != nil {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			err.Error(),
-			http.StatusBadRequest,
-		)
+	var qrCodeImage arassets.QRCodeImage
+	if input.File != nil {
+		var err error
+
+		file := file.NewMyFile(input.File, input.FileHeader)
+		qrCodeImage, err = arassets.NewQRCodeImage(file)
+		if err != nil {
+			return output, customerror.NewApplicationErrorWithoutDetails(
+				err.Error(),
+				http.StatusBadRequest,
+			)
+		}
 	}
 
 	speakingAsset, err := arassets.NewSpeakingAsset(uid, input.SpeakingDescription)
@@ -136,14 +141,16 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// QRコードアイコン画像の保存
-	err = u.qrCodeImageStorage.Save(qrCodeImage)
-	if err != nil {
-		msg := "failed to save QR code image"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
+	if input.File != nil {
+		err = u.qrCodeImageStorage.Save(qrCodeImage)
+		if err != nil {
+			msg := "failed to save QR code image"
+			return output, customerror.NewApplicationError(
+				err,
+				msg,
+				http.StatusInternalServerError,
+			)
+		}
 	}
 
 	// データベース保存

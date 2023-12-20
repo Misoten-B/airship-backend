@@ -50,9 +50,8 @@ func CreateArAssets(c *gin.Context) {
 		return
 	}
 
-	// TODO: errors.isで判定できるが、ユースケースでパニックになる
 	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
-	if err != nil {
+	if err != nil && !errors.Is(err, http.ErrMissingFile) {
 		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
 		return
 	}
