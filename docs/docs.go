@@ -86,7 +86,8 @@ const docTemplate = `{
                         "type": "file",
                         "description": "Audio file to be uploaded",
                         "name": "recorded_voice",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "boolean",
@@ -227,13 +228,15 @@ const docTemplate = `{
                         "type": "string",
                         "example": "description",
                         "name": "speakingDescription",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "url",
                         "name": "threeDimentionalID",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -308,13 +311,15 @@ const docTemplate = `{
                         "type": "string",
                         "example": "description",
                         "name": "speakingDescription",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "url",
                         "name": "threeDimentionalID",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",

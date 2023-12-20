@@ -60,13 +60,18 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
 	uid := id.ReconstructID(input.UID)
 
-	file := file.NewMyFile(input.File, input.FileHeader)
-	qrCodeImage, err := arassets.NewQRCodeImage(file)
-	if err != nil {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			err.Error(),
-			http.StatusBadRequest,
-		)
+	var qrCodeImage arassets.QRCodeImage
+	if input.File != nil {
+		var err error
+
+		file := file.NewMyFile(input.File, input.FileHeader)
+		qrCodeImage, err = arassets.NewQRCodeImage(file)
+		if err != nil {
+			return output, customerror.NewApplicationErrorWithoutDetails(
+				err.Error(),
+				http.StatusBadRequest,
+			)
+		}
 	}
 
 	speakingAsset, err := arassets.NewSpeakingAsset(uid, input.SpeakingDescription)
@@ -136,28 +141,47 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// QRコードアイコン画像の保存
-	err = u.qrCodeImageStorage.Save(qrCodeImage)
-	if err != nil {
-		msg := "failed to save QR code image"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
+	if input.File != nil {
+		err = u.saveStorage(qrCodeImage)
+		if err != nil {
+			return output, err
+		}
 	}
 
 	// データベース保存
-	err = u.arAssetsRepository.Save(arAssets)
+	err = u.saveModel(arAssets)
 	if err != nil {
-		msg := "failed to save AR assets"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
+		return output, err
 	}
 
 	return ARAssetsCreateOutput{
 		ID: arAssets.ID().String(),
 	}, nil
+}
+
+func (u *ARAssetsUsecaseImpl) saveStorage(qrCodeImage arassets.QRCodeImage) error {
+	err := u.qrCodeImageStorage.Save(qrCodeImage)
+
+	if err != nil {
+		msg := "failed to save QR code image"
+		return customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
+	}
+	return nil
+}
+
+func (u *ARAssetsUsecaseImpl) saveModel(arAssets arassets.ARAssets) error {
+	err := u.arAssetsRepository.Save(arAssets)
+	if err != nil {
+		msg := "failed to save AR assets"
+		return customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
+	}
+	return nil
 }

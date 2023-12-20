@@ -1,6 +1,6 @@
 package dto
 
 type CreateArAssetsRequest struct {
-	SpeakingDescription string `form:"speakingDescription" example:"description"`
-	ThreeDimentionalID  string `form:"threeDimentionalID" example:"url"`
+	SpeakingDescription string `form:"speakingDescription" example:"description" binding:"required"`
+	ThreeDimentionalID  string `form:"threeDimentionalID" example:"url" binding:"required"`
 }

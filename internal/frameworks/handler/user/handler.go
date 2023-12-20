@@ -109,7 +109,7 @@ func ReadUserByID(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
-// @Param recorded_voice formData file false "Audio file to be uploaded"
+// @Param recorded_voice formData file true "Audio file to be uploaded"
 // @Param CreateUserRequest formData dto.CreateUserRequest false "update user"
 // @Success 200 {object} dto.UserResponse
 func UpdateUser(c *gin.Context) {
