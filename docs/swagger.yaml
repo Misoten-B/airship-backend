@@ -275,6 +275,7 @@ paths:
       - description: Audio file to be uploaded
         in: formData
         name: recorded_voice
+        required: true
         type: file
       - example: false
         in: formData
@@ -351,10 +352,12 @@ paths:
       - example: description
         in: formData
         name: speakingDescription
+        required: true
         type: string
       - example: url
         in: formData
         name: threeDimentionalID
+        required: true
         type: string
       responses:
         "201":
@@ -420,10 +423,12 @@ paths:
       - example: description
         in: formData
         name: speakingDescription
+        required: true
         type: string
       - example: url
         in: formData
         name: threeDimentionalID
+        required: true
         type: string
       - description: ArAssets ID
         in: path
