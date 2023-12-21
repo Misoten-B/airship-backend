@@ -1,4 +1,4 @@
-FROM golang:1.21.3-alpine3.17 AS base
+FROM golang:1.21.4 AS base
 
 ARG SA_TYPE
 ARG SA_PROJECT_ID
