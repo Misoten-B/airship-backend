@@ -8,7 +8,7 @@ type CreateBusinessCardRequest struct {
 	// business card
 	BusinessCardPartsCoordinateID string `form:"businessCardPartsCoordinateId" example:"id" binding:"required"`
 	BusinessCardName              string `form:"businessCardName,omitempty" example:"会社"`
-	DisplayName                   string `form:"displayName,omitempty" example:"名前"`
+	DisplayName                   string `form:"displayName,omitempty" example:"名前"  binding:"required"`
 	CompanyName                   string `form:"companyName,omitempty" example:"会社名"`
 	Department                    string `form:"department,omitempty" example:"部署"`
 	OfficialPosition              string `form:"officialPosition,omitempty" example:"役職"`

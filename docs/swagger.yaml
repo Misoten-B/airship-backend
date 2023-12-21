@@ -200,6 +200,7 @@ definitions:
     required:
     - businessCardBackgroundColor
     - businessCardPartsCoordinate
+    - displayName
     - id
     - speakingAudioPath
     - speakingDescription
@@ -626,6 +627,7 @@ paths:
       - example: 名前
         in: formData
         name: displayName
+        required: true
         type: string
       - example: sample@example.com
         in: formData
@@ -749,6 +751,7 @@ paths:
       - example: 名前
         in: formData
         name: displayName
+        required: true
         type: string
       - example: sample@example.com
         in: formData

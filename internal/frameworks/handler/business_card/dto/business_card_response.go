@@ -14,7 +14,7 @@ type BusinessCardResponse struct {
 	// business card
 	BusinessCardPartsCoordinate BusinessCardPartsCoordinate `json:"businessCardPartsCoordinate" binding:"required"`
 	BusinessCardName            string                      `json:"businessCardName" example:"Business Card Name"`
-	DisplayName                 string                      `json:"displayName" example:"Display Name"`
+	DisplayName                 string                      `json:"displayName" example:"Display Name" binding:"required"`
 	CompanyName                 string                      `json:"companyName" example:"Company Name"`
 	Department                  string                      `json:"department" example:"Department"`
 	OfficialPosition            string                      `json:"officialPosition" example:"Official Position"`

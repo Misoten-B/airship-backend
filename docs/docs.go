@@ -589,7 +589,8 @@ const docTemplate = `{
                         "type": "string",
                         "example": "名前",
                         "name": "displayName",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -747,7 +748,8 @@ const docTemplate = `{
                         "type": "string",
                         "example": "名前",
                         "name": "displayName",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
@@ -1277,6 +1279,7 @@ const docTemplate = `{
             "required": [
                 "businessCardBackgroundColor",
                 "businessCardPartsCoordinate",
+                "displayName",
                 "id",
                 "speakingAudioPath",
                 "speakingDescription",
