@@ -1,11 +1,20 @@
 services:
-  airship-backend:
+  golang:
     build:
       context: .
       target: dev
     ports:
-      - 2345:2345 # Delve debugger port
       - 8080:8080
     volumes:
       - ./:/app
-      
+    environment:
+      DB_HOST: database
+  database:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: airship
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
