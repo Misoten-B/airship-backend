@@ -35,19 +35,18 @@ EOF
 EOR
 
 FROM base AS dev
-RUN go install github.com/go-delve/delve/cmd/dlv@latest && \
-    go install github.com/cosmtrek/air@latest && \
+RUN go install github.com/cosmtrek/air@latest && \
     wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
 COPY . .
 CMD ["air", "-c", ".air.toml"]
 
 FROM base AS builder
 COPY . .
-RUN addgroup -g 10001 scratchgroup && \
-    adduser -u 10001 -G scratchgroup -D scratch
+RUN groupadd -g 10001 scratchgroup && \
+    useradd -u 10001 -g scratchgroup -m scratch
 
 RUN --mount=type=cache,target=/go/pkg/mod/ \
-    go build \
+    CGO_ENABLED=0 go build \
     -ldflags="-s -w" \
     -o golang-app \
     -trimpath
