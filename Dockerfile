@@ -55,6 +55,7 @@ FROM scratch AS runner
 COPY --from=builder /app/serviceAccountKey.json serviceAccountKey.json
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /app/golang-app golang-app
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 USER scratch
 EXPOSE 8080
 CMD ["/golang-app"]
