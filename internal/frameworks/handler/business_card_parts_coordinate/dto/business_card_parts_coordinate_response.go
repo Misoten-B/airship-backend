@@ -3,25 +3,25 @@ package dto
 import "github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 
 type BusinessCardPartsCoordinateResponse struct {
-	ID                string `json:"id"`
-	DisplayNameX      int    `json:"displayNameX"`
-	DisplayNameY      int    `json:"displayNameY"`
-	CompanyNameX      int    `json:"companyNameX"`
-	CompanyNameY      int    `json:"companyNameY"`
-	DepartmentX       int    `json:"departmentX"`
-	DepartmentY       int    `json:"departmentY"`
-	OfficialPositionX int    `json:"officialPositionX"`
-	OfficialPositionY int    `json:"officialPositionY"`
-	PhoneNumberX      int    `json:"phoneNumberX"`
-	PhoneNumberY      int    `json:"phoneNumberY"`
-	EmailX            int    `json:"emailX"`
-	EmailY            int    `json:"emailY"`
-	PostalCodeX       int    `json:"postalCodeX"`
-	PostalCodeY       int    `json:"postalCodeY"`
-	AddressX          int    `json:"addressX"`
-	AddressY          int    `json:"addressY"`
-	QrcodeX           int    `json:"qrcodeX"`
-	QrcodeY           int    `json:"qrcodeY"`
+	ID                string `json:"id" binding:"required"`
+	DisplayNameX      int    `json:"displayNameX" binding:"required"`
+	DisplayNameY      int    `json:"displayNameY" binding:"required"`
+	CompanyNameX      int    `json:"companyNameX" binding:"required"`
+	CompanyNameY      int    `json:"companyNameY" binding:"required"`
+	DepartmentX       int    `json:"departmentX" binding:"required"`
+	DepartmentY       int    `json:"departmentY" binding:"required"`
+	OfficialPositionX int    `json:"officialPositionX" binding:"required"`
+	OfficialPositionY int    `json:"officialPositionY" binding:"required"`
+	PhoneNumberX      int    `json:"phoneNumberX" binding:"required"`
+	PhoneNumberY      int    `json:"phoneNumberY" binding:"required"`
+	EmailX            int    `json:"emailX" binding:"required"`
+	EmailY            int    `json:"emailY" binding:"required"`
+	PostalCodeX       int    `json:"postalCodeX" binding:"required"`
+	PostalCodeY       int    `json:"postalCodeY" binding:"required"`
+	AddressX          int    `json:"addressX" binding:"required"`
+	AddressY          int    `json:"addressY" binding:"required"`
+	QrcodeX           int    `json:"qrcodeX" binding:"required"`
+	QrcodeY           int    `json:"qrcodeY" binding:"required"`
 }
 
 func ConvertToBCPCResponse(bcpc model.BusinessCardPartsCoordinate) BusinessCardPartsCoordinateResponse {

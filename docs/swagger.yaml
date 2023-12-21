@@ -4,6 +4,9 @@ definitions:
       id:
         example: id
         type: string
+      isCompleted:
+        example: true
+        type: boolean
       qrcodeImagePath:
         example: url
         type: string
@@ -16,6 +19,12 @@ definitions:
       threeDimentionalPath:
         example: url
         type: string
+    required:
+    - id
+    - isCompleted
+    - speakingAudioPath
+    - speakingDescription
+    - threeDimentionalPath
     type: object
   dto.BackgroundResponse:
     properties:
@@ -27,6 +36,9 @@ definitions:
         type: string
       id:
         type: string
+    required:
+    - businessCardBackgroundColor
+    - id
     type: object
   dto.BusinessCardPartsCoordinate:
     properties:
@@ -109,6 +121,26 @@ definitions:
         type: integer
       qrcodeY:
         type: integer
+    required:
+    - addressX
+    - addressY
+    - companyNameX
+    - companyNameY
+    - departmentX
+    - departmentY
+    - displayNameX
+    - displayNameY
+    - emailX
+    - emailY
+    - id
+    - officialPositionX
+    - officialPositionY
+    - phoneNumberX
+    - phoneNumberY
+    - postalCodeX
+    - postalCodeY
+    - qrcodeX
+    - qrcodeY
     type: object
   dto.BusinessCardResponse:
     properties:
@@ -165,13 +197,20 @@ definitions:
         description: ar assets
         example: https://example.com/model.glb
         type: string
+    required:
+    - businessCardBackgroundColor
+    - businessCardPartsCoordinate
+    - displayName
+    - id
+    - speakingAudioPath
+    - speakingDescription
+    - threeDimentionalModel
     type: object
   dto.CreateUserRequest:
     properties:
       isToured:
         example: false
         type: boolean
-        x-nullable: true
     type: object
   dto.ThreeDimentionalResponse:
     properties:
@@ -179,6 +218,9 @@ definitions:
         type: string
       path:
         type: string
+    required:
+    - id
+    - path
     type: object
   dto.UserResponse:
     properties:
@@ -190,6 +232,11 @@ definitions:
         type: string
       status:
         type: integer
+    required:
+    - id
+    - isToured
+    - recordedModelPath
+    - status
     type: object
 host: localhost:8080
 info:
@@ -281,7 +328,6 @@ paths:
         in: formData
         name: isToured
         type: boolean
-        x-nullable: true
       responses:
         "200":
           description: OK
@@ -548,65 +594,57 @@ paths:
         in: formData
         name: address
         type: string
-        x-nullable: true
       - description: ar assets
         example: ar_assets_id
         in: formData
         name: arAssetsId
+        required: true
         type: string
-        x-nullable: true
       - description: background
         example: id
         in: formData
         name: businessCardBackgroundId
+        required: true
         type: string
-        x-nullable: true
       - example: 会社
         in: formData
         name: businessCardName
         type: string
-        x-nullable: true
       - description: business card
         example: id
         in: formData
         name: businessCardPartsCoordinateId
+        required: true
         type: string
-        x-nullable: true
       - example: 会社名
         in: formData
         name: companyName
         type: string
-        x-nullable: true
       - example: 部署
         in: formData
         name: department
         type: string
-        x-nullable: true
       - example: 名前
         in: formData
         name: displayName
+        required: true
         type: string
-        x-nullable: true
       - example: sample@example.com
         in: formData
         name: email
         type: string
-        x-nullable: true
       - example: 役職
         in: formData
         name: officialPosition
         type: string
-        x-nullable: true
       - example: 090-1234-5678
         in: formData
         name: phoneNumber
         type: string
-        x-nullable: true
       - example: 123-4567
         in: formData
         name: postalCode
         type: string
-        x-nullable: true
       responses:
         "201":
           description: Created
@@ -680,65 +718,57 @@ paths:
         in: formData
         name: address
         type: string
-        x-nullable: true
       - description: ar assets
         example: ar_assets_id
         in: formData
         name: arAssetsId
+        required: true
         type: string
-        x-nullable: true
       - description: background
         example: id
         in: formData
         name: businessCardBackgroundId
+        required: true
         type: string
-        x-nullable: true
       - example: 会社
         in: formData
         name: businessCardName
         type: string
-        x-nullable: true
       - description: business card
         example: id
         in: formData
         name: businessCardPartsCoordinateId
+        required: true
         type: string
-        x-nullable: true
       - example: 会社名
         in: formData
         name: companyName
         type: string
-        x-nullable: true
       - example: 部署
         in: formData
         name: department
         type: string
-        x-nullable: true
       - example: 名前
         in: formData
         name: displayName
+        required: true
         type: string
-        x-nullable: true
       - example: sample@example.com
         in: formData
         name: email
         type: string
-        x-nullable: true
       - example: 役職
         in: formData
         name: officialPosition
         type: string
-        x-nullable: true
       - example: 090-1234-5678
         in: formData
         name: phoneNumber
         type: string
-        x-nullable: true
       - example: 123-4567
         in: formData
         name: postalCode
         type: string
-        x-nullable: true
       responses:
         "200":
           description: OK

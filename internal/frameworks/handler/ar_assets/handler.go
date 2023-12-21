@@ -162,6 +162,7 @@ func ReadArAssetsByID(c *gin.Context) {
 		SpeakingAudioPath:    output.SpeakingAudioPath,
 		ThreeDimentionalPath: output.ThreeDimentionalPath,
 		QrcodeIconImagePath:  output.QrcodeIconImagePath,
+		IsCompleted:          output.IsCompleted,
 	})
 }
 
@@ -221,6 +222,7 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 		SpeakingDescription:  output.SpeakingDescription,
 		SpeakingAudioPath:    output.SpeakingAudioPath,
 		ThreeDimentionalPath: output.ThreeDimentionalPath,
+		IsCompleted:          output.IsCompleted,
 	})
 }
 
@@ -283,6 +285,7 @@ func ReadAllArAssets(c *gin.Context) {
 			SpeakingAudioPath:    item.SpeakingAudioPath,
 			ThreeDimentionalPath: item.ThreeDimentionalPath,
 			QrcodeIconImagePath:  item.QrcodeIconImagePath,
+			IsCompleted:          item.IsCompleted,
 		})
 	}
 

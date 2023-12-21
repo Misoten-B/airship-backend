@@ -23,6 +23,7 @@ type Output struct {
 	SpeakingDescription  string
 	SpeakingAudioPath    string
 	ThreeDimentionalPath string
+	IsCompleted          bool
 }
 
 // Interactor はARアセットID検索（Public）ユースケースの実装です。
@@ -67,13 +68,6 @@ func (i *Interactor) Execute(
 		)
 	}
 
-	if !model.IsCreated() {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			"AR assets has not been created",
-			http.StatusBadRequest,
-		)
-	}
-
 	// アクセスカウントをインクリメント
 
 	// URL生成
@@ -102,5 +96,6 @@ func (i *Interactor) Execute(
 		SpeakingDescription:  model.SpeakingDescription(),
 		SpeakingAudioPath:    speakingAudioPath,
 		ThreeDimentionalPath: threeDimentionalPath,
+		IsCompleted:          model.IsCreated(),
 	}, nil
 }
