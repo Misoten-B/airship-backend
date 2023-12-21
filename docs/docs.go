@@ -1092,6 +1092,9 @@ const docTemplate = `{
     "definitions": {
         "dto.ArAssetsResponse": {
             "type": "object",
+            "required": [
+                "isCompleted"
+            ],
             "properties": {
                 "id": {
                     "type": "string",

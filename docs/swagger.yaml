@@ -19,6 +19,8 @@ definitions:
       threeDimentionalPath:
         example: url
         type: string
+    required:
+    - isCompleted
     type: object
   dto.BackgroundResponse:
     properties:
