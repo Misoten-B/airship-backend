@@ -92,7 +92,6 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "example": false,
-                        "x-nullable": true,
                         "name": "isToured",
                         "in": "formData"
                     }
@@ -541,87 +540,78 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "東京都渋谷区神南1-1-1",
-                        "x-nullable": true,
                         "name": "address",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "ar_assets_id",
-                        "x-nullable": true,
                         "description": "ar assets",
                         "name": "arAssetsId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "id",
-                        "x-nullable": true,
                         "description": "background",
                         "name": "businessCardBackgroundId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "会社",
-                        "x-nullable": true,
                         "name": "businessCardName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "id",
-                        "x-nullable": true,
                         "description": "business card",
                         "name": "businessCardPartsCoordinateId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "会社名",
-                        "x-nullable": true,
                         "name": "companyName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "部署",
-                        "x-nullable": true,
                         "name": "department",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "名前",
-                        "x-nullable": true,
                         "name": "displayName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "sample@example.com",
-                        "x-nullable": true,
                         "name": "email",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "役職",
-                        "x-nullable": true,
                         "name": "officialPosition",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "090-1234-5678",
-                        "x-nullable": true,
                         "name": "phoneNumber",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "123-4567",
-                        "x-nullable": true,
                         "name": "postalCode",
                         "in": "formData"
                     }
@@ -708,87 +698,78 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "example": "東京都渋谷区神南1-1-1",
-                        "x-nullable": true,
                         "name": "address",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "ar_assets_id",
-                        "x-nullable": true,
                         "description": "ar assets",
                         "name": "arAssetsId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "id",
-                        "x-nullable": true,
                         "description": "background",
                         "name": "businessCardBackgroundId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "会社",
-                        "x-nullable": true,
                         "name": "businessCardName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "id",
-                        "x-nullable": true,
                         "description": "business card",
                         "name": "businessCardPartsCoordinateId",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "string",
                         "example": "会社名",
-                        "x-nullable": true,
                         "name": "companyName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "部署",
-                        "x-nullable": true,
                         "name": "department",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "名前",
-                        "x-nullable": true,
                         "name": "displayName",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "sample@example.com",
-                        "x-nullable": true,
                         "name": "email",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "役職",
-                        "x-nullable": true,
                         "name": "officialPosition",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "090-1234-5678",
-                        "x-nullable": true,
                         "name": "phoneNumber",
                         "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "123-4567",
-                        "x-nullable": true,
                         "name": "postalCode",
                         "in": "formData"
                     }
@@ -1093,7 +1074,11 @@ const docTemplate = `{
         "dto.ArAssetsResponse": {
             "type": "object",
             "required": [
-                "isCompleted"
+                "id",
+                "isCompleted",
+                "speakingAudioPath",
+                "speakingDescription",
+                "threeDimentionalPath"
             ],
             "properties": {
                 "id": {
@@ -1124,6 +1109,10 @@ const docTemplate = `{
         },
         "dto.BackgroundResponse": {
             "type": "object",
+            "required": [
+                "businessCardBackgroundColor",
+                "id"
+            ],
             "properties": {
                 "businessCardBackgroundColor": {
                     "type": "string",
@@ -1202,6 +1191,27 @@ const docTemplate = `{
         },
         "dto.BusinessCardPartsCoordinateResponse": {
             "type": "object",
+            "required": [
+                "addressX",
+                "addressY",
+                "companyNameX",
+                "companyNameY",
+                "departmentX",
+                "departmentY",
+                "displayNameX",
+                "displayNameY",
+                "emailX",
+                "emailY",
+                "id",
+                "officialPositionX",
+                "officialPositionY",
+                "phoneNumberX",
+                "phoneNumberY",
+                "postalCodeX",
+                "postalCodeY",
+                "qrcodeX",
+                "qrcodeY"
+            ],
             "properties": {
                 "addressX": {
                     "type": "integer"
@@ -1264,6 +1274,14 @@ const docTemplate = `{
         },
         "dto.BusinessCardResponse": {
             "type": "object",
+            "required": [
+                "businessCardBackgroundColor",
+                "businessCardPartsCoordinate",
+                "id",
+                "speakingAudioPath",
+                "speakingDescription",
+                "threeDimentionalModel"
+            ],
             "properties": {
                 "accessCount": {
                     "type": "integer",
@@ -1345,13 +1363,16 @@ const docTemplate = `{
             "properties": {
                 "isToured": {
                     "type": "boolean",
-                    "x-nullable": true,
                     "example": false
                 }
             }
         },
         "dto.ThreeDimentionalResponse": {
             "type": "object",
+            "required": [
+                "id",
+                "path"
+            ],
             "properties": {
                 "id": {
                     "type": "string"
@@ -1363,6 +1384,12 @@ const docTemplate = `{
         },
         "dto.UserResponse": {
             "type": "object",
+            "required": [
+                "id",
+                "isToured",
+                "recordedModelPath",
+                "status"
+            ],
             "properties": {
                 "id": {
                     "type": "string"

@@ -3,16 +3,16 @@ package dto
 import "github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 
 type BusinessCardResponse struct {
-	ID string `json:"id"`
+	ID string `json:"id" binding:"required"`
 	// background
-	BusinessCardBackgroundColor string `json:"businessCardBackgroundColor" example:"#ffffff"`
+	BusinessCardBackgroundColor string `json:"businessCardBackgroundColor" example:"#ffffff" binding:"required"`
 	BusinessCardBackgroundImage string `json:"businessCardBackgroundImage" example:"https://example.com/image.png"`
 	// ar assets
-	ThreeDimentionalModel string `json:"threeDimentionalModel" example:"https://example.com/model.glb"`
-	SpeakingDescription   string `json:"speakingDescription" example:"This is a description"`
-	SpeakingAudioPath     string `json:"speakingAudioPath" example:"https://example.com/audio.mp3"`
+	ThreeDimentionalModel string `json:"threeDimentionalModel" example:"https://example.com/model.glb" binding:"required"`
+	SpeakingDescription   string `json:"speakingDescription" example:"This is a description" binding:"required"`
+	SpeakingAudioPath     string `json:"speakingAudioPath" example:"https://example.com/audio.mp3" binding:"required"`
 	// business card
-	BusinessCardPartsCoordinate BusinessCardPartsCoordinate `json:"businessCardPartsCoordinate"`
+	BusinessCardPartsCoordinate BusinessCardPartsCoordinate `json:"businessCardPartsCoordinate" binding:"required"`
 	BusinessCardName            string                      `json:"businessCardName" example:"Business Card Name"`
 	DisplayName                 string                      `json:"displayName" example:"Display Name"`
 	CompanyName                 string                      `json:"companyName" example:"Company Name"`
