@@ -1097,6 +1097,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "id"
                 },
+                "isCompleted": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "qrcodeImagePath": {
                     "type": "string",
                     "example": "url"

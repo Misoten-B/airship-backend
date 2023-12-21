@@ -24,6 +24,7 @@ type item struct {
 	SpeakingAudioPath    string
 	ThreeDimentionalPath string
 	QrcodeIconImagePath  string
+	IsCompleted          bool
 }
 
 type Output struct {
@@ -110,17 +111,13 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 
 	items := []item{}
 	for _, model := range models {
-		// 生成が完了していないものはスキップ
-		if !model.IsCreated() {
-			continue
-		}
-
 		element := item{
 			ID:                   model.ID(),
 			SpeakingDescription:  model.SpeakingDescription(),
 			SpeakingAudioPath:    speakingAudioFullPath.Path(model.SpeakingAudioPath()),
 			ThreeDimentionalPath: threeDimentionalModelFullPath.Path(model.ThreeDimentionalPath()),
 			QrcodeIconImagePath:  qrCodeImageFullPath.Path(model.QrcodeIconImagePath()),
+			IsCompleted:          model.IsCreated(),
 		}
 		items = append(items, element)
 	}

@@ -4,6 +4,9 @@ definitions:
       id:
         example: id
         type: string
+      isCompleted:
+        example: true
+        type: boolean
       qrcodeImagePath:
         example: url
         type: string

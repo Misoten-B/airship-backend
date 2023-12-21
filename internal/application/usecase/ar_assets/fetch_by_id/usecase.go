@@ -25,6 +25,7 @@ type Output struct {
 	SpeakingAudioPath    string
 	ThreeDimentionalPath string
 	QrcodeIconImagePath  string
+	IsCompleted          bool
 }
 
 // Interactor はARアセットID検索ユースケースの実装です。
@@ -64,13 +65,6 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 			err,
 			msg,
 			http.StatusInternalServerError,
-		)
-	}
-
-	if !model.IsCreated() {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			"AR assets has not been created",
-			http.StatusBadRequest,
 		)
 	}
 
@@ -119,5 +113,6 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 		SpeakingAudioPath:    speakingAudioPath,
 		ThreeDimentionalPath: threeDimentionalPath,
 		QrcodeIconImagePath:  qrcodeIconImagePath,
+		IsCompleted:          model.IsCreated(),
 	}, nil
 }

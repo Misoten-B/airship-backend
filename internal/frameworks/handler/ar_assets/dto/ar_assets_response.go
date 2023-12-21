@@ -6,4 +6,5 @@ type ArAssetsResponse struct {
 	SpeakingAudioPath    string `json:"speakingAudioPath" example:"url"`
 	ThreeDimentionalPath string `json:"threeDimentionalPath" example:"url"`
 	QrcodeIconImagePath  string `json:"qrcodeImagePath" example:"url"`
+	IsCompleted          bool   `json:"isCompleted" example:"true"`
 }
