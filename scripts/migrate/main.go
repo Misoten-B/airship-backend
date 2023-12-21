@@ -13,7 +13,7 @@ func main() {
 	}
 
 	// データベースの初期化
-	db.Migrator().DropTable(
+	if err = db.Migrator().DropTable(
 		&model.User{},
 		&model.SpeakingAsset{},
 		&model.ThreeDimentionalModel{},
@@ -23,7 +23,9 @@ func main() {
 		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
 		&model.BusinessCardPartsCoordinate{},
 		&model.BusinessCard{},
-	)
+	); err != nil {
+		panic(err)
+	}
 
 	// マイグレーション
 	if err = db.AutoMigrate(
