@@ -104,7 +104,9 @@ func NewQRCodeImage(file *file.File) (QRCodeImage, error) {
 		return QRCodeImage{}, err
 	}
 
+	// AzureDriverの仕様上、一旦ここでファイル名を変更しています。
 	name := fmt.Sprintf("%s%s", id.String(), filepath.Ext(file.FileHeader().Filename))
+	file.FileHeader().Filename = name
 
 	return QRCodeImage{
 		name: name,
