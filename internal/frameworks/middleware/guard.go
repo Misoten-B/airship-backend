@@ -29,7 +29,9 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 		idToken := c.GetHeader("Authorization")
 
 		if !strings.HasPrefix(idToken, "Bearer ") {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error": "Unauthorized"})
+			c.AbortWithStatusJSON(
+				http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "error": "token is invalid format"},
+			)
 			return
 		}
 
@@ -38,7 +40,7 @@ func Guard(client *auth.Client) gin.HandlerFunc {
 		token, err := client.VerifyIDToken(c.Request.Context(), idToken)
 		if err != nil {
 			log.Printf("error verifying ID token: %v\n", err)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error": "Unauthorized"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"code": http.StatusUnauthorized, "error": err.Error()})
 			return
 		}
 
