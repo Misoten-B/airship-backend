@@ -1346,6 +1346,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "123-4567"
                 },
+                "qrcodeImagePath": {
+                    "type": "string",
+                    "example": "https://example.com/image.png"
+                },
                 "speakingAudioPath": {
                     "type": "string",
                     "example": "https://example.com/audio.mp3"

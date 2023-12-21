@@ -187,6 +187,9 @@ definitions:
       postalCode:
         example: 123-4567
         type: string
+      qrcodeImagePath:
+        example: https://example.com/image.png
+        type: string
       speakingAudioPath:
         example: https://example.com/audio.mp3
         type: string

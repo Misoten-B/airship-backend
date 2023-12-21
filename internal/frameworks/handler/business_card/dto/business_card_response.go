@@ -11,6 +11,7 @@ type BusinessCardResponse struct {
 	ThreeDimentionalModel string `json:"threeDimentionalModel" example:"https://example.com/model.glb" binding:"required"`
 	SpeakingDescription   string `json:"speakingDescription" example:"This is a description" binding:"required"`
 	SpeakingAudioPath     string `json:"speakingAudioPath" example:"https://example.com/audio.mp3" binding:"required"`
+	QRCodeImagePath       string `json:"qrcodeImagePath" example:"https://example.com/image.png"`
 	// business card
 	BusinessCardPartsCoordinate BusinessCardPartsCoordinate `json:"businessCardPartsCoordinate" binding:"required"`
 	BusinessCardName            string                      `json:"businessCardName" example:"Business Card Name"`
@@ -59,6 +60,7 @@ func ConvertBC(businesscard model.BusinessCard,
 		ThreeDimentionalModel:       arassets.ThreeDimentionalModel.ModelPath,
 		SpeakingDescription:         arassets.SpeakingAsset.Description,
 		SpeakingAudioPath:           arassets.SpeakingAsset.AudioPath,
+		QRCodeImagePath:             arassets.QRCodeImagePath,
 		BusinessCardPartsCoordinate: BusinessCardPartsCoordinate{
 			ID:                bcc.ID,
 			DisplayNameX:      bcc.DisplayNameX,
