@@ -12,6 +12,21 @@ func main() {
 		panic(err)
 	}
 
+	// データベースの初期化
+	if err = db.Migrator().DropTable(
+		&model.User{},
+		&model.SpeakingAsset{},
+		&model.ThreeDimentionalModel{},
+		&model.PersonalThreeDimentionalModel{}, &model.ThreeDimentionalModelTemplate{},
+		&model.ARAsset{},
+		&model.BusinessCardBackground{},
+		&model.PersonalBusinessCardBackground{}, &model.BusinessCardBackgroundTemplate{},
+		&model.BusinessCardPartsCoordinate{},
+		&model.BusinessCard{},
+	); err != nil {
+		panic(err)
+	}
+
 	// マイグレーション
 	if err = db.AutoMigrate(
 		&model.User{},
