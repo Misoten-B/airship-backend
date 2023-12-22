@@ -7,6 +7,10 @@ import (
 
 func ToGormStatus(status shared.Status) int {
 	switch status.(type) {
+	case shared.StatusError:
+		return model.GormStatusError
+	case shared.StatusNone:
+		return model.GormStatusNone
 	case shared.StatusInProgress:
 		return model.GormStatusInProgress
 	case shared.StatusCompleted:
