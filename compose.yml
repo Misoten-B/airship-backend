@@ -1,4 +1,5 @@
 services:
+  # golang:
   golang:
     build:
       context: .
@@ -6,9 +7,18 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./:/app
+      - type: bind
+        source: .
+        target: /app
+      - type: volume
+        source: gopkg
+        target: /go/pkg/mod
+    depends_on:
+      - database
     environment:
       DB_HOST: database
+  
+  # database:
   database:
     image: mysql:latest
     ports:
@@ -18,3 +28,6 @@ services:
       MYSQL_DATABASE: airship
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+
+volumes:
+  gopkg:

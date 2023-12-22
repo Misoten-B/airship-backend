@@ -1,8 +1,19 @@
 version: '3'
 
 tasks:
-  lint:
-    desc: Run linting
+  run:
+    desc: Run docker compose
     cmds:
-      - echo "This is experimental feature"
-      - docker compose -f compose.yml -f compose.lint.yml up
+      - docker compose up {{ .CLI_ARGS }}
+  generate:
+    desc: Run go generate
+    cmds:
+      - docker compose exec golang go generate
+  database:migrate:
+    desc: Run database migrations
+    cmds:
+      - docker compose exec golang go run ./scripts/migrate/main.go
+  database:seed:
+    desc: Run database seed
+    cmds:
+      - docker compose exec golang go run ./scripts/seed/main.go
