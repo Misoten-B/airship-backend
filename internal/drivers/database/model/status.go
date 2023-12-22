@@ -1,7 +1,8 @@
 package model
 
 const (
-	GormStatusNone       = -1
-	GormStatusInProgress = 0
-	GormStatusCompleted  = 1
+	GormStatusError      = -1
+	GormStatusNone       = 1
+	GormStatusInProgress = 2
+	GormStatusCompleted  = 3
 )
