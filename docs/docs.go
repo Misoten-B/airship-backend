@@ -375,48 +375,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/users/ar_assets/{ar_assets_id}/status/done": {
-            "post": {
-                "tags": [
-                    "ArAssets"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ArAssets ID",
-                        "name": "ar_assets_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/v1/users/ar_assets/{ar_assets_id}/status/failed": {
-            "post": {
-                "tags": [
-                    "ArAssets"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ArAssets ID",
-                        "name": "ar_assets_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
         "/v1/users/business_card_backgrounds": {
             "get": {
                 "security": [
@@ -1025,48 +983,6 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
-                    }
-                }
-            }
-        },
-        "/v1/users/{user_id}/voice_model/status/done": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/v1/users/{user_id}/voice_model/status/failed": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
                     }
                 }
             }
