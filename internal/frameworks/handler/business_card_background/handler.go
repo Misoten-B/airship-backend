@@ -121,23 +121,14 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	// TODO: どうにかする
 	bcbst := []model.BusinessCardBackground{}
-	if err = db.Joins("JOIN business_card_background_templates on " +
-		"business_card_backgrounds.id = " +
-		"business_card_background_templates.id").
+	if err = db.Joins("LEFT JOIN business_card_background_templates on "+
+		"business_card_backgrounds.id = business_card_background_templates.id").
+		Joins("LEFT JOIN personal_business_card_backgrounds on"+
+			"personal_business_card_backgrounds.id = business_card_backgrounds.id").
+		Where("personal_business_card_backgrounds.user_id = ? OR "+
+			"business_card_backgrounds.id = business_card_background_templates.id", uid).
 		Find(&bcbst).
-		Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	pbcbs := []model.BusinessCardBackground{}
-	if err = db.Joins("JOIN personal_business_card_backgrounds on "+
-		"personal_business_card_backgrounds.id = "+
-		"business_card_backgrounds.id").
-		Where("personal_business_card_backgrounds.user_id = ?", uid).
-		Find(&pbcbs).
 		Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -158,18 +149,6 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 	responses := []dto.BackgroundResponse{}
 
 	for _, bcb := range bcbst {
-		backgroundImageURL := ""
-		if bcb.ImagePath != "" {
-			backgroundImageURL = containerURL.Path(bcb.ImagePath)
-		}
-		responses = append(responses, dto.BackgroundResponse{
-			ID:                          bcb.ID,
-			BusinessCardBackgroundColor: bcb.ColorCode,
-			BusinessCardBackgroundImage: backgroundImageURL,
-		})
-	}
-
-	for _, bcb := range pbcbs {
 		backgroundImageURL := ""
 		if bcb.ImagePath != "" {
 			backgroundImageURL = containerURL.Path(bcb.ImagePath)
