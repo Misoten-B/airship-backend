@@ -446,6 +446,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "BusinessCardBackground"
                 ],

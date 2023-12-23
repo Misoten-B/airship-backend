@@ -543,6 +543,8 @@ paths:
       tags:
       - BusinessCardBackground
     post:
+      consumes:
+      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header

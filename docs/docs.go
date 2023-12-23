@@ -454,6 +454,9 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
                 "tags": [
                     "BusinessCardBackground"
                 ],
