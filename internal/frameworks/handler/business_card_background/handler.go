@@ -158,18 +158,26 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 	responses := []dto.BackgroundResponse{}
 
 	for _, bcb := range bcbst {
+		backgroundImageURL := ""
+		if bcb.ImagePath != "" {
+			backgroundImageURL = containerURL.Path(bcb.ImagePath)
+		}
 		responses = append(responses, dto.BackgroundResponse{
 			ID:                          bcb.ID,
 			BusinessCardBackgroundColor: bcb.ColorCode,
-			BusinessCardBackgroundImage: containerURL.Path(bcb.ImagePath),
+			BusinessCardBackgroundImage: backgroundImageURL,
 		})
 	}
 
 	for _, bcb := range pbcbs {
+		backgroundImageURL := ""
+		if bcb.ImagePath != "" {
+			backgroundImageURL = containerURL.Path(bcb.ImagePath)
+		}
 		responses = append(responses, dto.BackgroundResponse{
 			ID:                          bcb.ID,
 			BusinessCardBackgroundColor: bcb.ColorCode,
-			BusinessCardBackgroundImage: containerURL.Path(bcb.ImagePath),
+			BusinessCardBackgroundImage: backgroundImageURL,
 		})
 	}
 
