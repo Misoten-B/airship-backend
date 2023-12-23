@@ -20,6 +20,11 @@ func NewAppModelPRD() *AppModelPRD {
 		{
 			ID:        newID(),
 			ColorCode: "#ffffff",
+			ImagePath: "",
+		},
+		{
+			ID:        newID(),
+			ColorCode: "#ffffff",
 			ImagePath: "background-template-1.png",
 		},
 		{
@@ -38,6 +43,7 @@ func NewAppModelPRD() *AppModelPRD {
 		{ID: businessCardBackgrounds[0].ID},
 		{ID: businessCardBackgrounds[1].ID},
 		{ID: businessCardBackgrounds[2].ID},
+		{ID: businessCardBackgrounds[3].ID},
 	}
 
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
