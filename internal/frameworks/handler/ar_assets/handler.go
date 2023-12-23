@@ -10,13 +10,10 @@ import (
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	fetchbyuserid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
-	statusdone "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/status_done"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
-	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
-	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
 	"github.com/gin-gonic/gin"
 )
 
@@ -377,79 +374,4 @@ func DeleteArAssets(c *gin.Context) {
 
 	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
-}
-
-// @Tags ArAssets
-// @Router /v1/users/ar_assets/{ar_assets_id}/status/done [POST]
-// @Param ar_assets_id path string true "ArAssets ID"
-// @Success 200 {object} nil
-func PostStatusDone(c *gin.Context) {
-	// コンテキストから取得
-	config, err := frameworks.GetConfig(c)
-	if err != nil {
-		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
-		return
-	}
-
-	// リクエスト取得
-	id := c.Param("ar_assets_id")
-	if id == "" {
-		reqErr := errors.New("ar_assets_id is empty")
-		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
-		return
-	}
-
-	// ユースケース実行
-	var usecaseImpl statusdone.Usecase
-
-	if config.DevMode {
-		usecaseImpl = statusdone.NewInteractor(
-			service.NewMockARAssetsRepository(),
-		)
-	} else {
-		db, dbErr := frameworks.GetDB(c)
-		if dbErr != nil {
-			frameworks.ErrorHandling(c, dbErr, http.StatusInternalServerError)
-			return
-		}
-
-		usecaseImpl = statusdone.NewInteractor(
-			arassets.NewGormARAssetsRepository(db),
-		)
-	}
-
-	input := statusdone.Input{
-		ID: id,
-	}
-
-	err = usecaseImpl.Execute(input)
-	if err != nil {
-		var appErr *customerror.ApplicationError
-
-		if errors.As(err, &appErr) {
-			frameworks.ErrorHandling(c, err, appErr.StatusCode())
-			return
-		}
-
-		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
-		return
-	}
-
-	// レスポンス
-	c.JSON(http.StatusOK, nil)
-}
-
-// @Tags ArAssets
-// @Router /v1/users/ar_assets/{ar_assets_id}/status/failed [POST]
-// @Param ar_assets_id path string true "ArAssets ID"
-// @Success 200 {object} nil
-func PostStatusFailed(c *gin.Context) {
-	// コンテキストから取得
-
-	// リクエスト取得
-
-	// ユースケース実行
-
-	// レスポンス
-	c.JSON(http.StatusOK, nil)
 }
