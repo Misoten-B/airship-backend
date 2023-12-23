@@ -9,3 +9,7 @@ local:
 lint:
 	echo "現状のベースイメージだとエラーになる"
 	docker compose -f compose.yml -f compose.lint.yml up
+
+migrate:
+	go run scripts/migrate/main.go
+	go run scripts/seed/main.go
