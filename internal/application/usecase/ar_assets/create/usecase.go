@@ -11,6 +11,7 @@ import (
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/id"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 )
 
 type ARAssetsUsecase interface {
@@ -123,14 +124,28 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// AIへ音声ファイル生成を依頼
-	request := voiceservice.GenerateAudioFileRequest{
-		UID:            arAssets.UserID().String(),
-		OutputFilePath: speakingAsset.AudioPath(),
-		Language:       "ja",
-		Content:        speakingAsset.Description(),
-	}
+	// request := voiceservice.GenerateAudioFileRequest{
+	// 	UID:            arAssets.UserID().String(),
+	// 	OutputFilePath: speakingAsset.AudioPath(),
+	// 	Language:       "ja",
+	// 	Content:        speakingAsset.Description(),
+	// }
 
-	err = u.voiceModelAdapter.GenerateAudioFile(request)
+	// err = u.voiceModelAdapter.GenerateAudioFile(request)
+	// if err != nil {
+	// 	msg := "failed to generate audio file"
+	// 	return output, customerror.NewApplicationError(
+	// 		err,
+	// 		msg,
+	// 		http.StatusInternalServerError,
+	// 	)
+	// }
+	adapter := voice.NewVallEXAdapter()
+	request := voice.GenerateAudioFileRequest{
+		ARAssetsID: arAssets.ID().String(),
+		Text:       speakingAsset.Description(),
+	}
+	err = adapter.GenerateAudioFile(input.UID, request)
 	if err != nil {
 		msg := "failed to generate audio file"
 		return output, customerror.NewApplicationError(

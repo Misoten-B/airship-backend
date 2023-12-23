@@ -13,6 +13,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -130,10 +131,18 @@ func UpdateUser(c *gin.Context) {
 
 	// TODO: AI側に送信
 	formFile, fileHeader, err := c.Request.FormFile("recorded_voice")
-	log.Printf("file: %v", formFile)
-	log.Printf("fileHeader: %v", fileHeader)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	adapter := voice.NewVallEXAdapter()
+	vmReq := voice.GenerateVoiceModelRequest{
+		File:       formFile,
+		FileHeader: fileHeader,
+	}
+	if err = adapter.GenerateVoiceModel(uid, vmReq); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -161,7 +170,7 @@ func UpdateUser(c *gin.Context) {
 		ID:                uid,
 		RecordedModelPath: "",
 		IsToured:          request.IsToured,
-		Status:            model.GormStatusInProgress,
+		Status:            model.GormStatusCompleted,
 	}
 
 	err = db.Model(&user).Updates(user).Error
