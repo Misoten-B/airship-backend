@@ -23,6 +23,7 @@ const (
 // @Router /v1/users/business_card_backgrounds [POST]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
+// @Accept multipart/form-data
 // @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
 // @Param dto.CreateBackgroundRequest formData dto.CreateBackgroundRequest true "BusinessCardBackground"
 // @Success 201 {object} dto.BackgroundResponse
