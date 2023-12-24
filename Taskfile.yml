@@ -1,19 +1,31 @@
 version: '3'
 
 tasks:
+  run:db:
+    desc: Run Database with docker compose
+    cmds:
+      - docker compose up
+  run:app:
+    desc: Run Application with air
+    cmds:
+      - sleep 3
+      - air -c .air.toml
   run:
-    desc: Run docker compose
-    cmds:
-      - docker compose up {{ .CLI_ARGS }}
+    desc: Run Database and Application
+    deps: [run:db, run:app]
   generate:
-    desc: Run go generate
+    desc: run go generate
     cmds:
-      - docker compose exec golang go generate
-  database:migrate:
-    desc: Run database migrations
+      - go generate
+  db:migrate:
+    desc: Run Database Migration
+    deps: [run:db]
     cmds:
-      - docker compose exec golang go run ./scripts/migrate/main.go
-  database:seed:
-    desc: Run database seed
+      - sleep 3
+      - go run ./scripts/migrate/main.go
+  db:seed:
+    desc: Run Database Seed
+    deps: [run:db]
     cmds:
-      - docker compose exec golang go run ./scripts/seed/main.go
+      - sleep 3
+      - go run ./scripts/seed/main.go
