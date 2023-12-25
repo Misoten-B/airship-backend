@@ -131,8 +131,8 @@ func UpdateUser(c *gin.Context) {
 
 	// TODO: AI側に送信
 	formFile, fileHeader, err := c.Request.FormFile("recorded_voice")
-	log.Printf("file: %v", formFile)
-	log.Printf("fileHeader: %v", fileHeader)
+	// log.Printf("file: %v", formFile)
+	// log.Printf("fileHeader: %v", fileHeader)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -146,21 +146,25 @@ func UpdateUser(c *gin.Context) {
 	ab := drivers.NewAzureBlobDriver(appConfig)
 	castedFile := file.NewMyFile(formFile, fileHeader)
 	castedFile.FileHeader().Filename = fmt.Sprintf("%s%s", uid, filepath.Ext(castedFile.FileHeader().Filename))
-	log.Printf("castedFile: %s", castedFile.FileHeader().Filename)
+	// log.Printf("castedFile: %s", castedFile.FileHeader().Filename)
 	if err = ab.SaveBlob(containerName, castedFile); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	url := fmt.Sprintf("http://airship-ml.japaneast.cloudapp.azure.com/voice-model/%s", uid)
+	url := fmt.Sprintf("https://airship-ml.japaneast.cloudapp.azure.com/voice-model/%s", uid)
 	client := resty.New()
-	_, err = client.R().
+	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]string{
 			"train_sound_file_name": castedFile.FileHeader().Filename,
 			"language":              "ja",
 		}).
 		Post(url)
+	if resp.StatusCode() != http.StatusOK {
+		c.JSON(resp.StatusCode(), gin.H{"error": "AI server error"})
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
