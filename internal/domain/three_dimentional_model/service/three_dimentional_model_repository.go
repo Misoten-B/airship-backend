@@ -41,7 +41,9 @@ func (r *MockThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimen
 	), nil
 }
 
-func (r *MockThreeDimentionalModelRepository) FindByUserID(userID shared.ID) ([]threedimentionalmodel.ReadModel, error) {
+func (r *MockThreeDimentionalModelRepository) FindByUserID(
+	userID shared.ID,
+) ([]threedimentionalmodel.ReadModel, error) {
 	log.Printf("Mock ThreeDimentionalModel Repository - FindByUserID: %s", userID)
 
 	return []threedimentionalmodel.ReadModel{
