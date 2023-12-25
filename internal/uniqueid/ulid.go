@@ -13,8 +13,8 @@ func NewULID(ms uint64, entropy io.Reader) (ulid.ULID, error) {
 	return ulid.New(ms, entropy)
 }
 
-func MakeULID() (ulid.ULID, error) {
-	entropy := rand.New(rand.NewSource(time.Now().UnixNano()))
-	ms := ulid.Timestamp(time.Now())
+func MakeULID(t time.Time) (ulid.ULID, error) {
+	entropy := rand.New(rand.NewSource(t.UnixNano()))
+	ms := ulid.Timestamp(t)
 	return NewULID(ms, entropy)
 }
