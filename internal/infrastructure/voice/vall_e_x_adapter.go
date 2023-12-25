@@ -53,3 +53,7 @@ func (a *VallEXAdapter) GenerateAudioFile(userID string, request GenerateAudioFi
 
 	return nil
 }
+
+func (a *VallEXAdapter) GetAudioRelativePath() string {
+	return "http://localhost:9000/audio"
+}

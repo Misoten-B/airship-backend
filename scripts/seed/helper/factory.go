@@ -2,6 +2,8 @@
 package helper
 
 import (
+	"fmt"
+
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
@@ -84,7 +86,7 @@ func NewAppModel() *AppModel {
 func newUser() *model.User {
 	return &model.User{
 		ID:                testdata.DEV_UID,
-		RecordedModelPath: "seed_recorded_model.glb",
+		RecordedModelPath: fmt.Sprintf("%s.npz", testdata.DEV_UID),
 		IsToured:          false,
 		Status:            model.GormStatusCompleted,
 	}

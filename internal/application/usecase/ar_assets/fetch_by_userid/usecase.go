@@ -1,6 +1,7 @@
 package fetchbyuserid
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
@@ -8,6 +9,7 @@ import (
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/id"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 )
 
 type Usecase interface {
@@ -89,15 +91,8 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 		)
 	}
 
-	speakingAudioFullPath, err := i.speakingAudioStorage.GetContainerFullPath()
-	if err != nil {
-		msg := "failed to get speaking audio full path"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
+	adapter := voice.NewVallEXAdapter()
+	relativePath := adapter.GetAudioRelativePath()
 
 	threeDimentionalModelFullPath, err := i.threeDimentionalModelStorage.GetContainerFullPath()
 	if err != nil {
@@ -111,10 +106,11 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 
 	items := []item{}
 	for _, model := range models {
+		speakingAudioPath := fmt.Sprintf("%s/%s", relativePath, model.SpeakingAudioPath())
 		element := item{
 			ID:                   model.ID(),
 			SpeakingDescription:  model.SpeakingDescription(),
-			SpeakingAudioPath:    speakingAudioFullPath.Path(model.SpeakingAudioPath()),
+			SpeakingAudioPath:    speakingAudioPath,
 			ThreeDimentionalPath: threeDimentionalModelFullPath.Path(model.ThreeDimentionalPath()),
 			QrcodeIconImagePath:  qrCodeImageFullPath.Path(model.QrcodeIconImagePath()),
 			IsCompleted:          model.IsCreated(),

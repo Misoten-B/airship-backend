@@ -1,6 +1,7 @@
 package fetchbyidpublic
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
@@ -8,6 +9,7 @@ import (
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/id"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 )
 
 type Usecase interface {
@@ -71,15 +73,9 @@ func (i *Interactor) Execute(
 	// アクセスカウントをインクリメント
 
 	// URL生成
-	speakingAudioPath, err := i.speakingAudioStorage.GetAudioURL(model.SpeakingAudioPath())
-	if err != nil {
-		msg := "failed to get speaking audio URL"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
+	adapter := voice.NewVallEXAdapter()
+	relativePath := adapter.GetAudioRelativePath()
+	speakingAudioPath := fmt.Sprintf("%s/%s", relativePath, model.SpeakingAudioPath())
 
 	threeDimentionalPath, err := i.threeDimentionalModelStorage.GetModelURL(model.ThreeDimentionalPath())
 	if err != nil {
