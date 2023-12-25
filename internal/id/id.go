@@ -1,12 +1,22 @@
 package id
 
-import "github.com/google/uuid"
+import (
+	"github.com/Misoten-B/airship-backend/internal/uniqueid"
+)
 
 type ID string
 
+const (
+	invalidID = ID("")
+)
+
 func NewID() (ID, error) {
-	id, err := uuid.NewRandom()
-	return ID(id.String()), err
+	value, err := uniqueid.NewULID()
+	if err != nil {
+		return invalidID, err
+	}
+
+	return ID(value.String()), nil
 }
 
 func ReconstructID(id string) ID {
@@ -15,4 +25,12 @@ func ReconstructID(id string) ID {
 
 func (i ID) String() string {
 	return string(i)
+}
+
+func (i ID) Equals(other ID) bool {
+	return i == other
+}
+
+func (i ID) IsValid() bool {
+	return !i.Equals(invalidID)
 }
