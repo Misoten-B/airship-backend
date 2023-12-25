@@ -35,6 +35,11 @@ func NewAppModel() *AppModel {
 		{
 			ID:        newID(),
 			ColorCode: "#ffffff",
+			ImagePath: "",
+		},
+		{
+			ID:        newID(),
+			ColorCode: "#ffffff",
 			ImagePath: "background-template-1.png",
 		},
 		{
@@ -51,6 +56,7 @@ func NewAppModel() *AppModel {
 	businessCardBackgroundTemplate := []*model.BusinessCardBackgroundTemplate{
 		{ID: businessCardBackgrounds[0].ID},
 		{ID: businessCardBackgrounds[2].ID},
+		{ID: businessCardBackgrounds[3].ID},
 	}
 	personalBusinessCardBackground := &model.PersonalBusinessCardBackground{
 		ID:     businessCardBackgrounds[1].ID,
