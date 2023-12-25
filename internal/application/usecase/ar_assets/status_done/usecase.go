@@ -6,7 +6,6 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type Usecase interface {
@@ -33,7 +32,7 @@ func NewInteractor(
 // Execute はARアセット生成完了ユースケースを実行します。
 func (i *Interactor) Execute(input Input) error {
 	// バリデーション & オブジェクト生成
-	id := id.ReconstructID(input.ID)
+	id := shared.ReconstructID(input.ID)
 	statusDone := shared.StatusCompleted{}
 
 	// ARアセットの取得

@@ -3,7 +3,6 @@ package voice
 import (
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +16,7 @@ func NewGormVoiceRepository(db *gorm.DB) *GormVoiceRepository {
 	}
 }
 
-func (r *GormVoiceRepository) FetchStatus(userID id.ID) (shared.Status, error) {
+func (r *GormVoiceRepository) FetchStatus(userID shared.ID) (shared.Status, error) {
 	var user model.User
 
 	err := r.db.Select("status").First(&user, "id = ?", userID.String()).Error

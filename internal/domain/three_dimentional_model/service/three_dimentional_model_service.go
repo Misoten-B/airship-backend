@@ -1,9 +1,9 @@
 package service
 
-import "github.com/Misoten-B/airship-backend/internal/id"
+import "github.com/Misoten-B/airship-backend/internal/domain/shared"
 
 type ThreeDimentionalModelService interface {
-	HasUsePermission(threeDimentionalModelID id.ID, userID id.ID) (bool, error)
+	HasUsePermission(threeDimentionalModelID shared.ID, userID shared.ID) (bool, error)
 }
 
 type ThreeDimentionalModelServiceImpl struct {
@@ -18,7 +18,10 @@ func NewThreeDimentionalModelServiceImpl(repository ThreeDimentionalModelReposit
 
 // HasUsePermission は3Dモデルの使用権限を持っているかどうかを返します。
 // 権限を持っている場合はtrueを、持っていない場合はfalseを返します。
-func (s *ThreeDimentionalModelServiceImpl) HasUsePermission(threeDimentionalModelID id.ID, userID id.ID) (bool, error) {
+func (s *ThreeDimentionalModelServiceImpl) HasUsePermission(
+	threeDimentionalModelID shared.ID,
+	userID shared.ID,
+) (bool, error) {
 	threeDimentionalModel, err := s.repository.Find(threeDimentionalModelID)
 	if err != nil {
 		return false, err

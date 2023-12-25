@@ -3,15 +3,15 @@ package service
 import (
 	"log"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
 type ThreeDimentionalModelRepository interface {
-	Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error)
-	FindByID(id id.ID) (threedimentionalmodel.ReadModel, error)
-	FindByUserID(userID id.ID) ([]threedimentionalmodel.ReadModel, error)
+	Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error)
+	FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error)
+	FindByUserID(userID shared.ID) ([]threedimentionalmodel.ReadModel, error)
 	Save(threeDimentionalModel threedimentionalmodel.ThreeDimentionalModel) error
 }
 
@@ -26,12 +26,12 @@ func (r *MockThreeDimentionalModelRepository) Save(_ threedimentionalmodel.Three
 	return nil
 }
 
-func (r *MockThreeDimentionalModelRepository) Find(id id.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
+func (r *MockThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
 	log.Printf("Mock ThreeDimentionalModel Repository - Find: %s", id)
 	return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
 }
 
-func (r *MockThreeDimentionalModelRepository) FindByID(id id.ID) (threedimentionalmodel.ReadModel, error) {
+func (r *MockThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error) {
 	log.Printf("Mock ThreeDimentionalModel Repository - FindByID: %s", id)
 
 	return threedimentionalmodel.NewReadModel(
@@ -41,7 +41,7 @@ func (r *MockThreeDimentionalModelRepository) FindByID(id id.ID) (threedimention
 	), nil
 }
 
-func (r *MockThreeDimentionalModelRepository) FindByUserID(userID id.ID) ([]threedimentionalmodel.ReadModel, error) {
+func (r *MockThreeDimentionalModelRepository) FindByUserID(userID shared.ID) ([]threedimentionalmodel.ReadModel, error) {
 	log.Printf("Mock ThreeDimentionalModel Repository - FindByUserID: %s", userID)
 
 	return []threedimentionalmodel.ReadModel{

@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	tdmdomain "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type Usecase interface {
@@ -46,7 +46,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 	var output Output
 
 	//	バリデーション&オブジェクト生成
-	userID := id.ReconstructID(input.UserID)
+	userID := shared.ReconstructID(input.UserID)
 	modelFile := file.NewMyFile(input.File, input.FileHeader)
 
 	threeDimentionalModel, err := tdmdomain.NewThreeDimentionalModel(

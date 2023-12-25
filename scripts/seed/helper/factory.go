@@ -2,8 +2,8 @@
 package helper
 
 import (
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
@@ -247,7 +247,7 @@ func newBusinessCard(
 }
 
 func newID() string {
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		panic(err)
 	}

@@ -3,9 +3,9 @@ package threedimentionalmodel
 import (
 	"errors"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
-	idlib "github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )
 
@@ -62,7 +62,7 @@ func (r *GormThreeDimentionalModelRepository) Save(
 	return tx.Commit().Error
 }
 
-func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
+func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
 	// FIXME: Gorm取得の最適化
@@ -83,11 +83,11 @@ func (r *GormThreeDimentionalModelRepository) Find(id idlib.ID) (*threedimention
 		return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
 	}
 
-	uid := idlib.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
+	uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
 	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
 }
 
-func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threedimentionalmodel.ReadModel, error) {
+func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
 	// TODO: 重複部分の修正または統合
@@ -113,7 +113,7 @@ func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threediment
 	}
 
 	if personalLen != 0 {
-		uid := idlib.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
+		uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
 		return threedimentionalmodel.NewReadModel(
 			id.String(),
 			uid.String(),
@@ -124,7 +124,7 @@ func (r *GormThreeDimentionalModelRepository) FindByID(id idlib.ID) (threediment
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByUserID(
-	userID idlib.ID,
+	userID shared.ID,
 ) ([]threedimentionalmodel.ReadModel, error) {
 	var threeDimentionalModels []model.ThreeDimentionalModel
 

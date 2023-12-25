@@ -5,15 +5,14 @@ import (
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
 type ARAssetsRepository interface {
 	Save(arassets arassets.ARAssets) error
-	FetchByID(id id.ID) (arassets.ReadModel, error)
-	FetchByUserID(userID id.ID) ([]arassets.ReadModel, error)
-	PatchStatus(id id.ID, status shared.Status) error
+	FetchByID(id shared.ID) (arassets.ReadModel, error)
+	FetchByUserID(userID shared.ID) ([]arassets.ReadModel, error)
+	PatchStatus(id shared.ID, status shared.Status) error
 }
 
 type MockARAssetsRepository struct{}
@@ -27,7 +26,7 @@ func (r *MockARAssetsRepository) Save(_ arassets.ARAssets) error {
 	return nil
 }
 
-func (r *MockARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error) {
+func (r *MockARAssetsRepository) FetchByID(id shared.ID) (arassets.ReadModel, error) {
 	log.Printf("Mock ARAssets Repository - FetchByID: %s", id)
 
 	return arassets.NewReadModel(
@@ -41,7 +40,7 @@ func (r *MockARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 	), nil
 }
 
-func (r *MockARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadModel, error) {
+func (r *MockARAssetsRepository) FetchByUserID(userID shared.ID) ([]arassets.ReadModel, error) {
 	log.Printf("Mock ARAssets Repository - FetchByUserID: %s", userID)
 
 	return []arassets.ReadModel{
@@ -57,7 +56,7 @@ func (r *MockARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadMod
 	}, nil
 }
 
-func (r *MockARAssetsRepository) PatchStatus(id id.ID, status shared.Status) error {
+func (r *MockARAssetsRepository) PatchStatus(id shared.ID, status shared.Status) error {
 	log.Printf("Mock ARAssets Repository - PatchStatus: id: %s, status: %d", id, status.Status())
 
 	return nil

@@ -1,8 +1,8 @@
 package voice
 
 import (
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type File struct {
@@ -20,13 +20,13 @@ func (v *File) File() file.File {
 }
 
 type Voice struct {
-	id        id.ID
+	id        shared.ID
 	voice     File
 	modelPath string
 }
 
 func NewVoice(voice File, modelPath string) (*Voice, error) {
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func NewVoice(voice File, modelPath string) (*Voice, error) {
 	}, nil
 }
 
-func (v *Voice) ID() id.ID {
+func (v *Voice) ID() shared.ID {
 	return v.id
 }
 

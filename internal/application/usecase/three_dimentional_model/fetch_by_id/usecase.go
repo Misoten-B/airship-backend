@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type Usecase interface {
@@ -43,7 +43,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 	var output Output
 
 	//   バリデーション&オブジェクト生成
-	tdmID := id.ReconstructID(input.ID)
+	tdmID := shared.ReconstructID(input.ID)
 
 	//   IDをもとに3Dモデルを取得
 	readModel, err := i.threeDimentionalModelRepository.FindByID(tdmID)

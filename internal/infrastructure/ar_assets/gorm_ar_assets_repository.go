@@ -7,7 +7,6 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/mapper"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"gorm.io/gorm"
 )
 
@@ -74,7 +73,7 @@ func (r *GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 	return tx.Commit().Error
 }
 
-func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error) {
+func (r *GormARAssetsRepository) FetchByID(id shared.ID) (arassets.ReadModel, error) {
 	var arAssetModel model.ARAsset
 	var readModel arassets.ReadModel
 
@@ -90,7 +89,7 @@ func (r *GormARAssetsRepository) FetchByID(id id.ID) (arassets.ReadModel, error)
 	return convertToReadModel(arAssetModel), nil
 }
 
-func (r *GormARAssetsRepository) FetchByUserID(userID id.ID) ([]arassets.ReadModel, error) {
+func (r *GormARAssetsRepository) FetchByUserID(userID shared.ID) ([]arassets.ReadModel, error) {
 	var arAssetsModels []model.ARAsset
 	var readModels []arassets.ReadModel
 
@@ -122,7 +121,7 @@ func convertToReadModel(arAssetModel model.ARAsset) arassets.ReadModel {
 	)
 }
 
-func (r *GormARAssetsRepository) PatchStatus(id id.ID, status shared.Status) error {
+func (r *GormARAssetsRepository) PatchStatus(id shared.ID, status shared.Status) error {
 	var arAssetModel model.ARAsset
 
 	if err := r.db.Model(&arAssetModel).

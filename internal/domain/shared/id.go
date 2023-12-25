@@ -1,4 +1,4 @@
-package id
+package shared
 
 import (
 	"github.com/Misoten-B/airship-backend/internal/uniqueid"

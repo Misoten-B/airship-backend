@@ -3,11 +3,11 @@ package domain
 import (
 	"time"
 
-	"github.com/Misoten-B/airship-backend/internal/id"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 )
 
 type User struct {
-	id        id.ID
+	id        shared.ID
 	isToured  bool
 	createdAt time.Time
 	deletedAt time.Time
@@ -16,7 +16,7 @@ type User struct {
 func NewUser() (*User, error) {
 	createdAt := time.Now()
 
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func NewUser() (*User, error) {
 	}, nil
 }
 
-func (u *User) ID() id.ID {
+func (u *User) ID() shared.ID {
 	return u.id
 }
 
