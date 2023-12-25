@@ -7,10 +7,10 @@ type VoiceModelAdapter interface {
 }
 
 type GenerateAudioFileRequest struct {
-	UID            string
-	OutputFilePath string
-	Language       string
-	Content        string
+	UID        string
+	ARAssetsID string
+	Language   string
+	Content    string
 }
 
 type MockVoiceModelAdapter struct{}
