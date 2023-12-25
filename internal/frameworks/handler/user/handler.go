@@ -180,7 +180,8 @@ func UpdateUser(c *gin.Context) {
 		ID:                uid,
 		RecordedModelPath: "",
 		IsToured:          request.IsToured,
-		Status:            model.GormStatusInProgress,
+		// Status:            model.GormStatusInProgress,
+		Status: model.GormStatusCompleted,
 	}
 
 	err = db.Model(&user).Updates(user).Error
