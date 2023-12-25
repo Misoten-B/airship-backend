@@ -2,11 +2,8 @@
 package helper
 
 import (
-	"fmt"
-
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/id"
-	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
 type AppModel struct {
@@ -80,15 +77,6 @@ func NewAppModel() *AppModel {
 		BusinessCardBackgrounds:           businessCardBackgrounds,
 		BusinessCardPartsCoordinate:       businessCardPartsCoordinate,
 		BusinessCard:                      businessCard,
-	}
-}
-
-func newUser() *model.User {
-	return &model.User{
-		ID:                testdata.DEV_UID,
-		RecordedModelPath: fmt.Sprintf("%s.npz", testdata.DEV_UID),
-		IsToured:          false,
-		Status:            model.GormStatusCompleted,
 	}
 }
 

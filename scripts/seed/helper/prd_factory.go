@@ -1,10 +1,14 @@
 package helper
 
 import (
+	"fmt"
+
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
+	"github.com/Misoten-B/airship-backend/internal/testdata"
 )
 
 type AppModelPRD struct {
+	User                              *model.User
 	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
 	ThreeDimentionalModels            []*model.ThreeDimentionalModel
 	BusinessCardBackgroundTemplate    []*model.BusinessCardBackgroundTemplate
@@ -43,11 +47,21 @@ func NewAppModelPRD() *AppModelPRD {
 	businessCardPartsCoordinate := newBusinessCardPartsCoordinate()
 
 	return &AppModelPRD{
+		User:                              newUser(),
 		TempThreeDimentionalModelTemplate: threeDimentionalModelTemplate,
 		ThreeDimentionalModels:            threeDimentionalModels,
 		BusinessCardBackgroundTemplate:    businessCardBackgroundTemplate,
 		BusinessCardBackgrounds:           businessCardBackgrounds,
 		BusinessCardPartsCoordinate:       businessCardPartsCoordinate,
+	}
+}
+
+func newUser() *model.User {
+	return &model.User{
+		ID:                testdata.DEV_UID,
+		RecordedModelPath: fmt.Sprintf("%s.npz", testdata.DEV_UID),
+		IsToured:          true,
+		Status:            model.GormStatusCompleted,
 	}
 }
 
