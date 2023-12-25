@@ -14,6 +14,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/user/dto"
 	"github.com/gin-gonic/gin"
+	"github.com/go-resty/resty/v2"
 	"gorm.io/gorm"
 )
 
@@ -147,6 +148,20 @@ func UpdateUser(c *gin.Context) {
 	castedFile.FileHeader().Filename = fmt.Sprintf("%s%s", uid, filepath.Ext(castedFile.FileHeader().Filename))
 	log.Printf("castedFile: %s", castedFile.FileHeader().Filename)
 	if err = ab.SaveBlob(containerName, castedFile); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	url := fmt.Sprintf("http://airship-ml.japaneast.cloudapp.azure.com/voice-model/%s", uid)
+	client := resty.New()
+	_, err = client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(map[string]string{
+			"train_sound_file_name": castedFile.FileHeader().Filename,
+			"language":              "ja",
+		}).
+		Post(url)
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
