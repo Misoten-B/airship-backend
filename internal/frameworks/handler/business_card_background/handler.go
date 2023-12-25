@@ -125,7 +125,7 @@ func ReadAllBusinessCardBackground(c *gin.Context) {
 	bcbst := []model.BusinessCardBackground{}
 	if err = db.Joins("LEFT JOIN business_card_background_templates on "+
 		"business_card_backgrounds.id = business_card_background_templates.id").
-		Joins("LEFT JOIN personal_business_card_backgrounds on"+
+		Joins("LEFT JOIN personal_business_card_backgrounds on "+
 			"personal_business_card_backgrounds.id = business_card_backgrounds.id").
 		Where("personal_business_card_backgrounds.user_id = ? OR "+
 			"business_card_backgrounds.id = business_card_background_templates.id", uid).
