@@ -5,7 +5,7 @@ import (
 )
 
 type AppModelPRD struct {
-	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
+	TempThreeDimentionalModelTemplate []*model.ThreeDimentionalModelTemplate
 	ThreeDimentionalModels            []*model.ThreeDimentionalModel
 	BusinessCardBackgroundTemplate    []*model.BusinessCardBackgroundTemplate
 	BusinessCardBackgrounds           []*model.BusinessCardBackground
@@ -14,7 +14,7 @@ type AppModelPRD struct {
 
 func NewAppModelPRD() *AppModelPRD {
 	threeDimentionalModels := newThreeDimentionalModelsPRD()
-	threeDimentionalModelTemplate := newThreeDimentionalModelTemplatePRD(threeDimentionalModels[0].ID)
+	threeDimentionalModelTemplate := newThreeDimentionalModelTemplatePRD(threeDimentionalModels)
 
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
@@ -57,10 +57,14 @@ func NewAppModelPRD() *AppModelPRD {
 	}
 }
 
-func newThreeDimentionalModelTemplatePRD(id string) *model.ThreeDimentionalModelTemplate {
-	return &model.ThreeDimentionalModelTemplate{
-		ID: id,
+func newThreeDimentionalModelTemplatePRD(tdms []*model.ThreeDimentionalModel) []*model.ThreeDimentionalModelTemplate {
+	models := []*model.ThreeDimentionalModelTemplate{}
+	for _, tdm := range tdms {
+		models = append(models, &model.ThreeDimentionalModelTemplate{
+			ID: tdm.ID,
+		})
 	}
+	return models
 }
 
 func newThreeDimentionalModelsPRD() []*model.ThreeDimentionalModel {

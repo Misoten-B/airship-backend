@@ -1,6 +1,7 @@
 package fetchbyidpublic
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
@@ -60,6 +61,12 @@ func (i *Interactor) Execute(
 	// リポジトリから取得
 	model, err := i.arAssetsRepository.FetchByID(id)
 	if err != nil {
+		if errors.Is(err, service.ErrArAssetsNotFound) {
+			return output, customerror.NewApplicationErrorWithoutDetails(
+				"AR assets not found",
+				http.StatusNotFound,
+			)
+		}
 		msg := "failed to fetch AR assets"
 		return output, customerror.NewApplicationError(
 			err,

@@ -29,7 +29,6 @@ const (
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param CreateUserRequest body dto.CreateUserRequest true "create user"
 func CreateUser(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -42,7 +41,6 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("body: %v", request)
 
 	user := model.User{
 		ID:                uid,
@@ -92,6 +90,10 @@ func ReadUserByID(c *gin.Context) {
 	user := model.User{}
 	err = db.First(&user, "id = ?", uid).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -114,7 +116,6 @@ func ReadUserByID(c *gin.Context) {
 // @Param CreateUserRequest formData dto.CreateUserRequest false "update user"
 // @Success 200 {object} dto.UserResponse
 func UpdateUser(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -131,8 +132,6 @@ func UpdateUser(c *gin.Context) {
 
 	// TODO: AI側に送信
 	formFile, fileHeader, err := c.Request.FormFile("recorded_voice")
-	// log.Printf("file: %v", formFile)
-	// log.Printf("fileHeader: %v", fileHeader)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -146,7 +145,6 @@ func UpdateUser(c *gin.Context) {
 	ab := drivers.NewAzureBlobDriver(appConfig)
 	castedFile := file.NewMyFile(formFile, fileHeader)
 	castedFile.FileHeader().Filename = fmt.Sprintf("%s%s", uid, filepath.Ext(castedFile.FileHeader().Filename))
-	// log.Printf("castedFile: %s", castedFile.FileHeader().Filename)
 	if err = ab.SaveBlob(containerName, castedFile); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -180,8 +178,7 @@ func UpdateUser(c *gin.Context) {
 		ID:                uid,
 		RecordedModelPath: "",
 		IsToured:          request.IsToured,
-		// Status:            model.GormStatusInProgress,
-		Status: model.GormStatusCompleted,
+		Status:            model.GormStatusCompleted,
 	}
 
 	err = db.Model(&user).Updates(user).Error

@@ -1,11 +1,16 @@
 package service
 
 import (
+	"errors"
 	"log"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
+)
+
+var (
+	ErrThreeDimentionalModelNotFound = errors.New("3d model not found")
 )
 
 type ThreeDimentionalModelRepository interface {

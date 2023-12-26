@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"mime/multipart"
 	"net/http"
 
@@ -106,20 +107,9 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// 3Dモデルが存在するかつ、ユーザーが所有しているか
-	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, uid)
+	err = u.hasPermission(threedimentionalmodelID, uid)
 	if err != nil {
-		msg := "failed to check if user has permission to use this 3D model"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
-	}
-	if !hasPermission {
-		return output, customerror.NewApplicationErrorWithoutDetails(
-			"user does not have permission to use this 3D model",
-			http.StatusForbidden,
-		)
+		return output, err
 	}
 
 	// AIへ音声ファイル生成を依頼
@@ -157,6 +147,31 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	return ARAssetsCreateOutput{
 		ID: arAssets.ID().String(),
 	}, nil
+}
+
+func (u *ARAssetsUsecaseImpl) hasPermission(threedimentionalmodelID shared.ID, userID shared.ID) error {
+	hasPermission, err := u.threeDimentionalModelService.HasUsePermission(threedimentionalmodelID, userID)
+	if err != nil {
+		if errors.Is(err, threeservice.ErrThreeDimentionalModelNotFound) {
+			return customerror.NewApplicationErrorWithoutDetails(
+				"3D model not found",
+				http.StatusNotFound,
+			)
+		}
+		msg := "failed to check if user has permission to use this 3D model"
+		return customerror.NewApplicationError(
+			err,
+			msg,
+			http.StatusInternalServerError,
+		)
+	}
+	if !hasPermission {
+		return customerror.NewApplicationErrorWithoutDetails(
+			"user does not have permission to use this 3D model",
+			http.StatusForbidden,
+		)
+	}
+	return nil
 }
 
 func (u *ARAssetsUsecaseImpl) saveStorage(qrCodeImage arassets.QRCodeImage) error {
