@@ -10,7 +10,7 @@ type AzureSpeakingAudioStorage struct {
 }
 
 const (
-	containerName = "speaking-audios"
+	containerName = "voice-sounds"
 )
 
 func NewAzureSpeakingAudioStorage(driver *drivers.AzureBlobDriver) *AzureSpeakingAudioStorage {
