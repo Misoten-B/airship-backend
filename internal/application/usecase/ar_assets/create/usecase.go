@@ -124,22 +124,6 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	}
 
 	// AIへ音声ファイル生成を依頼
-	// request := voiceservice.GenerateAudioFileRequest{
-	// 	UID:            arAssets.UserID().String(),
-	// 	OutputFilePath: speakingAsset.AudioPath(),
-	// 	Language:       "ja",
-	// 	Content:        speakingAsset.Description(),
-	// }
-
-	// err = u.voiceModelAdapter.GenerateAudioFile(request)
-	// if err != nil {
-	// 	msg := "failed to generate audio file"
-	// 	return output, customerror.NewApplicationError(
-	// 		err,
-	// 		msg,
-	// 		http.StatusInternalServerError,
-	// 	)
-	// }
 	adapter := voice.NewVallEXAdapter()
 	request := voice.GenerateAudioFileRequest{
 		ARAssetsID: arAssets.ID().String(),

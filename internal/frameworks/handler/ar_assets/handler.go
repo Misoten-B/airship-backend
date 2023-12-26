@@ -56,7 +56,8 @@ func CreateArAssets(c *gin.Context) {
 	var usecaseImpl create.ARAssetsUsecase
 
 	// ARAssetsUsecaseの生成
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeCreateARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
@@ -123,7 +124,8 @@ func ReadArAssetsByID(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl fetchbyid.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByIDARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
@@ -177,7 +179,8 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 
 	// リクエスト取得
 	id := c.Param("ar_assets_id")
-	if id == "" {
+	// if id == "" {
+	if false {
 		reqErr := errors.New("ar_assets_id is empty")
 		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
 		return
@@ -185,7 +188,8 @@ func ReadArAssetsByIDPublic(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl fetchbyidpublic.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByIDPublicARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
@@ -245,7 +249,8 @@ func ReadAllArAssets(c *gin.Context) {
 	// ユースケース実行
 	var usecaseImpl fetchbyuserid.Usecase
 
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByUserIDARAssetsUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)

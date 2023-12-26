@@ -1,3 +1,6 @@
 保険用プロジェクト
 
-データベースだけ起動して、AI側とgo run .を行なう
+task runとAI側の起動を行なう
+
+AI側
+- audiosバケットがPUBLICか
