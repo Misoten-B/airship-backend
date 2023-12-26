@@ -4,12 +4,12 @@ import (
 	"errors"
 	"regexp"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type PersonalBusinessCardBackground struct {
-	id        id.ID
+	id        shared.ID
 	colorCode string
 	image     file.File
 }
@@ -29,7 +29,7 @@ func NewPersonalBusinessCardBackground(colorCode string, image file.File) (*Pers
 		return nil, ErrBadColor
 	}
 
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func NewPersonalBusinessCardBackground(colorCode string, image file.File) (*Pers
 	}, nil
 }
 
-func (p *PersonalBusinessCardBackground) ID() id.ID {
+func (p *PersonalBusinessCardBackground) ID() shared.ID {
 	return p.id
 }
 

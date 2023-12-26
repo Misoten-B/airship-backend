@@ -7,10 +7,10 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type ARAssetsUsecase interface {
@@ -57,8 +57,8 @@ func (u *ARAssetsUsecaseImpl) Create(input ARAssetsCreateInput) (ARAssetsCreateO
 	var output ARAssetsCreateOutput
 
 	// バリデーション & オブジェクト生成
-	threedimentionalmodelID := id.ReconstructID(input.ThreeDimentionalID)
-	uid := id.ReconstructID(input.UID)
+	threedimentionalmodelID := shared.ReconstructID(input.ThreeDimentionalID)
+	uid := shared.ReconstructID(input.UID)
 
 	var qrCodeImage arassets.QRCodeImage
 	if input.File != nil {

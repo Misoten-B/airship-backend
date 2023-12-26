@@ -4,18 +4,18 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type ThreeDimentionalModel struct {
-	id     id.ID
-	userID id.ID
+	id     shared.ID
+	userID shared.ID
 	file   *file.File
 }
 
-func NewThreeDimentionalModel(userID id.ID, file *file.File) (ThreeDimentionalModel, error) {
-	id, err := id.NewID()
+func NewThreeDimentionalModel(userID shared.ID, file *file.File) (ThreeDimentionalModel, error) {
+	id, err := shared.NewID()
 	if err != nil {
 		return ThreeDimentionalModel{}, err
 	}
@@ -30,14 +30,14 @@ func NewThreeDimentionalModel(userID id.ID, file *file.File) (ThreeDimentionalMo
 	}, nil
 }
 
-func ReconstructThreeDimentionalModel(id id.ID, userID id.ID) *ThreeDimentionalModel {
+func ReconstructThreeDimentionalModel(id shared.ID, userID shared.ID) *ThreeDimentionalModel {
 	return &ThreeDimentionalModel{
 		id:     id,
 		userID: userID,
 	}
 }
 
-func ReconstructThreeDimentionalModelTemplate(id id.ID) *ThreeDimentionalModel {
+func ReconstructThreeDimentionalModelTemplate(id shared.ID) *ThreeDimentionalModel {
 	return &ThreeDimentionalModel{
 		id: id,
 	}
@@ -47,11 +47,11 @@ func (t *ThreeDimentionalModel) IsTemplate() bool {
 	return t.userID == ""
 }
 
-func (t *ThreeDimentionalModel) ID() id.ID {
+func (t *ThreeDimentionalModel) ID() shared.ID {
 	return t.id
 }
 
-func (t *ThreeDimentionalModel) UserID() id.ID {
+func (t *ThreeDimentionalModel) UserID() shared.ID {
 	return t.userID
 }
 

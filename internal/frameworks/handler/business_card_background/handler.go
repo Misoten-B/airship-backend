@@ -5,13 +5,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers"
 	"github.com/Misoten-B/airship-backend/internal/drivers/config"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"github.com/Misoten-B/airship-backend/internal/file"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/business_card_background/dto"
-	"github.com/Misoten-B/airship-backend/internal/id"
 	"github.com/gin-gonic/gin"
 )
 
@@ -48,7 +48,7 @@ func CreateBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	bcbID, err := id.NewID()
+	bcbID, err := shared.NewID()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

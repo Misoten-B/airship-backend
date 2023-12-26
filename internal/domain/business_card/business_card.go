@@ -1,13 +1,13 @@
 package businesscard
 
-import "github.com/Misoten-B/airship-backend/internal/id"
+import "github.com/Misoten-B/airship-backend/internal/domain/shared"
 
 type BusinessCard struct {
-	ID                          id.ID
-	UserID                      id.ID
-	BusinessCardPartsCoordinate id.ID
-	BusinessCardBackground      id.ID
-	ARAssets                    id.ID
+	ID                          shared.ID
+	UserID                      shared.ID
+	BusinessCardPartsCoordinate shared.ID
+	BusinessCardBackground      shared.ID
+	ARAssets                    shared.ID
 	Name                        *string
 	DisplayName                 *string
 	CompanyName                 *string
@@ -21,10 +21,10 @@ type BusinessCard struct {
 }
 
 func NewBusinessCard(
-	userID id.ID,
-	businessCardPartsCoordinate id.ID,
-	businessCardBackground id.ID,
-	arAssets id.ID,
+	userID shared.ID,
+	businessCardPartsCoordinate shared.ID,
+	businessCardBackground shared.ID,
+	arAssets shared.ID,
 	name *string,
 	displayName *string,
 	companyName *string,
@@ -36,7 +36,7 @@ func NewBusinessCard(
 	address *string,
 	accessCount int,
 ) (*BusinessCard, error) {
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		return nil, err
 	}

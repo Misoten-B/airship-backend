@@ -5,9 +5,9 @@ import (
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	tdmservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	vservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type Usecase interface {
@@ -58,7 +58,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 	var output Output
 
 	// バリデーション & オブジェクト生成
-	userID := id.ReconstructID(input.UserID)
+	userID := shared.ReconstructID(input.UserID)
 
 	// userIDをもとに一覧取得
 	models, err := i.arAssetsRepository.FetchByUserID(userID)

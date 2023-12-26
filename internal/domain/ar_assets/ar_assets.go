@@ -4,21 +4,21 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/file"
-	"github.com/Misoten-B/airship-backend/internal/id"
 )
 
 type ARAssets struct {
 	speakingAsset           SpeakingAsset
 	qRCodeImage             QRCodeImage
-	threeDimentionalModelID id.ID
+	threeDimentionalModelID shared.ID
 	accessCount             int
 }
 
 func NewARAssets(
 	speakingAsset SpeakingAsset,
 	qrCodeImage QRCodeImage,
-	threedimentionalModelID id.ID,
+	threedimentionalModelID shared.ID,
 ) ARAssets {
 	return ARAssets{
 		speakingAsset:           speakingAsset,
@@ -30,11 +30,11 @@ func NewARAssets(
 
 // ID は ARAssets の ID を返します。
 // ARアセット・音声ファイルともに1対1の関係なので、内部的には SpeakingAsset の ID を返します。
-func (a *ARAssets) ID() id.ID {
+func (a *ARAssets) ID() shared.ID {
 	return a.speakingAsset.ID()
 }
 
-func (a *ARAssets) UserID() id.ID {
+func (a *ARAssets) UserID() shared.ID {
 	return a.speakingAsset.UserID()
 }
 
@@ -42,7 +42,7 @@ func (a *ARAssets) QRCodeImage() QRCodeImage {
 	return a.qRCodeImage
 }
 
-func (a *ARAssets) ThreeDimentionalModelID() id.ID {
+func (a *ARAssets) ThreeDimentionalModelID() shared.ID {
 	return a.threeDimentionalModelID
 }
 
@@ -55,14 +55,14 @@ func (a *ARAssets) AccessCount() int {
 }
 
 type SpeakingAsset struct {
-	id          id.ID
-	userID      id.ID
+	id          shared.ID
+	userID      shared.ID
 	description string
 	audioPath   string
 }
 
-func NewSpeakingAsset(userID id.ID, description string) (SpeakingAsset, error) {
-	id, err := id.NewID()
+func NewSpeakingAsset(userID shared.ID, description string) (SpeakingAsset, error) {
+	id, err := shared.NewID()
 	if err != nil {
 		return SpeakingAsset{}, err
 	}
@@ -77,11 +77,11 @@ func NewSpeakingAsset(userID id.ID, description string) (SpeakingAsset, error) {
 	}, nil
 }
 
-func (s *SpeakingAsset) ID() id.ID {
+func (s *SpeakingAsset) ID() shared.ID {
 	return s.id
 }
 
-func (s *SpeakingAsset) UserID() id.ID {
+func (s *SpeakingAsset) UserID() shared.ID {
 	return s.userID
 }
 
@@ -99,7 +99,7 @@ type QRCodeImage struct {
 }
 
 func NewQRCodeImage(file *file.File) (QRCodeImage, error) {
-	id, err := id.NewID()
+	id, err := shared.NewID()
 	if err != nil {
 		return QRCodeImage{}, err
 	}
