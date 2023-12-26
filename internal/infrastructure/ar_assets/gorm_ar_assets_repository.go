@@ -1,9 +1,11 @@
 package arassets
 
 import (
+	"errors"
 	"fmt"
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
+	arservice "github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/mapper"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
@@ -45,8 +47,7 @@ func (r *GormARAssetsRepository) Save(arassets arassets.ARAssets) error {
 		ThreeDimentionalModelID: threedimentionalmodelID,
 		QRCodeImagePath:         qrCodeImage.Name(),
 		AccessCount:             arassets.AccessCount(),
-		// Status:                  model.GormStatusInProgress,
-		Status: model.GormStatusCompleted,
+		Status:                  model.GormStatusCompleted,
 	}
 
 	tx := r.db.Begin()
@@ -83,6 +84,9 @@ func (r *GormARAssetsRepository) FetchByID(id shared.ID) (arassets.ReadModel, er
 		Preload("SpeakingAsset").
 		Preload("ThreeDimentionalModel").
 		First(&arAssetModel).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return readModel, arservice.ErrArAssetsNotFound
+		}
 		return readModel, fmt.Errorf("failed to fetch ar asset by id: %w", err)
 	}
 

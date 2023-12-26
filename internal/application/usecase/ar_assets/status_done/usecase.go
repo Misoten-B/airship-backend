@@ -1,6 +1,7 @@
 package statusdone
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
@@ -38,6 +39,12 @@ func (i *Interactor) Execute(input Input) error {
 	// ARアセットの取得
 	_, err := i.arAssetsRepository.FetchByID(id)
 	if err != nil {
+		if errors.Is(err, service.ErrArAssetsNotFound) {
+			return customerror.NewApplicationErrorWithoutDetails(
+				"AR assets not found",
+				http.StatusNotFound,
+			)
+		}
 		return customerror.NewApplicationErrorWithoutDetails(
 			"failed to fetch ar assets",
 			http.StatusNotFound,

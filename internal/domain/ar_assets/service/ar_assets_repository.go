@@ -1,11 +1,16 @@
 package service
 
 import (
+	"errors"
 	"log"
 
 	arassets "github.com/Misoten-B/airship-backend/internal/domain/ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	"github.com/Misoten-B/airship-backend/internal/testdata"
+)
+
+var (
+	ErrArAssetsNotFound = errors.New("ar assets not found")
 )
 
 type ARAssetsRepository interface {
