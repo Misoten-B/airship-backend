@@ -5,6 +5,7 @@ import (
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
+	"github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
 	"github.com/Misoten-B/airship-backend/internal/drivers/database/model"
 	"gorm.io/gorm"
 )
@@ -69,6 +70,9 @@ func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentio
 	if err := r.db.Preload("PersonalThreeDimentionalModels").
 		Preload("ThreeDimentionalModelTemplates").
 		First(&threeDimentionalModel, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, service.ErrThreeDimentionalModelNotFound
+		}
 		return nil, err
 	}
 
@@ -95,6 +99,9 @@ func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimen
 	if err := r.db.Preload("PersonalThreeDimentionalModels").
 		Preload("ThreeDimentionalModelTemplates").
 		First(&threeDimentionalModel, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return threedimentionalmodel.ReadModel{}, service.ErrThreeDimentionalModelNotFound
+		}
 		return threedimentionalmodel.ReadModel{}, err
 	}
 

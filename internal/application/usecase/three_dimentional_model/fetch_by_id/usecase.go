@@ -1,6 +1,7 @@
 package fetchbyid
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/customerror"
@@ -48,6 +49,12 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 	//   IDをもとに3Dモデルを取得
 	readModel, err := i.threeDimentionalModelRepository.FindByID(tdmID)
 	if err != nil {
+		if errors.Is(err, tdmservice.ErrThreeDimentionalModelNotFound) {
+			return output, customerror.NewApplicationErrorWithoutDetails(
+				"three dimentional model not found",
+				http.StatusNotFound,
+			)
+		}
 		msg := "failed to find three dimentional model"
 		return output, customerror.NewApplicationError(
 			err,
