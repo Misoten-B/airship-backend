@@ -29,6 +29,12 @@ func seedPRD(db *gorm.DB) {
 	// ThreeDimentionalModelTemplate
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.TempThreeDimentionalModelTemplate)
 
+	// SpeakingAsset
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.SpeakingAsset)
+
+	// ARAsset
+	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.ARAsset)
+
 	// BusinessCardBackground
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(appModel.BusinessCardBackgrounds)
 

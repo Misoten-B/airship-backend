@@ -9,30 +9,32 @@ import (
 
 type AppModelPRD struct {
 	User                              *model.User
-	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
+	TempThreeDimentionalModelTemplate []*model.ThreeDimentionalModelTemplate
 	ThreeDimentionalModels            []*model.ThreeDimentionalModel
 	BusinessCardBackgroundTemplate    []*model.BusinessCardBackgroundTemplate
 	BusinessCardBackgrounds           []*model.BusinessCardBackground
 	BusinessCardPartsCoordinate       []*model.BusinessCardPartsCoordinate
+	SpeakingAsset                     *model.SpeakingAsset
+	ARAsset                           *model.ARAsset
 }
 
 func NewAppModelPRD() *AppModelPRD {
 	threeDimentionalModels := newThreeDimentionalModelsPRD()
-	threeDimentionalModelTemplate := newThreeDimentionalModelTemplatePRD(threeDimentionalModels[0].ID)
+	threeDimentionalModelTemplate := newThreeDimentionalModelTemplatePRD(threeDimentionalModels)
 
 	businessCardBackgrounds := []*model.BusinessCardBackground{
 		{
-			ID:        newID(),
+			ID:        "background-template-1",
 			ColorCode: "#ffffff",
 			ImagePath: "background-template-1.png",
 		},
 		{
-			ID:        newID(),
+			ID:        "background-template-2",
 			ColorCode: "#ffffff",
 			ImagePath: "background-template-2.png",
 		},
 		{
-			ID:        newID(),
+			ID:        "background-template-3",
 			ColorCode: "#ffffff",
 			ImagePath: "background-template-3.png",
 		},
@@ -53,6 +55,8 @@ func NewAppModelPRD() *AppModelPRD {
 		BusinessCardBackgroundTemplate:    businessCardBackgroundTemplate,
 		BusinessCardBackgrounds:           businessCardBackgrounds,
 		BusinessCardPartsCoordinate:       businessCardPartsCoordinate,
+		SpeakingAsset:                     newSpeakingAssetsModelPRD(),
+		ARAsset:                           newARAssetsModelPRD(threeDimentionalModels[0].ID),
 	}
 }
 
@@ -65,29 +69,54 @@ func newUser() *model.User {
 	}
 }
 
-func newThreeDimentionalModelTemplatePRD(id string) *model.ThreeDimentionalModelTemplate {
-	return &model.ThreeDimentionalModelTemplate{
-		ID: id,
+func newThreeDimentionalModelTemplatePRD(tdms []*model.ThreeDimentionalModel) []*model.ThreeDimentionalModelTemplate {
+	models := []*model.ThreeDimentionalModelTemplate{}
+	for _, tdm := range tdms {
+		models = append(models, &model.ThreeDimentionalModelTemplate{
+			ID: tdm.ID,
+		})
 	}
+	return models
 }
 
 func newThreeDimentionalModelsPRD() []*model.ThreeDimentionalModel {
 	return []*model.ThreeDimentionalModel{
 		{
-			ID:        newID(),
+			ID:        "chicken",
 			ModelPath: "chicken.glb",
 		},
 		{
-			ID:        newID(),
+			ID:        "dog",
 			ModelPath: "dog.glb",
 		},
 		{
-			ID:        newID(),
+			ID:        "pinguin",
 			ModelPath: "pinguin.glb",
 		},
 		{
-			ID:        newID(),
+			ID:        "tiger",
 			ModelPath: "tiger.glb",
 		},
+	}
+}
+
+func newSpeakingAssetsModelPRD() *model.SpeakingAsset {
+	return &model.SpeakingAsset{
+		ID:          testdata.DEV_UID,
+		UserID:      testdata.DEV_UID,
+		Description: "xxx",
+		AudioPath:   fmt.Sprint(testdata.DEV_UID, ".wav"),
+	}
+}
+
+func newARAssetsModelPRD(tdmID string) *model.ARAsset {
+	return &model.ARAsset{
+		ID:                      testdata.DEV_UID,
+		AccessCount:             0,
+		QRCodeImagePath:         "",
+		Status:                  model.GormStatusCompleted,
+		UserID:                  testdata.DEV_UID,
+		SpeakingAssetID:         testdata.DEV_UID,
+		ThreeDimentionalModelID: tdmID,
 	}
 }
