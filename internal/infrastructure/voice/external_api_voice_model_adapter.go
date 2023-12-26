@@ -1,7 +1,9 @@
 package voice
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/voice/service"
 	"github.com/go-resty/resty/v2"
@@ -16,7 +18,7 @@ func NewExternalAPIVoiceModelAdapter() *ExternalAPIVoiceModelAdapter {
 func (a *ExternalAPIVoiceModelAdapter) GenerateAudioFile(request service.GenerateAudioFileRequest) error {
 	url := fmt.Sprintf("https://airship-ml.japaneast.cloudapp.azure.com/voice-model/%s/sound", request.UID)
 	client := resty.New()
-	_, err := client.R().
+	resp, err := client.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]string{
 			"ar_assets_id": request.ARAssetsID,
@@ -24,6 +26,10 @@ func (a *ExternalAPIVoiceModelAdapter) GenerateAudioFile(request service.Generat
 			"content":      request.Content,
 		}).
 		Post(url)
+	if resp.StatusCode() != http.StatusOK {
+		return errors.New("failed to generate audio file")
+	}
+
 	if err != nil {
 		return err
 	}
