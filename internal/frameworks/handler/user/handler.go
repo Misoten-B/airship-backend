@@ -90,6 +90,10 @@ func ReadUserByID(c *gin.Context) {
 	user := model.User{}
 	err = db.First(&user, "id = ?", uid).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
