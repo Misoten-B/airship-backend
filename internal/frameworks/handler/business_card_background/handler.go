@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
@@ -108,8 +107,6 @@ func CreateBusinessCardBackground(c *gin.Context) {
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Success 200 {object} []dto.BackgroundResponse
 func ReadAllBusinessCardBackground(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
-
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

@@ -32,14 +32,11 @@ const (
 // @Param CreateBusinessCardRequest formData dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 201 {object} dto.BusinessCardResponse
 func CreateBusinessCard(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
-
 	request := dto.CreateBusinessCardRequest{}
 	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("formData: %v", request)
 
 	uid, err := frameworks.GetUID(c)
 	if err != nil {
