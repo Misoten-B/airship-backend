@@ -47,7 +47,8 @@ func CreateThreeDimentional(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl create.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeCreateThreeDimentionalModelUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
@@ -103,7 +104,8 @@ func ReadAllThreeDimentional(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl fetchbyuserid.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
@@ -174,7 +176,8 @@ func ReadThreeDimentionalByID(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl fetchbyid.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByIDThreeDimentionalModelUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)
