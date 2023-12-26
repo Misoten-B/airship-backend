@@ -554,11 +554,11 @@ paths:
       - description: Image file to be uploaded
         in: formData
         name: BusinessCardBackgroundImage
-        required: true
         type: file
       - example: '#ffffff'
         in: formData
         name: businessCardBackgroundColor
+        required: true
         type: string
       responses:
         "201":

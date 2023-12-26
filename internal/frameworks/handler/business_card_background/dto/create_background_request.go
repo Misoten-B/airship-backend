@@ -1,5 +1,5 @@
 package dto
 
 type CreateBackgroundRequest struct {
-	BusinessCardBackgroundColor string `form:"businessCardBackgroundColor" example:"#ffffff"`
+	BusinessCardBackgroundColor string `form:"businessCardBackgroundColor" example:"#ffffff" binding:"required"`
 }

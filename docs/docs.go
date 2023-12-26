@@ -472,14 +472,14 @@ const docTemplate = `{
                         "type": "file",
                         "description": "Image file to be uploaded",
                         "name": "BusinessCardBackgroundImage",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "example": "#ffffff",
                         "name": "businessCardBackgroundColor",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
