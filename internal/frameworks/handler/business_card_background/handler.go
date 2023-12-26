@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -23,7 +24,7 @@ const (
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Accept multipart/form-data
-// @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
+// @Param BusinessCardBackgroundImage formData file false "Image file to be uploaded"
 // @Param dto.CreateBackgroundRequest formData dto.CreateBackgroundRequest true "BusinessCardBackground"
 // @Success 201 {object} dto.BackgroundResponse
 func CreateBusinessCardBackground(c *gin.Context) {
@@ -42,7 +43,7 @@ func CreateBusinessCardBackground(c *gin.Context) {
 	// TODO: pngでバリデーション
 	// TODO: 余裕があれば解像度を低くする
 	formFile, fileHeader, err := c.Request.FormFile("BusinessCardBackgroundImage")
-	if err != nil {
+	if err != nil && !errors.Is(err, http.ErrMissingFile) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -53,23 +54,31 @@ func CreateBusinessCardBackground(c *gin.Context) {
 		return
 	}
 
-	appConfig, err := config.GetConfig()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	ab := drivers.NewAzureBlobDriver(appConfig)
-	castedFile := file.NewMyFile(formFile, fileHeader)
-	castedFile.FileHeader().Filename = fmt.Sprintf("%s.png", bcbID.String())
-	if err = ab.SaveBlob(containerName, castedFile); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	var fileName string
+
+	if fileHeader != nil {
+		var appConfig *config.Config
+		appConfig, err = config.GetConfig()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		ab := drivers.NewAzureBlobDriver(appConfig)
+		castedFile := file.NewMyFile(formFile, fileHeader)
+
+		fileName = fmt.Sprintf("%s.png", bcbID.String())
+		castedFile.FileHeader().Filename = fileName
+
+		if err = ab.SaveBlob(containerName, castedFile); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	bcb := model.BusinessCardBackground{
 		ID:        bcbID.String(),
 		ColorCode: request.BusinessCardBackgroundColor,
-		ImagePath: castedFile.FileHeader().Filename,
+		ImagePath: fileName,
 	}
 
 	pbcb := model.PersonalBusinessCardBackground{
