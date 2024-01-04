@@ -2,6 +2,7 @@ package threedimentionalmodel
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
@@ -34,7 +35,6 @@ func (r *GormThreeDimentionalModelRepository) Save(
 		ModelPath: threeDimentionalModel.FileName(),
 	}
 	ptdmModel := model.PersonalThreeDimentionalModel{
-		// ID:     tdmModel.ID,
 		ThreeDimentionalModel: tdmModel,
 		UserID:                userID,
 	}
@@ -139,8 +139,24 @@ func (r *GormThreeDimentionalModelRepository) FindByUserID(
 	var personalTDMs []model.PersonalThreeDimentionalModel
 	var tDMTemplates []model.ThreeDimentionalModelTemplate
 
-	r.db.Debug().Preload("ThreeDimentionalModel").Where("user_id = ?", userID).Find(&personalTDMs)
-	r.db.Preload("ThreeDimentionalModel").Find(&tDMTemplates)
+	if err := r.db.
+		Preload("ThreeDimentionalModel").
+		Where("user_id = ?", userID).
+		Find(&personalTDMs).
+		Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Personal Three Dimentional Models: %w", err)
+		}
+	}
+
+	if err := r.db.
+		Preload("ThreeDimentionalModel").
+		Find(&tDMTemplates).
+		Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Three Dimentional Model Templates: %w", err)
+		}
+	}
 
 	var readModels []threedimentionalmodel.ReadModel
 
