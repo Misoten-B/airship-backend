@@ -9,7 +9,7 @@ import (
 
 type AppModel struct {
 	User                              *model.User
-	TempThreeDimentionalModelTemplate *model.ThreeDimentionalModelTemplate
+	TempThreeDimentionalModelTemplate []*model.ThreeDimentionalModelTemplate
 	PersonalThreeDimentionalModel     *model.PersonalThreeDimentionalModel
 	ThreeDimentionalModels            []*model.ThreeDimentionalModel
 	SpeakingAsset                     *model.SpeakingAsset
@@ -25,8 +25,8 @@ func NewAppModel() *AppModel {
 	user := newUser()
 
 	threeDimentionalModels := newThreeDimentionalModels()
-	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate(threeDimentionalModels[0].ID)
-	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[1].ID, user)
+	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate(threeDimentionalModels)
+	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[0].ID, user)
 
 	speakingAsset := newSpeakingAsset(user)
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
@@ -96,10 +96,17 @@ func newUser() *model.User {
 	}
 }
 
-func newThreeDimentionalModelTemplate(id string) *model.ThreeDimentionalModelTemplate {
-	return &model.ThreeDimentionalModelTemplate{
-		ID: id,
+func newThreeDimentionalModelTemplate(tdms []*model.ThreeDimentionalModel) []*model.ThreeDimentionalModelTemplate {
+	models := []*model.ThreeDimentionalModelTemplate{}
+	for i, tdm := range tdms {
+		if i == 0 {
+			continue
+		}
+		models = append(models, &model.ThreeDimentionalModelTemplate{
+			ID: tdm.ID,
+		})
 	}
+	return models
 }
 
 func newPersonalThreeDimentionalModel(id string, user *model.User) *model.PersonalThreeDimentionalModel {

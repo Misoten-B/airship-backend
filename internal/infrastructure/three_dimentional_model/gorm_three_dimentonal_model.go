@@ -2,6 +2,7 @@ package threedimentionalmodel
 
 import (
 	"errors"
+	"log"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
@@ -135,9 +136,10 @@ func (r *GormThreeDimentionalModelRepository) FindByUserID(
 ) ([]threedimentionalmodel.ReadModel, error) {
 	var threeDimentionalModels []model.ThreeDimentionalModel
 
+	// TODO: 現状、他の人のもすべて取得してしまう
 	// FIXME: Gorm取得の最適化
 	// すべてのThreeDimentionalModelTemplatesとuser_idが一致するPersonalThreeDimentionalModelsを取得
-	if err := r.db.Preload("PersonalThreeDimentionalModels", "user_id = ?", userID).
+	if err := r.db.Debug().Preload("PersonalThreeDimentionalModels", "user_id = ?", userID).
 		Preload("ThreeDimentionalModelTemplates").
 		Find(&threeDimentionalModels).Error; err != nil {
 		return nil, err
@@ -145,25 +147,22 @@ func (r *GormThreeDimentionalModelRepository) FindByUserID(
 
 	var readModels []threedimentionalmodel.ReadModel
 
+	log.Println(threeDimentionalModels)
+
 	for _, threeDimentionalModel := range threeDimentionalModels {
-		templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
+		log.Println(threeDimentionalModel)
+
 		personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
-
-		if templateLen == 0 && personalLen == 0 {
-			return nil, errors.New("three dimentional model not found")
-		}
-
-		if templateLen != 0 {
-			readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
-				threeDimentionalModel.ID,
-				threeDimentionalModel.ModelPath,
-			))
-		}
 
 		if personalLen != 0 {
 			readModels = append(readModels, threedimentionalmodel.NewReadModel(
 				threeDimentionalModel.ID,
 				threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID,
+				threeDimentionalModel.ModelPath,
+			))
+		} else {
+			readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
+				threeDimentionalModel.ID,
 				threeDimentionalModel.ModelPath,
 			))
 		}
