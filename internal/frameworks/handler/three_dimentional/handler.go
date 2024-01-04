@@ -103,7 +103,8 @@ func ReadAllThreeDimentional(c *gin.Context) {
 
 	// ユースケース実行
 	var usecaseImpl fetchbyuserid.Usecase
-	if config.DevMode {
+	// if config.DevMode {
+	if false {
 		usecaseImpl = container.InitializeFetchByUserIDThreeDimentionalModelUsecaseForDev()
 	} else {
 		db, dbErr := frameworks.GetDB(c)

@@ -1,5 +1,5 @@
 package testdata
 
 const (
-	DEV_UID = "dev_uid2"
+	DEV_UID = "dev_uid"
 )

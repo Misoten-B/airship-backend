@@ -26,7 +26,7 @@ func NewAppModel() *AppModel {
 
 	threeDimentionalModels := newThreeDimentionalModels()
 	threeDimentionalModelTemplate := newThreeDimentionalModelTemplate(threeDimentionalModels)
-	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[0].ID, user)
+	personalThreeDimentionalModel := newPersonalThreeDimentionalModel(threeDimentionalModels[0], user)
 
 	speakingAsset := newSpeakingAsset(user)
 	arAsset := newARAsset(user, speakingAsset, threeDimentionalModels[0])
@@ -103,16 +103,21 @@ func newThreeDimentionalModelTemplate(tdms []*model.ThreeDimentionalModel) []*mo
 			continue
 		}
 		models = append(models, &model.ThreeDimentionalModelTemplate{
-			ID: tdm.ID,
+			// ID: tdm.ID,
+			ThreeDimentionalModel: *tdm,
 		})
 	}
 	return models
 }
 
-func newPersonalThreeDimentionalModel(id string, user *model.User) *model.PersonalThreeDimentionalModel {
+func newPersonalThreeDimentionalModel(
+	tdm *model.ThreeDimentionalModel,
+	user *model.User,
+) *model.PersonalThreeDimentionalModel {
 	return &model.PersonalThreeDimentionalModel{
-		ID:     id,
-		UserID: user.ID,
+		// ID:     id,
+		ThreeDimentionalModel: *tdm,
+		UserID:                user.ID,
 	}
 }
 

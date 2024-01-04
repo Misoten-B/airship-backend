@@ -61,7 +61,8 @@ func newThreeDimentionalModelTemplatePRD(tdms []*model.ThreeDimentionalModel) []
 	models := []*model.ThreeDimentionalModelTemplate{}
 	for _, tdm := range tdms {
 		models = append(models, &model.ThreeDimentionalModelTemplate{
-			ID: tdm.ID,
+			// ID: tdm.ID,
+			ThreeDimentionalModel: *tdm,
 		})
 	}
 	return models

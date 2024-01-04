@@ -2,7 +2,6 @@ package threedimentionalmodel
 
 import (
 	"errors"
-	"log"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
@@ -35,8 +34,9 @@ func (r *GormThreeDimentionalModelRepository) Save(
 		ModelPath: threeDimentionalModel.FileName(),
 	}
 	ptdmModel := model.PersonalThreeDimentionalModel{
-		ID:     tdmModel.ID,
-		UserID: userID,
+		// ID:     tdmModel.ID,
+		ThreeDimentionalModel: tdmModel,
+		UserID:                userID,
 	}
 
 	// トランザクション
@@ -67,6 +67,7 @@ func (r *GormThreeDimentionalModelRepository) Save(
 func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
+	// TODO: 応急処置を治す
 	// FIXME: Gorm取得の最適化
 	if err := r.db.Preload("PersonalThreeDimentionalModels").
 		Preload("ThreeDimentionalModelTemplates").
@@ -77,24 +78,25 @@ func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentio
 		return nil, err
 	}
 
-	templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-	personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
+	// templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
+	// personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
 
-	if templateLen == 0 && personalLen == 0 {
-		return nil, errors.New("three dimentional model not found")
-	}
+	// if templateLen == 0 && personalLen == 0 {
+	// return nil, errors.New("three dimentional model not found")
+	// }
 
-	if templateLen != 0 {
-		return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
-	}
+	// if templateLen != 0 {
+	// return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
+	// }
 
-	uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
+	uid := shared.ReconstructID("threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID")
 	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error) {
 	var threeDimentionalModel model.ThreeDimentionalModel
 
+	// TODO: 応急処置を治す
 	// TODO: 重複部分の修正または統合
 	// FIXME: Gorm取得の最適化
 	if err := r.db.Preload("PersonalThreeDimentionalModels").
@@ -106,66 +108,55 @@ func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimen
 		return threedimentionalmodel.ReadModel{}, err
 	}
 
-	templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-	personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
+	// templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
+	// personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
 
-	if templateLen == 0 && personalLen == 0 {
-		return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
-	}
+	// if templateLen == 0 && personalLen == 0 {
+	// return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
+	// }
 
-	if templateLen != 0 {
-		return threedimentionalmodel.NewTemplateReadModel(
-			id.String(),
-			threeDimentionalModel.ModelPath,
-		), nil
-	}
+	// if templateLen != 0 {
+	return threedimentionalmodel.NewTemplateReadModel(
+		id.String(),
+		threeDimentionalModel.ModelPath,
+	), nil
+	// }
 
-	if personalLen != 0 {
-		uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
-		return threedimentionalmodel.NewReadModel(
-			id.String(),
-			uid.String(),
-			threeDimentionalModel.ModelPath,
-		), nil
-	}
-	return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
+	// if personalLen != 0 {
+	// uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
+	// return threedimentionalmodel.NewReadModel(
+	// id.String(),
+	// uid.String(),
+	// threeDimentionalModel.ModelPath,
+	// ), nil
+	// }
+	// return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByUserID(
 	userID shared.ID,
 ) ([]threedimentionalmodel.ReadModel, error) {
-	var threeDimentionalModels []model.ThreeDimentionalModel
+	var personalTDMs []model.PersonalThreeDimentionalModel
+	var tDMTemplates []model.ThreeDimentionalModelTemplate
 
-	// TODO: 現状、他の人のもすべて取得してしまう
-	// FIXME: Gorm取得の最適化
-	// すべてのThreeDimentionalModelTemplatesとuser_idが一致するPersonalThreeDimentionalModelsを取得
-	if err := r.db.Debug().Preload("PersonalThreeDimentionalModels", "user_id = ?", userID).
-		Preload("ThreeDimentionalModelTemplates").
-		Find(&threeDimentionalModels).Error; err != nil {
-		return nil, err
-	}
+	r.db.Debug().Preload("ThreeDimentionalModel").Where("user_id = ?", userID).Find(&personalTDMs)
+	r.db.Preload("ThreeDimentionalModel").Find(&tDMTemplates)
 
 	var readModels []threedimentionalmodel.ReadModel
 
-	log.Println(threeDimentionalModels)
+	for _, tdm := range personalTDMs {
+		readModels = append(readModels, threedimentionalmodel.NewReadModel(
+			tdm.ThreeDimentionalModel.ID,
+			tdm.UserID,
+			tdm.ThreeDimentionalModel.ModelPath,
+		))
+	}
 
-	for _, threeDimentionalModel := range threeDimentionalModels {
-		log.Println(threeDimentionalModel)
-
-		personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
-
-		if personalLen != 0 {
-			readModels = append(readModels, threedimentionalmodel.NewReadModel(
-				threeDimentionalModel.ID,
-				threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID,
-				threeDimentionalModel.ModelPath,
-			))
-		} else {
-			readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
-				threeDimentionalModel.ID,
-				threeDimentionalModel.ModelPath,
-			))
-		}
+	for _, tdm := range tDMTemplates {
+		readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
+			tdm.ThreeDimentionalModel.ID,
+			tdm.ThreeDimentionalModel.ModelPath,
+		))
 	}
 
 	return readModels, nil
