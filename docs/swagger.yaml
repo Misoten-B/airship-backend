@@ -150,6 +150,9 @@ definitions:
       address:
         example: Tokyo
         type: string
+      arAssetId:
+        description: ar assets
+        type: string
       businessCardBackgroundColor:
         description: background
         example: '#ffffff'
@@ -197,10 +200,10 @@ definitions:
         example: This is a description
         type: string
       threeDimentionalModel:
-        description: ar assets
         example: https://example.com/model.glb
         type: string
     required:
+    - arAssetId
     - businessCardBackgroundColor
     - businessCardPartsCoordinate
     - displayName

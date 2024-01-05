@@ -8,6 +8,7 @@ type BusinessCardResponse struct {
 	BusinessCardBackgroundColor string `json:"businessCardBackgroundColor" example:"#ffffff" binding:"required"`
 	BusinessCardBackgroundImage string `json:"businessCardBackgroundImage" example:"https://example.com/image.png"`
 	// ar assets
+	ARAssetID             string `json:"arAssetId" binding:"required"`
 	ThreeDimentionalModel string `json:"threeDimentionalModel" example:"https://example.com/model.glb" binding:"required"`
 	SpeakingDescription   string `json:"speakingDescription" example:"This is a description" binding:"required"`
 	SpeakingAudioPath     string `json:"speakingAudioPath" example:"https://example.com/audio.mp3" binding:"required"`
@@ -57,6 +58,7 @@ func ConvertBC(businesscard model.BusinessCard,
 		BusinessCardBackgroundColor: bcb.ColorCode,
 		BusinessCardBackgroundImage: bcb.ImagePath,
 		BusinessCardName:            businesscard.BusinessCardName,
+		ARAssetID:                   arassets.ID,
 		ThreeDimentionalModel:       arassets.ThreeDimentionalModel.ModelPath,
 		SpeakingDescription:         arassets.SpeakingAsset.Description,
 		SpeakingAudioPath:           arassets.SpeakingAsset.AudioPath,
