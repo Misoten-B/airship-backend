@@ -2,6 +2,7 @@ package threedimentionalmodel
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/Misoten-B/airship-backend/internal/domain/shared"
 	threedimentionalmodel "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model"
@@ -34,8 +35,8 @@ func (r *GormThreeDimentionalModelRepository) Save(
 		ModelPath: threeDimentionalModel.FileName(),
 	}
 	ptdmModel := model.PersonalThreeDimentionalModel{
-		ID:     tdmModel.ID,
-		UserID: userID,
+		ThreeDimentionalModel: tdmModel,
+		UserID:                userID,
 	}
 
 	// トランザクション
@@ -64,109 +65,109 @@ func (r *GormThreeDimentionalModelRepository) Save(
 }
 
 func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
-	var threeDimentionalModel model.ThreeDimentionalModel
+	var personalTDM model.PersonalThreeDimentionalModel
 
-	// FIXME: Gorm取得の最適化
-	if err := r.db.Preload("PersonalThreeDimentionalModels").
-		Preload("ThreeDimentionalModelTemplates").
-		First(&threeDimentionalModel, id).Error; err != nil {
+	err := r.db.
+		Preload("ThreeDimentionalModel").
+		First(&personalTDM, id).
+		Error
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Personal Three Dimentional Model: %w", err)
+		}
+	} else {
+		return threedimentionalmodel.ReconstructThreeDimentionalModel(id, shared.ID(personalTDM.UserID)), nil
+	}
+
+	var tDMTemplate model.ThreeDimentionalModelTemplate
+
+	err = r.db.
+		Preload("ThreeDimentionalModel").
+		First(&tDMTemplate, id).
+		Error
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, service.ErrThreeDimentionalModelNotFound
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch Three Dimentional Model Template: %w", err)
 	}
-
-	templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-	personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
-
-	if templateLen == 0 && personalLen == 0 {
-		return nil, errors.New("three dimentional model not found")
-	}
-
-	if templateLen != 0 {
-		return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
-	}
-
-	uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
-	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
+	return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error) {
-	var threeDimentionalModel model.ThreeDimentionalModel
+	var personalTDM model.PersonalThreeDimentionalModel
 
-	// TODO: 重複部分の修正または統合
-	// FIXME: Gorm取得の最適化
-	if err := r.db.Preload("PersonalThreeDimentionalModels").
-		Preload("ThreeDimentionalModelTemplates").
-		First(&threeDimentionalModel, id).Error; err != nil {
+	err := r.db.
+		Preload("ThreeDimentionalModel").
+		First(&personalTDM, id).
+		Error
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return threedimentionalmodel.ReadModel{}, fmt.Errorf("failed to fetch Personal Three Dimentional Model: %w", err)
+		}
+	} else {
+		return threedimentionalmodel.NewReadModel(
+			id.String(),
+			personalTDM.UserID,
+			personalTDM.ThreeDimentionalModel.ModelPath,
+		), nil
+	}
+
+	var tDMTemplate model.ThreeDimentionalModelTemplate
+
+	err = r.db.
+		Preload("ThreeDimentionalModel").
+		First(&tDMTemplate, id).
+		Error
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return threedimentionalmodel.ReadModel{}, service.ErrThreeDimentionalModelNotFound
 		}
-		return threedimentionalmodel.ReadModel{}, err
+		return threedimentionalmodel.ReadModel{}, fmt.Errorf("failed to fetch Three Dimentional Model Template: %w", err)
 	}
-
-	templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-	personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
-
-	if templateLen == 0 && personalLen == 0 {
-		return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
-	}
-
-	if templateLen != 0 {
-		return threedimentionalmodel.NewTemplateReadModel(
-			id.String(),
-			threeDimentionalModel.ModelPath,
-		), nil
-	}
-
-	if personalLen != 0 {
-		uid := shared.ReconstructID(threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID)
-		return threedimentionalmodel.NewReadModel(
-			id.String(),
-			uid.String(),
-			threeDimentionalModel.ModelPath,
-		), nil
-	}
-	return threedimentionalmodel.ReadModel{}, errors.New("three dimentional model not found")
+	return threedimentionalmodel.NewTemplateReadModel(id.String(), tDMTemplate.ThreeDimentionalModel.ModelPath), nil
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByUserID(
 	userID shared.ID,
 ) ([]threedimentionalmodel.ReadModel, error) {
-	var threeDimentionalModels []model.ThreeDimentionalModel
+	var personalTDMs []model.PersonalThreeDimentionalModel
+	var tDMTemplates []model.ThreeDimentionalModelTemplate
 
-	// FIXME: Gorm取得の最適化
-	// すべてのThreeDimentionalModelTemplatesとuser_idが一致するPersonalThreeDimentionalModelsを取得
-	if err := r.db.Preload("PersonalThreeDimentionalModels", "user_id = ?", userID).
-		Preload("ThreeDimentionalModelTemplates").
-		Find(&threeDimentionalModels).Error; err != nil {
-		return nil, err
+	if err := r.db.
+		Preload("ThreeDimentionalModel").
+		Where("user_id = ?", userID).
+		Find(&personalTDMs).
+		Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Personal Three Dimentional Models: %w", err)
+		}
+	}
+
+	if err := r.db.
+		Preload("ThreeDimentionalModel").
+		Find(&tDMTemplates).
+		Error; err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Three Dimentional Model Templates: %w", err)
+		}
 	}
 
 	var readModels []threedimentionalmodel.ReadModel
 
-	for _, threeDimentionalModel := range threeDimentionalModels {
-		templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-		personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
+	for _, tdm := range personalTDMs {
+		readModels = append(readModels, threedimentionalmodel.NewReadModel(
+			tdm.ThreeDimentionalModel.ID,
+			tdm.UserID,
+			tdm.ThreeDimentionalModel.ModelPath,
+		))
+	}
 
-		if templateLen == 0 && personalLen == 0 {
-			return nil, errors.New("three dimentional model not found")
-		}
-
-		if templateLen != 0 {
-			readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
-				threeDimentionalModel.ID,
-				threeDimentionalModel.ModelPath,
-			))
-		}
-
-		if personalLen != 0 {
-			readModels = append(readModels, threedimentionalmodel.NewReadModel(
-				threeDimentionalModel.ID,
-				threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID,
-				threeDimentionalModel.ModelPath,
-			))
-		}
+	for _, tdm := range tDMTemplates {
+		readModels = append(readModels, threedimentionalmodel.NewTemplateReadModel(
+			tdm.ThreeDimentionalModel.ID,
+			tdm.ThreeDimentionalModel.ModelPath,
+		))
 	}
 
 	return readModels, nil
