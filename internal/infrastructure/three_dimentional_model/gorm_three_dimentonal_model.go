@@ -65,32 +65,33 @@ func (r *GormThreeDimentionalModelRepository) Save(
 }
 
 func (r *GormThreeDimentionalModelRepository) Find(id shared.ID) (*threedimentionalmodel.ThreeDimentionalModel, error) {
-	var threeDimentionalModel model.ThreeDimentionalModel
+	var personalTDM model.PersonalThreeDimentionalModel
 
-	// TODO: 応急処置を治す
-	// FIXME: Gorm取得の最適化
-	if err := r.db.Preload("PersonalThreeDimentionalModels").
-		Preload("ThreeDimentionalModelTemplates").
-		First(&threeDimentionalModel, id).Error; err != nil {
+	err := r.db.
+		Preload("ThreeDimentionalModel").
+		First(&personalTDM, id).
+		Error
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, fmt.Errorf("failed to fetch Personal Three Dimentional Model: %w", err)
+		}
+	} else {
+		return threedimentionalmodel.ReconstructThreeDimentionalModel(id, shared.ID(personalTDM.UserID)), nil
+	}
+
+	var tDMTemplate model.ThreeDimentionalModelTemplate
+
+	err = r.db.
+		Preload("ThreeDimentionalModel").
+		First(&tDMTemplate, id).
+		Error
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, service.ErrThreeDimentionalModelNotFound
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch Three Dimentional Model Template: %w", err)
 	}
-
-	// templateLen := len(threeDimentionalModel.ThreeDimentionalModelTemplates)
-	// personalLen := len(threeDimentionalModel.PersonalThreeDimentionalModels)
-
-	// if templateLen == 0 && personalLen == 0 {
-	// return nil, errors.New("three dimentional model not found")
-	// }
-
-	// if templateLen != 0 {
-	// return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
-	// }
-
-	uid := shared.ReconstructID("threeDimentionalModel.PersonalThreeDimentionalModels[0].UserID")
-	return threedimentionalmodel.ReconstructThreeDimentionalModel(id, uid), nil
+	return threedimentionalmodel.ReconstructThreeDimentionalModelTemplate(id), nil
 }
 
 func (r *GormThreeDimentionalModelRepository) FindByID(id shared.ID) (threedimentionalmodel.ReadModel, error) {
