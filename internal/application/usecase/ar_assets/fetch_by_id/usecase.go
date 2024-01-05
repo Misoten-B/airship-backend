@@ -104,14 +104,17 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 		)
 	}
 
-	qrcodeIconImagePath, err := i.qrCodeImageStorage.GetImageURL(model.QrcodeIconImagePath())
-	if err != nil {
-		msg := "failed to get QR code image URL"
-		return output, customerror.NewApplicationError(
-			err,
-			msg,
-			http.StatusInternalServerError,
-		)
+	var qrcodeIconImagePath string
+	if model.QrcodeIconImagePath() != "" {
+		qrcodeIconImagePath, err = i.qrCodeImageStorage.GetImageURL(model.QrcodeIconImagePath())
+		if err != nil {
+			msg := "failed to get QR code image URL"
+			return output, customerror.NewApplicationError(
+				err,
+				msg,
+				http.StatusInternalServerError,
+			)
+		}
 	}
 
 	return Output{

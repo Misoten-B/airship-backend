@@ -176,7 +176,12 @@ func ReadAllBusinessCard(c *gin.Context) {
 		}
 		arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
 		arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
-		arassets.QRCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
+
+		var qrCodeImagePath string
+		if arassets.QRCodeImagePath != "" {
+			qrCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
+		}
+		arassets.QRCodeImagePath = qrCodeImagePath
 
 		response := dto.ConvertBC(businesscard, bcc, bcb, arassets)
 
@@ -259,7 +264,12 @@ func ReadBusinessCardByID(c *gin.Context) {
 	}
 	arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
 	arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
-	arassets.QRCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
+
+	var qrCodeImagePath string
+	if arassets.QRCodeImagePath != "" {
+		qrCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
+	}
+	arassets.QRCodeImagePath = qrCodeImagePath
 
 	response := dto.ConvertBC(businesscard, bcc, bcb, arassets)
 
