@@ -104,7 +104,6 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 		)
 	}
 
-	// TODO: 動作確認
 	var qrcodeIconImagePath string
 	if model.QrcodeIconImagePath() != "" {
 		qrcodeIconImagePath, err = i.qrCodeImageStorage.GetImageURL(model.QrcodeIconImagePath())
