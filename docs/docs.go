@@ -1280,6 +1280,7 @@ const docTemplate = `{
         "dto.BusinessCardResponse": {
             "type": "object",
             "required": [
+                "arAssetId",
                 "businessCardBackgroundColor",
                 "businessCardPartsCoordinate",
                 "displayName",
@@ -1296,6 +1297,10 @@ const docTemplate = `{
                 "address": {
                     "type": "string",
                     "example": "Tokyo"
+                },
+                "arAssetId": {
+                    "description": "ar assets",
+                    "type": "string"
                 },
                 "businessCardBackgroundColor": {
                     "description": "background",
@@ -1362,7 +1367,6 @@ const docTemplate = `{
                     "example": "This is a description"
                 },
                 "threeDimentionalModel": {
-                    "description": "ar assets",
                     "type": "string",
                     "example": "https://example.com/model.glb"
                 }
