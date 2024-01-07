@@ -334,6 +334,13 @@ func UpdateArAssets(c *gin.Context) {
 
 	// ユースケース実行
 
+	// 音声モデル生成済みか確認
+	// ARアセットの取得（存在確認＆権限確認）
+	// バリデーション
+	// もしファイルがあれば、、、ストレージを更新する
+	// もし話す文章が違えば、、、音声ファイルを再生成する
+	// データベースを更新する
+
 	// レスポンス
 	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
 		ID:                   "1",
@@ -374,6 +381,10 @@ func DeleteArAssets(c *gin.Context) {
 	}
 
 	// ユースケース実行
+
+	// ARアセットの取得（存在確認＆権限確認）
+	// （存在するなら）ストレージから削除する
+	// データベースから削除する
 
 	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
