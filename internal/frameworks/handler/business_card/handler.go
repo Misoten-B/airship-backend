@@ -282,7 +282,6 @@ func ReadBusinessCardByID(c *gin.Context) {
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
 // @Accept multipart/form-data
-// @Param BusinessCardBackgroundImage formData file true "Image file to be uploaded"
 // @Param CreateBusinessCardRequest formData dto.CreateBusinessCardRequest true "BusinessCard"
 // @Success 200 {object} dto.BusinessCardResponse
 func UpdateBusinessCard(c *gin.Context) {
@@ -295,14 +294,6 @@ func UpdateBusinessCard(c *gin.Context) {
 		return
 	}
 	log.Printf("formData: %v", request)
-
-	file, fileHeader, err := c.Request.FormFile("BusinessCardBackgroundImage")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	log.Printf("file: %v", file)
-	log.Printf("fileHeader: %v", fileHeader)
 
 	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
 		ID:                "1",
