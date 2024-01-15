@@ -61,6 +61,30 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/business_cards/{business_card_id}": {
+            "get": {
+                "tags": [
+                    "BusinessCard"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "BusinessCard ID",
+                        "name": "business_card_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.BusinessCardResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/users": {
             "put": {
                 "security": [

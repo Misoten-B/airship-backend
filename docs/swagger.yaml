@@ -279,6 +279,21 @@ paths:
             type: array
       tags:
       - BusinessCardPartsCoordinate
+  /v1/business_cards/{business_card_id}:
+    get:
+      parameters:
+      - description: BusinessCard ID
+        in: path
+        name: business_card_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.BusinessCardResponse'
+      tags:
+      - BusinessCard
   /v1/users:
     delete:
       parameters:

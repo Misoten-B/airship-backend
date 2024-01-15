@@ -357,3 +357,81 @@ func DeleteBusinessCard(c *gin.Context) {
 
 	c.JSON(http.StatusNoContent, nil)
 }
+
+// @Tags BusinessCard
+// @Router /v1/business_cards/{business_card_id} [GET]
+// @Param business_card_id path string true "BusinessCard ID"
+// @Success 200 {object} dto.BusinessCardResponse
+func ReadBusinessCardByIDPublic(c *gin.Context) {
+	// FIXME: まるごとコピペ
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	appConfig, err := config.GetConfig()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ab := drivers.NewAzureBlobDriver(appConfig)
+
+	bcURL, err := ab.GetContainerURL(backgroundContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	qcURL, err := ab.GetContainerURL(qrcodeContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	tdmcURL, err := ab.GetContainerURL(threeDimentionalModelContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	acURL, err := ab.GetContainerURL(audioContainer)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	businesscard := model.BusinessCard{}
+	if err = db.Where("id = ?", c.Param("business_card_id")).First(&businesscard).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	bcc := model.BusinessCardPartsCoordinate{ID: businesscard.BusinessCardPartsCoordinateID}
+	if err = db.First(&bcc).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	bcb := model.BusinessCardBackground{ID: businesscard.BusinessCardBackgroundID}
+	if err = db.First(&bcb).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	bcb.ImagePath = bcURL.Path(bcb.ImagePath)
+
+	arassets := model.ARAsset{ID: businesscard.ARAssetID}
+	if err = db.First(&arassets).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
+	arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
+
+	var qrCodeImagePath string
+	if arassets.QRCodeImagePath != "" {
+		qrCodeImagePath = qcURL.Path(arassets.QRCodeImagePath)
+	}
+	arassets.QRCodeImagePath = qrCodeImagePath
+
+	response := dto.ConvertBC(businesscard, bcc, bcb, arassets)
+
+	c.JSON(http.StatusOK, response)
+}
