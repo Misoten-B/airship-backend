@@ -1,22 +1,30 @@
+//nolint:dupl // 時間がないため一旦
 package handler
 
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 
 	create "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/create"
+	deletearassets "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/delete_ar_assets"
+	deleteqrcodeicon "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/delete_qr_code_icon"
 	fetchbyid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id"
 	fetchbyidpublic "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_id_public"
 	fetchbyuserid "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/fetch_by_userid"
 	statusdone "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/status_done"
+	updatearassets "github.com/Misoten-B/airship-backend/internal/application/usecase/ar_assets/update_ar_assets"
 	"github.com/Misoten-B/airship-backend/internal/container"
 	"github.com/Misoten-B/airship-backend/internal/customerror"
 	"github.com/Misoten-B/airship-backend/internal/domain/ar_assets/service"
+	threeservice "github.com/Misoten-B/airship-backend/internal/domain/three_dimentional_model/service"
+	voiceservice "github.com/Misoten-B/airship-backend/internal/domain/voice/service"
+	"github.com/Misoten-B/airship-backend/internal/drivers"
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/ar_assets/dto"
-	arassets "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
+	arassetsinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/ar_assets"
+	threeinfra "github.com/Misoten-B/airship-backend/internal/infrastructure/three_dimentional_model"
+	"github.com/Misoten-B/airship-backend/internal/infrastructure/voice"
 	"github.com/gin-gonic/gin"
 )
 
@@ -296,11 +304,11 @@ func ReadAllArAssets(c *gin.Context) {
 // @Router /v1/users/ar_assets/{ar_assets_id} [PUT]
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
-// @Param dto.CreateArAssetsRequest formData dto.CreateArAssetsRequest true "ArAssets"
+// @Param dto.UpdateArAssetsRequest formData dto.UpdateArAssetsRequest true "ArAssets"
 // @Param ar_assets_id path string true "ArAssets ID"
 // @Accept multipart/form-data
 // @Param qrcodeIcon formData file false "Image file to be uploaded"
-// @Success 200 {object} dto.ArAssetsResponse
+// @Success 204 {object} nil
 func UpdateArAssets(c *gin.Context) {
 	/// コンテキストから取得
 	config, err := frameworks.GetConfig(c)
@@ -315,7 +323,11 @@ func UpdateArAssets(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v, uid: %v", config, uid)
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// リクエスト取得
 	id := c.Param("ar_assets_id")
@@ -325,23 +337,123 @@ func UpdateArAssets(c *gin.Context) {
 		return
 	}
 
-	request := dto.CreateArAssetsRequest{}
+	request := dto.UpdateArAssetsRequest{}
 	if err = c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("formData: %v", request)
+
+	file, fileHeader, err := c.Request.FormFile("qrcodeIcon")
+	if err != nil && !errors.Is(err, http.ErrMissingFile) {
+		frameworks.ErrorHandling(c, err, http.StatusBadRequest)
+		return
+	}
 
 	// ユースケース実行
+	azureDriver := drivers.NewAzureBlobDriver(config)
+	voiceRepo := voice.NewGormVoiceRepository(db)
+	threeRepo := threeinfra.NewGormThreeDimentionalModelRepository(db)
+	usecaseImpl := updatearassets.NewInteractor(
+		db,
+		arassetsinfra.NewGormARAssetsRepository(db),
+		arassetsinfra.NewAzureQRCodeImageStorage(azureDriver),
+		voice.NewExternalAPIVoiceModelAdapter(),
+		voiceservice.NewVoiceServiceImpl(voiceRepo),
+		threeservice.NewThreeDimentionalModelServiceImpl(threeRepo),
+	)
+
+	var qrCodeImage *updatearassets.QRCodeImageInput
+	if file != nil {
+		qrCodeImage = &updatearassets.QRCodeImageInput{
+			File:       file,
+			FileHeader: fileHeader,
+		}
+	}
+
+	input := updatearassets.Input{
+		ID:                  id,
+		UserID:              uid,
+		ThreeDimentionalID:  request.ThreeDimentionalID,
+		SpeakingDescription: request.SpeakingDescription,
+		QRCodeImage:         qrCodeImage,
+	}
+
+	err = usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
-	c.JSON(http.StatusCreated, dto.ArAssetsResponse{
-		ID:                   "1",
-		SpeakingDescription:  "こんにちは",
-		SpeakingAudioPath:    "https://example.com",
-		ThreeDimentionalPath: "https://example.com",
-		QrcodeIconImagePath:  "https://example.com",
-	})
+	c.JSON(http.StatusNoContent, nil)
+}
+
+// @Tags ArAssets
+// @Router /v1/users/ar_assets/{ar_assets_id}/qr_code_icon [DELETE]
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer [Firebase JWT Token]"
+// @Param ar_assets_id path string true "ArAssets ID"
+// @Success 204 {object} nil
+func DeleteArAssetsQRCodeIcon(c *gin.Context) {
+	// コンテキストから取得
+	config, err := frameworks.GetConfig(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// リクエスト取得
+	id := c.Param("ar_assets_id")
+	if id == "" {
+		reqErr := errors.New("ar_assets_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
+
+	// ユースケース実行
+	usecaseImpl := deleteqrcodeicon.NewInteractor(
+		db,
+		drivers.NewAzureBlobDriver(config),
+	)
+
+	input := deleteqrcodeicon.Input{
+		ID:     id,
+		UserID: uid,
+	}
+
+	err = usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// レスポンス
+	c.JSON(http.StatusNoContent, nil)
 }
 
 // @Tags ArAssets
@@ -364,7 +476,11 @@ func DeleteArAssets(c *gin.Context) {
 		return
 	}
 
-	log.Printf("config: %v, uid: %v", config, uid)
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// リクエスト取得
 	id := c.Param("ar_assets_id")
@@ -374,6 +490,28 @@ func DeleteArAssets(c *gin.Context) {
 	}
 
 	// ユースケース実行
+	usecaseImpl := deletearassets.NewInteractor(
+		db,
+		drivers.NewAzureBlobDriver(config),
+	)
+
+	input := deletearassets.Input{
+		ID:     id,
+		UserID: uid,
+	}
+
+	err = usecaseImpl.Execute(input)
+	if err != nil {
+		var appErr *customerror.ApplicationError
+
+		if errors.As(err, &appErr) {
+			frameworks.ErrorHandling(c, err, appErr.StatusCode())
+			return
+		}
+
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
 
 	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
@@ -414,7 +552,7 @@ func PostStatusDone(c *gin.Context) {
 		}
 
 		usecaseImpl = statusdone.NewInteractor(
-			arassets.NewGormARAssetsRepository(db),
+			arassetsinfra.NewGormARAssetsRepository(db),
 		)
 	}
 
