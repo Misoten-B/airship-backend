@@ -359,14 +359,44 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ArAssetsResponse"
-                        }
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "ArAssets"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ArAssets ID",
+                        "name": "ar_assets_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/v1/users/ar_assets/{ar_assets_id}/qr_code_icon": {
             "delete": {
                 "security": [
                     {
@@ -512,6 +542,32 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/dto.BackgroundResponse"
                         }
+                    }
+                }
+            }
+        },
+        "/v1/users/business_card_backgrounds/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "BusinessCardBackground"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer [Firebase JWT Token]",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             }
@@ -695,9 +751,6 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "multipart/form-data"
-                ],
                 "tags": [
                     "BusinessCard"
                 ],
@@ -797,11 +850,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.BusinessCardResponse"
-                        }
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             },
@@ -1009,11 +1059,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ThreeDimentionalResponse"
-                        }
+                    "204": {
+                        "description": "No Content"
                     }
                 }
             },
