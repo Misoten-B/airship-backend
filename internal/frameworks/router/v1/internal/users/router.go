@@ -41,6 +41,7 @@ func arAssetsRegister(r *gin.RouterGroup) {
 		ar.POST("", arHandler.CreateArAssets)
 		ar.GET("/:ar_assets_id", arHandler.ReadArAssetsByID)
 		ar.PUT("/:ar_assets_id", arHandler.UpdateArAssets)
+		ar.DELETE("/:ar_assets_id/qr_code_icon", arHandler.DeleteArAssetsQRCodeIcon)
 		ar.DELETE("/:ar_assets_id", arHandler.DeleteArAssets)
 		ar.POST("/:ar_assets_id/status/done", arHandler.PostStatusDone)
 		ar.POST("/:ar_assets_id/status/failed", arHandler.PostStatusFailed)
