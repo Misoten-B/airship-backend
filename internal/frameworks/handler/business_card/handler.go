@@ -21,7 +21,7 @@ import (
 const (
 	backgroundContainer            = "background-images"
 	qrcodeContainer                = "qrcode-images"
-	threeDimentionalModelContainer = "three-dimentiional-models"
+	threeDimentionalModelContainer = "three-dimentional-models"
 	audioContainer                 = "audios"
 )
 
@@ -409,10 +409,13 @@ func ReadBusinessCardByIDPublic(c *gin.Context) {
 	bcb.ImagePath = bcURL.Path(bcb.ImagePath)
 
 	arassets := model.ARAsset{ID: businesscard.ARAssetID}
-	if err = db.First(&arassets).Error; err != nil {
+	if err = db.Preload("SpeakingAsset").
+		Preload("ThreeDimentionalModel").
+		First(&arassets).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
 	arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
 	arassets.SpeakingAsset.AudioPath = acURL.Path(arassets.SpeakingAsset.AudioPath)
 
