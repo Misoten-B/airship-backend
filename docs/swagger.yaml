@@ -507,10 +507,28 @@ paths:
         name: qrcodeIcon
         type: file
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ArAssetsResponse'
+        "204":
+          description: No Content
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - ArAssets
+  /v1/users/ar_assets/{ar_assets_id}/qr_code_icon:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ArAssets ID
+        in: path
+        name: ar_assets_id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -583,6 +601,21 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/dto.BackgroundResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - BusinessCardBackground
+  /v1/users/business_card_backgrounds/{id}:
+    delete:
+      parameters:
+      - description: Bearer [Firebase JWT Token]
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -719,8 +752,6 @@ paths:
       tags:
       - BusinessCard
     put:
-      consumes:
-      - multipart/form-data
       parameters:
       - description: Bearer [Firebase JWT Token]
         in: header
@@ -788,10 +819,8 @@ paths:
         name: postalCode
         type: string
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.BusinessCardResponse'
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:
@@ -918,10 +947,8 @@ paths:
         required: true
         type: file
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.ThreeDimentionalResponse'
+        "204":
+          description: No Content
       security:
       - ApiKeyAuth: []
       tags:

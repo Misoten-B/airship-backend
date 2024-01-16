@@ -101,6 +101,7 @@ func (r *GormARAssetsRepository) FetchByUserID(userID shared.ID) ([]arassets.Rea
 		Where("user_id = ?", userID).
 		Preload("SpeakingAsset").
 		Preload("ThreeDimentionalModel").
+		Order("id desc").
 		Find(&arAssetsModels).Error; err != nil {
 		return readModels, fmt.Errorf("failed to fetch ar asset by user id: %w", err)
 	}
