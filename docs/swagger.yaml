@@ -732,11 +732,6 @@ paths:
         name: business_card_id
         required: true
         type: string
-      - description: Image file to be uploaded
-        in: formData
-        name: BusinessCardBackgroundImage
-        required: true
-        type: file
       - example: 東京都渋谷区神南1-1-1
         in: formData
         name: address

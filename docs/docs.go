@@ -717,13 +717,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "file",
-                        "description": "Image file to be uploaded",
-                        "name": "BusinessCardBackgroundImage",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "string",
                         "example": "東京都渋谷区神南1-1-1",
                         "name": "address",
