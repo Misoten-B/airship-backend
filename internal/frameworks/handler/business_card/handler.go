@@ -1,11 +1,9 @@
-// FIXME: このファイルの関数の長さが長いので、分割する
-//
-//nolint:funlen
+//nolint:funlen,gocognit,cyclop // 時間がないため一旦
 package handler
 
 import (
+	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -16,6 +14,7 @@ import (
 	"github.com/Misoten-B/airship-backend/internal/frameworks"
 	"github.com/Misoten-B/airship-backend/internal/frameworks/handler/business_card/dto"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 const (
@@ -239,7 +238,8 @@ func ReadBusinessCardByID(c *gin.Context) {
 	}
 
 	businesscard := model.BusinessCard{}
-	if err = db.Where("id = ? AND user_id = ?", c.Param("business_card_id"), uid).First(&businesscard).Error; err != nil {
+	if err = db.Where("id = ? AND user_id = ?", c.Param("business_card_id"), uid).
+		Order("id desc").First(&businesscard).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -281,60 +281,109 @@ func ReadBusinessCardByID(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Param Authorization header string true "Bearer [Firebase JWT Token]"
 // @Param business_card_id path string true "BusinessCard ID"
-// @Accept multipart/form-data
 // @Param CreateBusinessCardRequest formData dto.CreateBusinessCardRequest true "BusinessCard"
-// @Success 200 {object} dto.BusinessCardResponse
+// @Success 204 {object} nil
 func UpdateBusinessCard(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
-	log.Printf("business_card_id: %s", c.Param("business_card_id"))
+	// FIXME: ベタ書き
+
+	// コンテキストから取得
+	userID, err := frameworks.GetUID(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		frameworks.ErrorHandling(c, err, http.StatusInternalServerError)
+		return
+	}
+
+	// リクエストから取得
+	id := c.Param("business_card_id")
+	if id == "" {
+		reqErr := errors.New("business_card_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
 
 	request := dto.CreateBusinessCardRequest{}
-	if err := c.ShouldBind(&request); err != nil {
+	if err = c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("formData: %v", request)
 
-	businessCardPartsCoordinate := dto.BusinessCardPartsCoordinate{
-		ID:                "1",
-		DisplayNameX:      0,
-		DisplayNameY:      0,
-		CompanyNameX:      0,
-		CompanyNameY:      0,
-		DepartmentX:       0,
-		DepartmentY:       0,
-		OfficialPositionX: 0,
-		OfficialPositionY: 0,
-		PhoneNumberX:      0,
-		PhoneNumberY:      0,
-		EmailX:            0,
-		EmailY:            0,
-		PostalCodeX:       0,
-		PostalCodeY:       0,
-		AddressX:          0,
-		AddressY:          0,
-		QrcodeX:           0,
-		QrcodeY:           0,
+	// ユースケース
+
+	// 名刺の取得（存在確認）
+	var prevModel model.BusinessCard
+
+	if err = db.Where("id = ?", id).First(&prevModel).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			frameworks.ErrorHandling(c, errors.New("business card not found"), http.StatusNotFound)
+			return
+		}
+		frameworks.ErrorHandling(c, fmt.Errorf("failed to fetch business card: %w", err), http.StatusInternalServerError)
+		return
 	}
 
-	c.JSON(http.StatusCreated, dto.BusinessCardResponse{
-		ID:                          "1",
-		BusinessCardBackgroundColor: "#ffffff",
-		BusinessCardBackgroundImage: "https://example.com/image.png",
-		BusinessCardName:            "会社",
-		ThreeDimentionalModel:       "https://example.com/model.gltf",
-		SpeakingDescription:         "こんにちは",
-		SpeakingAudioPath:           "https://example.com/audio.mp3",
-		BusinessCardPartsCoordinate: businessCardPartsCoordinate,
-		DisplayName:                 "山田太郎",
-		CompanyName:                 "株式会社山田",
-		Department:                  "開発部",
-		OfficialPosition:            "部長",
-		PhoneNumber:                 "090-1234-5678",
-		Email:                       "sample@example.com",
-		PostalCode:                  "123-4567",
-		Address:                     "東京都渋谷区1-1-1",
-	})
+	if prevModel.UserID != userID {
+		frameworks.ErrorHandling(c, errors.New("user does not have permission"), http.StatusForbidden)
+		return
+	}
+
+	// バリデーション
+
+	// （ARアセットを変える場合は）権限確認
+
+	// （名刺背景を変える場合は）権限確認
+
+	// データベース更新
+	// 許して
+
+	if request.BusinessCardBackgroundID != "" {
+		prevModel.BusinessCardBackgroundID = request.BusinessCardBackgroundID
+	}
+	if request.ArAssetsID != "" {
+		prevModel.ARAssetID = request.ArAssetsID
+	}
+	if request.BusinessCardPartsCoordinateID != "" {
+		prevModel.BusinessCardPartsCoordinateID = request.BusinessCardPartsCoordinateID
+	}
+	if request.BusinessCardName != "" {
+		prevModel.BusinessCardName = request.BusinessCardName
+	}
+	if request.DisplayName != "" {
+		prevModel.DisplayName = request.DisplayName
+	}
+	if request.CompanyName != "" {
+		prevModel.CompanyName = request.CompanyName
+	}
+	if request.Department != "" {
+		prevModel.Department = request.Department
+	}
+	if request.OfficialPosition != "" {
+		prevModel.OfficialPosition = request.OfficialPosition
+	}
+	if request.PhoneNumber != "" {
+		prevModel.PhoneNumber = request.PhoneNumber
+	}
+	if request.Email != "" {
+		prevModel.Email = request.Email
+	}
+	if request.PostalCode != "" {
+		prevModel.PostalCode = request.PostalCode
+	}
+	if request.Address != "" {
+		prevModel.Address = request.Address
+	}
+
+	if err = db.Debug().Save(&prevModel).Error; err != nil {
+		frameworks.ErrorHandling(c, fmt.Errorf("failed to update business card: %w", err), http.StatusInternalServerError)
+		return
+	}
+
+	// レスポンス
+	c.JSON(http.StatusNoContent, nil)
 }
 
 // @Tags BusinessCard
@@ -344,8 +393,53 @@ func UpdateBusinessCard(c *gin.Context) {
 // @Param business_card_id path string true "BusinessCard ID"
 // @Success 204 {object} nil
 func DeleteBusinessCard(c *gin.Context) {
-	log.Printf("Authorization: %s", c.GetHeader("Authorization"))
+	// FIXME: ベタ書きだけど許して
 
+	// コンテキストから取得
+	uid, err := frameworks.GetUID(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	db, err := frameworks.GetDB(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// リクエストから取得
+	id := c.Param("business_card_id")
+	if id == "" {
+		reqErr := errors.New("business_card_id is empty")
+		frameworks.ErrorHandling(c, reqErr, http.StatusBadRequest)
+	}
+
+	// データベースからBusinessCardを取得
+	var dbModel model.BusinessCard
+
+	if err = db.Where("id = ?", id).First(&dbModel).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			frameworks.ErrorHandling(c, errors.New("business card not found"), http.StatusNotFound)
+			return
+		}
+		frameworks.ErrorHandling(c, fmt.Errorf("failed to fetch business card: %w", err), http.StatusInternalServerError)
+		return
+	}
+
+	// BusinessCardの権限確認
+	if dbModel.UserID != uid {
+		frameworks.ErrorHandling(c, errors.New("user does not have permission"), http.StatusForbidden)
+		return
+	}
+
+	// データベースから削除
+	if err = db.Delete(&dbModel).Error; err != nil {
+		frameworks.ErrorHandling(c, fmt.Errorf("failed to delete business card: %w", err), http.StatusInternalServerError)
+		return
+	}
+
+	// レスポンス
 	c.JSON(http.StatusNoContent, nil)
 }
 
