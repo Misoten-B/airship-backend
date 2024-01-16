@@ -1,3 +1,4 @@
+//nolint:revive,nolintlint // ←削除検討
 package deletearassets
 
 import (
