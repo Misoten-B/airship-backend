@@ -24,6 +24,7 @@ type Output struct {
 	ID                   string
 	SpeakingDescription  string
 	SpeakingAudioPath    string
+	ThreeDimentionalID   string
 	ThreeDimentionalPath string
 	QrcodeIconImagePath  string
 	IsCompleted          bool
@@ -121,6 +122,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 		ID:                   model.ID(),
 		SpeakingDescription:  model.SpeakingDescription(),
 		SpeakingAudioPath:    speakingAudioPath,
+		ThreeDimentionalID:   model.ThreeDimentionalID(),
 		ThreeDimentionalPath: threeDimentionalPath,
 		QrcodeIconImagePath:  qrcodeIconImagePath,
 		IsCompleted:          model.IsCreated(),

@@ -16,6 +16,9 @@ definitions:
       speakingDescription:
         example: description
         type: string
+      threeDimentionalId:
+        example: id
+        type: string
       threeDimentionalPath:
         example: url
         type: string
@@ -24,6 +27,7 @@ definitions:
     - isCompleted
     - speakingAudioPath
     - speakingDescription
+    - threeDimentionalId
     - threeDimentionalPath
     type: object
   dto.BackgroundResponse:

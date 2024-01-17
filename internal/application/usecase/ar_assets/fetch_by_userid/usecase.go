@@ -22,6 +22,7 @@ type item struct {
 	ID                   string
 	SpeakingDescription  string
 	SpeakingAudioPath    string
+	ThreeDimentionalID   string
 	ThreeDimentionalPath string
 	QrcodeIconImagePath  string
 	IsCompleted          bool
@@ -120,6 +121,7 @@ func (i *Interactor) Execute(input Input) (Output, error) {
 			ID:                   model.ID(),
 			SpeakingDescription:  model.SpeakingDescription(),
 			SpeakingAudioPath:    speakingAudioFullPath.Path(model.SpeakingAudioPath()),
+			ThreeDimentionalID:   model.ThreeDimentionalID(),
 			ThreeDimentionalPath: threeDimentionalModelFullPath.Path(model.ThreeDimentionalPath()),
 			QrcodeIconImagePath:  qrCodeImagePath,
 			IsCompleted:          model.IsCreated(),

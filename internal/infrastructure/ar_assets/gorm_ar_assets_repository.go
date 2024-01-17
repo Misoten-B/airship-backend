@@ -120,6 +120,7 @@ func convertToReadModel(arAssetModel model.ARAsset) arassets.ReadModel {
 		arAssetModel.UserID,
 		arAssetModel.SpeakingAsset.Description,
 		arAssetModel.SpeakingAsset.AudioPath,
+		arAssetModel.ThreeDimentionalModel.ID,
 		arAssetModel.ThreeDimentionalModel.ModelPath,
 		arAssetModel.QRCodeImagePath,
 		isCreated,
