@@ -121,7 +121,7 @@ func ReadAllBusinessCard(c *gin.Context) {
 
 	businesscards := []model.BusinessCard{}
 	if err = db.Where("user_id = ?", uid).Find(&businesscards).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "message": "failed to fetch businesscards"})
 		return
 	}
 
@@ -157,20 +157,20 @@ func ReadAllBusinessCard(c *gin.Context) {
 	for _, businesscard := range businesscards {
 		bcc := model.BusinessCardPartsCoordinate{ID: businesscard.BusinessCardPartsCoordinateID}
 		if err = db.First(&bcc).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "message": "failed to fetch bcc"})
 			return
 		}
 
 		bcb := model.BusinessCardBackground{ID: businesscard.BusinessCardBackgroundID}
 		if err = db.First(&bcb).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "message": "failed to fetch bcb"})
 			return
 		}
 		bcb.ImagePath = bcURL.Path(bcb.ImagePath)
 
 		arassets := model.ARAsset{ID: businesscard.ARAssetID}
 		if err = db.First(&arassets).Error; err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "message": "failed to fetch arassets"})
 			return
 		}
 		arassets.ThreeDimentionalModel.ModelPath = tdmcURL.Path(arassets.ThreeDimentionalModel.ModelPath)
