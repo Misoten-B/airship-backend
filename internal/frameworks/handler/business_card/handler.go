@@ -21,7 +21,7 @@ const (
 	backgroundContainer            = "background-images"
 	qrcodeContainer                = "qrcode-images"
 	threeDimentionalModelContainer = "three-dimentional-models"
-	audioContainer                 = "audios"
+	audioContainer                 = "voice-sounds"
 )
 
 // @Tags BusinessCard
