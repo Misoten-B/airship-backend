@@ -1147,6 +1147,7 @@ const docTemplate = `{
                 "isCompleted",
                 "speakingAudioPath",
                 "speakingDescription",
+                "threeDimentionalId",
                 "threeDimentionalPath"
             ],
             "properties": {
@@ -1169,6 +1170,10 @@ const docTemplate = `{
                 "speakingDescription": {
                     "type": "string",
                     "example": "description"
+                },
+                "threeDimentionalId": {
+                    "type": "string",
+                    "example": "id"
                 },
                 "threeDimentionalPath": {
                     "type": "string",
