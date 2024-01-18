@@ -106,6 +106,15 @@ func (i *Interactor) deleteFromRepository(dbModel model.ARAsset) error {
 		}
 	}()
 
+	// 参照している名刺の全削除
+	if err := tx.Where("ar_asset_id = ?", dbModel.ID).Delete(&model.BusinessCard{}).Error; err != nil {
+		return customerror.NewApplicationError(
+			fmt.Errorf("failed to delete business cards: %w", err),
+			"failed to delete business cards",
+			http.StatusInternalServerError,
+		)
+	}
+
 	// ARアセットの削除
 	if err := tx.Delete(&dbModel).Error; err != nil {
 		tx.Rollback()
